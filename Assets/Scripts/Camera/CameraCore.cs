@@ -1,66 +1,69 @@
 ﻿using Cinemachine;
 using UnityEngine;
 
-//此脚本添加在VirtualCamera上
-public class CameraCore : MonoBehaviour
+namespace Camera
 {
-    private CinemachineVirtualCamera _VirtualCamera;
-    public CinemachineVirtualCamera VirtualCamera
+    //此脚本添加在VirtualCamera上
+    public class CameraCore : MonoBehaviour
     {
-        get
+        private CinemachineVirtualCamera _VirtualCamera;
+        public CinemachineVirtualCamera VirtualCamera
         {
-            if (_VirtualCamera == null)
-                Debug.Log("未添加VirtualCamera");
-            return _VirtualCamera;
+            get
+            {
+                if (_VirtualCamera == null)
+                    Debug.Log("未添加VirtualCamera");
+                return _VirtualCamera;
+            }
         }
-    }
-    private CinemachineConfiner _CameraConfiner;
-    public CinemachineConfiner CameraConfiner
-    {
-        get
+        private CinemachineConfiner _CameraConfiner;
+        public CinemachineConfiner CameraConfiner
         {
-            if (_CameraConfiner == null)
-                Debug.Log("未添加CameraConfiner");
-            return _CameraConfiner;
+            get
+            {
+                if (_CameraConfiner == null)
+                    Debug.Log("未添加CameraConfiner");
+                return _CameraConfiner;
+            }
         }
-    }
-    private CinemachineCameraOffset _CameraOffset;
-    public CinemachineCameraOffset CameraOffset
-    {
-        get
+        private CinemachineCameraOffset _CameraOffset;
+        public CinemachineCameraOffset CameraOffset
         {
-            if (_CameraOffset == null)
-                Debug.Log("未添加CameraOffset");
-            return _CameraOffset;
+            get
+            {
+                if (_CameraOffset == null)
+                    Debug.Log("未添加CameraOffset");
+                return _CameraOffset;
+            }
         }
-    }
-    public CinemachineImpulseSource _ImpulseSource;
-    public CinemachineImpulseSource ImpulseSource
-    {
-        get
+        public CinemachineImpulseSource _ImpulseSource;
+        public CinemachineImpulseSource ImpulseSource
         {
-            if (_ImpulseSource == null)
-                Debug.Log("未添加ImpulseSource");
-            return _ImpulseSource;
+            get
+            {
+                if (_ImpulseSource == null)
+                    Debug.Log("未添加ImpulseSource");
+                return _ImpulseSource;
+            }
         }
-    }
-    private CameraMoveController _CameraMoveController;
-    public CameraMoveController CameraMoveController
-    {
-        get
+        private CameraMoveController _CameraMoveController;
+        public CameraMoveController CameraMoveController
         {
-            if (_CameraMoveController == null)
-                Debug.Log("未添加CameraMoveController");
-            return _CameraMoveController;
+            get
+            {
+                if (_CameraMoveController == null)
+                    Debug.Log("未添加CameraMoveController");
+                return _CameraMoveController;
+            }
         }
-    }
 
-    private void Awake()
-    {
-        _VirtualCamera = GetComponent<CinemachineVirtualCamera>();
-        _CameraConfiner = GetComponent<CinemachineConfiner>();
-        _CameraOffset = GetComponent<CinemachineCameraOffset>();
-        _ImpulseSource = GetComponent<CinemachineImpulseSource>();
-        _CameraMoveController = GetComponent<CameraMoveController>();
+        private void Awake()
+        {
+            _VirtualCamera = GetComponent<CinemachineVirtualCamera>();
+            _CameraConfiner = GetComponent<CinemachineConfiner>();
+            _CameraOffset = GetComponent<CinemachineCameraOffset>();
+            _ImpulseSource = GetComponent<CinemachineImpulseSource>();
+            _CameraMoveController = GetComponent<CameraMoveController>();
+        }
     }
 }

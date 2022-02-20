@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
 
-[System.Serializable]
-public class CameraMove
+namespace Camera
 {
-    public List<SingleCameraMove> singleCameraMoves = new List<SingleCameraMove>();
-    public CameraMove() { }
-    public static CameraMove operator +(CameraMove c, SingleCameraMove s)
+    [System.Serializable]
+    public class CameraMove
     {
-        if (s != null)
-            c.singleCameraMoves.Add(s);
-        return c;
+        public List<SingleCameraMove> singleCameraMoves = new List<SingleCameraMove>();
+        public CameraMove() { }
+        public static CameraMove operator +(CameraMove c, SingleCameraMove s)
+        {
+            if (s != null)
+                c.singleCameraMoves.Add(s);
+            return c;
+        }
     }
 }

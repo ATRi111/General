@@ -6,33 +6,37 @@ public enum EObject
 
 }
 
-[CreateAssetMenu]
-public class ObjectDataDict : ScriptableObject, IInitialize
+namespace ObjectPool
 {
-    private readonly Dictionary<EObject, ObjectData> objectDict = new Dictionary<EObject, ObjectData>();
-
-    [Header("顺序必须与EObject一致")]
-    [SerializeField]
-    private GameObject[] prefabs;
-    [Header("顺序必须与EObject一致")]
-    [SerializeField]
-    private int[] nums;
-
-    public int NumOfObjects { get; private set; }   //由ObjectManager管理的游戏物体总数
-
-    public void Initialize()
+    [CreateAssetMenu]
+    public class ObjectDataDict : ScriptableObject, IInitialize
     {
-        ObjectData data;
-        NumOfObjects = nums.Length;
-        for (int i = 0; i < NumOfObjects; i++)
+        private readonly Dictionary<EObject, ObjectData> objectDict = new Dictionary<EObject, ObjectData>();
+
+        [Header("顺序必须与EObject一致")]
+        [SerializeField]
+        private GameObject[] prefabs;
+        [Header("顺序必须与EObject一致")]
+        [SerializeField]
+        private int[] nums;
+
+        public int NumOfObjects { get; private set; }   //由ObjectManager管理的游戏物体总数
+
+        public void Initialize()
         {
-            data = new ObjectData((EObject)i, nums[i], prefabs[i]);
-            objectDict.Add((EObject)i, data);
+            ObjectData data;
+            NumOfObjects = nums.Length;
+            for (int i = 0; i < NumOfObjects; i++)
+            {
+                data = new ObjectData((EObject)i, nums[i], prefabs[i]);
+                objectDict.Add((EObject)i, data);
+            }
+        }
+
+        internal ObjectData GetObject(EObject eObject)
+        {
+            return objectDict[eObject];
         }
     }
-
-    public ObjectData GetObject(EObject eObject)
-    {
-        return objectDict[eObject];
-    }
 }
+

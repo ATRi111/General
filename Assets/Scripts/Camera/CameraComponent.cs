@@ -1,14 +1,17 @@
 using UnityEngine;
 
-public class CameraComponent : MonoBehaviour
+namespace Camera
 {
-    protected CameraCore CameraCore { get; private set; }
-
-    //不要在此方法中获取其他CameraComponent
-    protected virtual void Awake()
+    public class CameraComponent : MonoBehaviour
     {
-        CameraCore = GetComponent<CameraCore>();
-        if (CameraCore == null)
-            Debug.Log("CameraComponent未安装在CameraCore上");
+        protected CameraCore CameraCore { get; private set; }
+
+        //不要在此方法中获取其他CameraComponent
+        protected virtual void Awake()
+        {
+            CameraCore = GetComponent<CameraCore>();
+            if (CameraCore == null)
+                Debug.Log("CameraComponent未安装在CameraCore上");
+        }
     }
 }

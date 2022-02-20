@@ -43,13 +43,13 @@ public class CObject : MonoBehaviour
     /// <summary>
     /// 被对象池创建时的行为
     /// </summary>
-    public virtual void Initialize()
+    internal virtual void Initialize()
     {
         _Active = true;
         Active = false;
     }
 
-    public void Activate(Vector3 pos, float angle)
+    internal void Activate(Vector3 pos, float angle)
     {
         b_createdInPool = true;
         Active = true;

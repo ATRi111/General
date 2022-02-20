@@ -8,8 +8,8 @@ public enum ESound
 //每段音频对应唯一的ESound和String，在它们间转换时使用此类中的方法
 public static class ESoundTranslator
 {
-    //必须与枚举一一对应
-    public static string[] names = new string[] { "" };
+    //必须与枚举顺序一致
+    private static string[] names = new string[] { "" };
     private static readonly Dictionary<string, ESound> eSoundDict = new Dictionary<string, ESound>();
     private static readonly Dictionary<ESound, string> nameDict = new Dictionary<ESound, string>();
 
