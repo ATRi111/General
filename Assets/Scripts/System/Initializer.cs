@@ -34,7 +34,8 @@ public class Initializer : Singleton<Initializer>
         get => _NumOfLoadObject;
         set
         {
-            if (value < 0 || value == _NumOfLoadObject) return;
+            if (value < 0 || value == _NumOfLoadObject) 
+                return;
             if (value == 0)
             {
                 Debug.Log("对象池初始化完成");

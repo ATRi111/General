@@ -9,4 +9,8 @@ public enum EService
     GameManager,
     AudioController,
     ObjectManager,
+    /// <summary>
+    /// Œ¥ π”√
+    /// </summary>
+    StateManager,
 }

@@ -5,7 +5,7 @@ namespace ObjectPool
     public class ObjectManager : Service
     {
         [SerializeField]
-        private ObjectDataDict dict;        //初始化所需的数据
+        private ObjectDataDict odd;         //从中获取所需的数据
 
         private ObjectPool[] cObjectPools;  //对象池的脚本
         private int numOfObjects;           //对象的种类数，即对象池数
@@ -23,21 +23,21 @@ namespace ObjectPool
 
         public void Initialize()
         {
-            if (dict == null || dict.NumOfObjects == 0)
+            if (odd == null || odd.NumOfObjects == 0)
             {
                 Initializer initializer = Initializer.Instance;
                 initializer.NumOfLoadObject++;
                 initializer.NumOfLoadObject--;
                 return;
             }
-            numOfObjects = dict.NumOfObjects;
+            numOfObjects = odd.NumOfObjects;
 
             cObjectPools = new ObjectPool[numOfObjects];
             ObjectPool script_pool;
             ObjectData data;
             for (int i = 0; i < numOfObjects; i++)
             {
-                data = dict.GetObject((EObject)i);
+                data = odd.GetObject((EObject)i);
                 //创建游戏物体
                 GameObject obj_pool = new GameObject("Pool" + i.ToString());
                 obj_pool.transform.parent = transform;
@@ -59,7 +59,7 @@ namespace ObjectPool
         {
             CObject obj = cObjectPools[(int)eObject].Activate(position, angle);
             if (obj == null)
-                obj = Instantiate(dict.GetObject(eObject).Prefab).GetComponent<CObject>();
+                obj = Instantiate(odd.GetObject(eObject).Prefab).GetComponent<CObject>();
             return obj;
         }
     }

@@ -5,39 +5,7 @@ using UnityEngine;
 [DefaultExecutionOrder(-200)]
 public class ServiceLocator : Singleton<ServiceLocator>
 {
-    private int NumOfService;       //总服务数
-    [SerializeField]
-    private int _NumOfLoadedService;
-    /// <summary>
-    /// 已加载的服务数
-    /// </summary>
-    private int NumOfLoadedService
-    {
-        get => _NumOfLoadedService;
-        set
-        {
-            if (value == NumOfService)
-            {
-                Debug.Log("服务加载完成");
-                OnServiceLoaded?.Invoke();
-                OnServiceLoaded = null;
-            }
-            _NumOfLoadedService = value;
-        }
-    }
-    /// <summary>
-    /// 服务加载完时要执行的方法(应当在Start中注册)
-    /// </summary>
-    public event Action OnServiceLoaded;
-
     private readonly Dictionary<EService, Service> serviceDict = new Dictionary<EService, Service>();
-
-    protected override void Awake()
-    {
-        base.Awake();
-        NumOfService = Enum.GetValues(typeof(EService)).Length;
-        _NumOfLoadedService = 0;
-    }
 
     /// <summary>
     /// 获取一个服务
@@ -63,6 +31,5 @@ public class ServiceLocator : Singleton<ServiceLocator>
     public void AddService(EService eService, Service service)
     {
         serviceDict.Add(eService, service);
-        NumOfLoadedService++;
     }
 }

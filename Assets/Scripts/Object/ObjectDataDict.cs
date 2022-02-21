@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum EObject
-{
-
-}
-
 namespace ObjectPool
 {
+    public enum EObject
+    {
+
+    }
+
     [CreateAssetMenu]
     public class ObjectDataDict : ScriptableObject, IInitialize
     {
