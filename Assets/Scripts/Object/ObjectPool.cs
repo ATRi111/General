@@ -57,14 +57,15 @@ namespace ObjectPool
                 return null;
             //等差数列探测法
             int depth = 0;
-            for (int i = nextIndex; i < Size; i++)
+            for (int i = nextIndex; i < Size;)
             {
                 if (!cObjects[i].Active)
                 {
                     cObjects[i].Activate(position, angle);
-                    nextIndex = i + depth * 2 + 1;
+                    nextIndex = i + 1;
                     return cObjects[i];
                 }
+                i += depth * 2 + 1
                 depth++;
             }
             for (int i = 0; i < nextIndex; i++)
@@ -72,9 +73,10 @@ namespace ObjectPool
                 if (!cObjects[i].Active)
                 {
                     cObjects[i].Activate(position, angle);
-                    nextIndex = depth * 2 + 1;
+                    nextIndex = i + 1;
                     return cObjects[i];
                 }
+                i += depth * 2 + 1
                 depth++;
             }
             Debug.LogWarning(gameObject.name + "池中的对象几乎用完了");
