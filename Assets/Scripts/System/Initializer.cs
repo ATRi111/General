@@ -49,7 +49,7 @@ public class Initializer : Singleton<Initializer>
     {
         base.Awake();
         _NumOfLoadObject = 0;
-        UnityEngine.Random.InitState(System.DateTime.Now.Second);
+        Random.InitState(System.DateTime.Now.Second);
     }
 
     private void Start()

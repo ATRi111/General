@@ -7,16 +7,15 @@ using UnityEngine;
 public class Singleton<T> : MonoBehaviour where T : Singleton<T>
 {
     public static T Instance { get; private set; }
+
     protected virtual void Awake()
     {
         if (Instance == null)
         {
             Instance = this as T;
-            if (Instance == null) Debug.Log("´´½¨µ¥ÀýÊ§°Ü");
             DontDestroyOnLoad(gameObject);
         }
         else
             Destroy(gameObject);
-        DontDestroyOnLoad(gameObject);
     }
 }

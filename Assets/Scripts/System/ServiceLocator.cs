@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,7 +27,7 @@ public class ServiceLocator : Singleton<ServiceLocator>
         return (T)serviceDict[eService];
     }
 
-    public void AddService(EService eService, Service service)
+    public void Register(EService eService, Service service)
     {
         serviceDict.Add(eService, service);
     }

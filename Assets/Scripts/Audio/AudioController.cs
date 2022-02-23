@@ -10,10 +10,9 @@ public class AudioController : Service
     private readonly Dictionary<ESound, AudioSource> audioDict = new Dictionary<ESound, AudioSource>();
     private ESound activeBgm = ESound.NullSound;
 
-    protected override void Awake()
+    protected override void BeforeRegister()
     {
         eService = EService.AudioController;
-        base.Awake();
     }
 
     private void Start()

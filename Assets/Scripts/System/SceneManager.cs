@@ -27,10 +27,9 @@ public class SceneManager : Service
         }
     }
 
-    protected override void Awake()
+    protected override void BeforeRegister()
     {
         eService = EService.SceneManager;
-        base.Awake();
         eventSystem = ServiceLocator.Instance.GetService<EventSystem>(EService.EventSystem);
     }
 

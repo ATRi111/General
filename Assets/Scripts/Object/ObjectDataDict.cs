@@ -20,7 +20,7 @@ namespace ObjectPool
         [SerializeField]
         private int[] nums;
 
-        public int NumOfObjects { get; private set; }   //由ObjectManager管理的游戏物体总数
+        internal int NumOfObjects { get; private set; }   //由ObjectManager管理的游戏物体总数
 
         public void Initialize()
         {
@@ -39,4 +39,3 @@ namespace ObjectPool
         }
     }
 }
-

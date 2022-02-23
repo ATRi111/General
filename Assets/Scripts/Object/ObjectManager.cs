@@ -10,10 +10,9 @@ namespace ObjectPool
         private ObjectPool[] cObjectPools;  //对象池的脚本
         private int numOfObjects;           //对象的种类数，即对象池数
 
-        protected override void Awake()
+        protected override void BeforeRegister()
         {
             eService = EService.ObjectManager;
-            base.Awake();
         }
 
         private void Start()
@@ -21,7 +20,7 @@ namespace ObjectPool
             Initialize();
         }
 
-        public void Initialize()
+        internal void Initialize()
         {
             if (odd == null || odd.NumOfObjects == 0)
             {
@@ -53,14 +52,26 @@ namespace ObjectPool
         /// </summary>
         /// <param name="eObject">要激活的游戏物体对应的枚举</param>
         /// <param name="position">位置</param>
-        /// <param name="angle">表示朝向的角度</param>
+        /// <param name="eulerAngles">欧拉角</param>
         /// <returns>被激活的游戏物体</returns>
-        public CObject Activate(EObject eObject, Vector3 position, float angle = 0f)
+        public CObject Activate(EObject eObject, Vector3 position, Vector3 eulerAngles)
         {
-            CObject obj = cObjectPools[(int)eObject].Activate(position, angle);
+            CObject obj = cObjectPools[(int)eObject].Activate(position, eulerAngles); 
             if (obj == null)
                 obj = Instantiate(odd.GetObject(eObject).Prefab).GetComponent<CObject>();
             return obj;
+        }
+
+        /// <summary>
+        /// 激活一个2D游戏物体，若对象池中的对象已用完，直接创建一个游戏物体
+        /// </summary>
+        /// <param name="eObject">要激活的游戏物体对应的枚举</param>
+        /// <param name="position">位置</param>
+        /// <param name="eulerAngleZ">z方向欧拉角</param>
+        /// <returns>被激活的游戏物体</returns>
+        public CObject Activate(EObject eObject, Vector3 position, float eulerAngleZ = 0f)
+        {
+            return Activate(eObject,position, new Vector3(0f, 0f, eulerAngleZ));
         }
     }
 }

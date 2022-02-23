@@ -26,8 +26,6 @@ namespace ObjectPool
                 yield break;
             }
             Initializer initializer = Initializer.Instance;
-            if (num == 0)
-                num = 10;
             initializer.NumOfLoadObject++;
             GameObject temp;
             int count = 0;
@@ -51,7 +49,7 @@ namespace ObjectPool
             }
         }
 
-        internal CObject Activate(Vector3 position, float angle)
+        internal CObject Activate(Vector3 position, Vector3 eulerAngles)
         {
             if (Size == 0)
                 return null;
@@ -61,22 +59,22 @@ namespace ObjectPool
             {
                 if (!cObjects[i].Active)
                 {
-                    cObjects[i].Activate(position, angle);
+                    cObjects[i].Activate(position, eulerAngles);
                     nextIndex = i + 1;
                     return cObjects[i];
                 }
-                i += depth * 2 + 1
+                i += depth * 2 + 1;
                 depth++;
             }
             for (int i = 0; i < nextIndex; i++)
             {
                 if (!cObjects[i].Active)
                 {
-                    cObjects[i].Activate(position, angle);
+                    cObjects[i].Activate(position, eulerAngles);
                     nextIndex = i + 1;
                     return cObjects[i];
                 }
-                i += depth * 2 + 1
+                i += depth * 2 + 1;
                 depth++;
             }
             Debug.LogWarning(gameObject.name + "池中的对象几乎用完了");

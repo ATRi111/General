@@ -12,10 +12,13 @@ public class EventSystem : Service
     };
     private Dictionary<EEvent, Delegate> eventDict;
 
-    protected override void Awake()
+    protected override void BeforeRegister()
     {
         eService = EService.EventSystem;
-        base.Awake();
+    }
+
+    private void Start()
+    {
         eventDict = new Dictionary<EEvent, Delegate>();
         foreach (EEvent key in typeDict.Keys)
         {

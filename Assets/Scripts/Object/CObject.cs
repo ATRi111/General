@@ -21,14 +21,14 @@ public class CObject : MonoBehaviour
         }
     }
 
-    protected float _Angle;
-    protected float Angle
+    protected Vector3 _EulerAngles;
+    protected Vector3 EulerAngles
     {
-        get => _Angle;
+        get => _EulerAngles;
         set
         {
-            _Angle = value;
-            transform.eulerAngles = new Vector3(0, 0, 360f - value);
+            _EulerAngles = value;
+            transform.eulerAngles = _EulerAngles;
         }
     }
 
@@ -49,13 +49,13 @@ public class CObject : MonoBehaviour
         Active = false;
     }
 
-    internal void Activate(Vector3 pos, float angle)
+    internal void Activate(Vector3 pos, Vector3 eulerAngles)
     {
         b_createdInPool = true;
         Active = true;
         transform.position = pos;
-        Angle = angle;
         OnActivate();
+        EulerAngles = eulerAngles;
     }
     /// <summary>
     /// 物体被激活时的行为

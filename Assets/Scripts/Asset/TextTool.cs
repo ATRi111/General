@@ -1,4 +1,5 @@
 using System.IO;
+using System.Text;
 
 public static class TextTool
 {
@@ -8,7 +9,7 @@ public static class TextTool
     /// <param name="maxLine">最大读取行数</param>
     public static string GetParagraph(StreamReader reader, int maxLine)
     {
-        string ret = null;
+        StringBuilder ret = null;
         string line;
         try
         {
@@ -17,13 +18,13 @@ public static class TextTool
                 line = reader.ReadLine();
                 if (string.IsNullOrWhiteSpace(line))
                     break;
-                ret += line + '\n';
+                ret.Append(line).Append('\n');
             }
         }
         catch
         {
-            ret = null;
+            throw new IOException();
         }
-        return ret;
+        return ret.ToString();
     }
 }
