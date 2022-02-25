@@ -1,8 +1,8 @@
 using System.IO;
 using UnityEngine;
-using static SpriteFillMode;
+using static SpriteScaleMode;
 
-public enum SpriteFillMode
+public enum SpriteScaleMode
 {
     /// <summary>
     /// 宽高自由缩放
@@ -19,17 +19,17 @@ public enum SpriteFillMode
     /// <summary>
     /// 改变宽度，高度等比例缩放
     /// </summary>
-    ByWidthEqually,
+    ByWidth,
     /// <summary>
     /// 改变高度，宽度等比例缩放
     /// </summary>
-    ByHeightEqually,
+    ByHeight,
 }
 
 public static class SpriteTool
 {
-    private const float HEIGHT_CAMERA = 10f;    //相机宽度（以unit为单位，修改相机大小后，这里也需要手动修改）
-    private const float WIDTH_CAMERA = 17.78f;  //相机高度（以unit为单位，修改相机大小后，这里也需要手动修改）
+    private const float HEIGHT_CAMERA = 10f;    //相机高度 = 相机尺寸 * 2
+    private const float WIDTH_CAMERA = 17.78f;  //相机宽度 = 相机宽度 * 相机宽高比
 
     public static Vector2 s_mid = new Vector2(0.5f, 0.5f);
 
@@ -54,49 +54,49 @@ public static class SpriteTool
     /// <summary>
     /// 调整Sprite的宽高
     /// </summary>
-    /// <param name="width">目标宽度</param>
-    /// <param name="height">目标高度</param>
-    /// <param name="fillMode">填充模式</param
-    /// <param name="pixelPerUnit">图片在Sprite Editor中的pixelPerUnit</param>
+    /// <param name="width">目标宽度（以屏幕宽度的倍数计）</param>
+    /// <param name="height">目标高度（以屏幕高度的倍数计）</param>
+    /// <param name="scaleMode">形变模式</param>
     /// <returns>该游戏物体的lossyScale应调整为多少</returns>
-    public static Vector3 ScaleWithScreen(SpriteRenderer spriteRenderer, float width, float height, SpriteFillMode fillMode,int pixelPerUnit = 100)
+    public static Vector3 ScaleWithScreen(SpriteRenderer spriteRenderer, float width, float height, SpriteScaleMode scaleMode = Free)
     {
         if (spriteRenderer == null)
             return Vector3.one;
         GameObject obj = spriteRenderer.gameObject;
         if (obj == null)
             return Vector3.one;
-        Vector3 origin = obj.transform.localScale;
+        Vector3 original = obj.transform.localScale;
         Sprite sprite = spriteRenderer.sprite;
         if (sprite == null)
-            return origin;
+            return original;
 
+        float pixelsPerUnit = sprite.pixelsPerUnit;
         float kx, ky;
-        switch (fillMode)
+        switch (scaleMode)
         {
             case WidthOnly:
-                kx = WIDTH_CAMERA * pixelPerUnit / sprite.rect.width * width;
-                ky = origin.y;
+                kx = WIDTH_CAMERA * pixelsPerUnit/ sprite.rect.width * width;
+                ky = original.y;
                 break;
             case HeightOnly:
-                kx = origin.x;
-                ky = HEIGHT_CAMERA * pixelPerUnit / sprite.rect.height * height;
+                kx = original.x;
+                ky = HEIGHT_CAMERA * pixelsPerUnit / sprite.rect.height * height;
                 break;
             case Free:
-                kx = WIDTH_CAMERA * pixelPerUnit / sprite.rect.width * width;
-                ky = HEIGHT_CAMERA * pixelPerUnit / sprite.rect.height * height;
+                kx = WIDTH_CAMERA * pixelsPerUnit / sprite.rect.width * width;
+                ky = HEIGHT_CAMERA * pixelsPerUnit / sprite.rect.height * height;
                 break;
-            case ByWidthEqually:
-                kx = WIDTH_CAMERA * pixelPerUnit / sprite.rect.width * width;
+            case ByWidth:
+                kx = WIDTH_CAMERA * pixelsPerUnit / sprite.rect.width * width;
                 ky = kx;
                 break;
-            case ByHeightEqually:
-                ky = HEIGHT_CAMERA * pixelPerUnit / sprite.rect.height * height;
+            case ByHeight:
+                ky = HEIGHT_CAMERA * pixelsPerUnit / sprite.rect.height * height;
                 kx = ky;
                 break;
             default:
-                kx = origin.x;
-                ky = origin.y;
+                kx = original.x;
+                ky = original.y;
                 break;
         }
         return new Vector3(kx, ky, 1f);
