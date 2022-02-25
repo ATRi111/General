@@ -1,14 +1,16 @@
 using UnityEngine;
-using static UnityEngine.SceneManagement.SceneManager;
+using UnityEngine.SceneManagement;
 
-public class SceneManager : Service
+public class LoadManager : Service
 {
     private EventSystem eventSystem;
 
-    /// <summary>
-    /// 主菜单对应的INDEX
-    /// </summary>
-    public const int MENUINDEX = 2;
+    [Header("主菜单的场景号")]
+    public int index_menu;
+    [Header("最大场景号")]
+    public int index_max;
+    [Header("是否异步加载")]
+    public bool asynchronous;
 
     [SerializeField]
     private int _Index;
@@ -17,13 +19,13 @@ public class SceneManager : Service
         get => _Index;
         private set
         {
-            if (value > MENUINDEX)
-                value = MENUINDEX;
+            if (value > index_max)
+                value = index_menu;
             if (value == _Index || value <= 0)
                 return;
             _Index = value;
             eventSystem.ActivateEvent(EEvent.BeforeLoadScene, value);
-            LoadScene(value);
+            SceneManager.LoadScene(value);
         }
     }
 
@@ -34,22 +36,26 @@ public class SceneManager : Service
     }
 
     //禁止用不属于本类的方法加载场景
-    public void LoadLevel(int index)
+    public void LoadScene(int index)
     {
         Index = index;
     }
-    public void LoadNextLevel()
+    public void LoadNextScene()
     {
         Index++;
     }
 
     public void Exit()
     {
-        Index = MENUINDEX;
+        Index = index_menu;
     }
 
     public void Quit()
     {
-        Application.Quit();
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
     }
 }
