@@ -7,20 +7,20 @@ namespace ObjectPool
     {
         public int Size { get; private set; }
 
-        private CObject[] cObjects;     //对象上的脚本
+        private MyObject[] cObjects;     //对象上的脚本
 
         private int nextIndex;          //下次在对象池中从这个下标开始查找，不完全可靠
 
         internal void Initialize(GameObject sample, int num)
         {
             Size = num;
-            cObjects = new CObject[num];
+            cObjects = new MyObject[num];
             StartCoroutine(GenerateObject(sample, num));
         }
 
         private IEnumerator GenerateObject(GameObject sample, int num)
         {
-            if (sample.GetComponent<CObject>() == null)
+            if (sample.GetComponent<MyObject>() == null)
             {
                 Debug.LogWarning("对象池中的物体未挂载CObject或其子类的脚本");
                 yield break;
@@ -36,7 +36,7 @@ namespace ObjectPool
                 {
                     temp = Instantiate(sample);
                     temp.transform.parent = transform;
-                    cObjects[count] = temp.GetComponent<CObject>();
+                    cObjects[count] = temp.GetComponent<MyObject>();
                     cObjects[count].Initialize();
                     count++;
                     if (count >= num)
@@ -49,7 +49,7 @@ namespace ObjectPool
             }
         }
 
-        internal CObject Activate(Vector3 position, Vector3 eulerAngles)
+        internal MyObject Activate(Vector3 position, Vector3 eulerAngles)
         {
             if (Size == 0)
                 return null;

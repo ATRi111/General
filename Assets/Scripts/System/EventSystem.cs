@@ -9,6 +9,7 @@ public class EventSystem : Service
     private readonly Dictionary<EEvent, Type> typeDict = new Dictionary<EEvent, Type>()
     {
         {BeforeLoadScene,typeof(Action<int>) },
+        {AfterLoadScene,typeof(Action<int>) },
     };
     private Dictionary<EEvent, Delegate> eventDict;
 

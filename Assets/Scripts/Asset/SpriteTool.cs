@@ -28,6 +28,9 @@ public enum SpriteFillMode
 
 public static class SpriteTool
 {
+    private const float HEIGHT_CAMERA = 10f;    //相机宽度（以unit为单位，修改相机大小后，这里也需要手动修改）
+    private const float WIDTH_CAMERA = 17.78f;  //相机高度（以unit为单位，修改相机大小后，这里也需要手动修改）
+
     public static Vector2 s_mid = new Vector2(0.5f, 0.5f);
 
     /// <summary>
@@ -48,17 +51,15 @@ public static class SpriteTool
         return sprite;
     }
 
-    private const float CAMERA_HEIGHT = 10f;    //相机宽度（以unit计，修改相机大小后，这里也需要手动修改）
-    private const float CAMERA_WIDTH = 17.78f;  //相机高度（以unit计，修改相机大小后，这里也需要手动修改）
-
-
     /// <summary>
-    /// 调整图片的宽高
+    /// 调整Sprite的宽高
     /// </summary>
     /// <param name="width">目标宽度</param>
     /// <param name="height">目标高度</param>
-    /// <returns>该游戏物体的lossyScale应调整为什么</returns>
-    public static Vector3 ScaleWithScreen(SpriteRenderer spriteRenderer, float width, float height, SpriteFillMode fillMode)
+    /// <param name="fillMode">填充模式</param
+    /// <param name="pixelPerUnit">图片在Sprite Editor中的pixelPerUnit</param>
+    /// <returns>该游戏物体的lossyScale应调整为多少</returns>
+    public static Vector3 ScaleWithScreen(SpriteRenderer spriteRenderer, float width, float height, SpriteFillMode fillMode,int pixelPerUnit = 100)
     {
         if (spriteRenderer == null)
             return Vector3.one;
@@ -71,28 +72,26 @@ public static class SpriteTool
             return origin;
 
         float kx, ky;
-        kx = width == 0 ? 1f :
-        ky = height == 0 ? 1f : CAMERA_HEIGHT * 100 / sprite.rect.height * height;
         switch (fillMode)
         {
             case WidthOnly:
-                kx = CAMERA_WIDTH * 100 / sprite.rect.width * width;
+                kx = WIDTH_CAMERA * pixelPerUnit / sprite.rect.width * width;
                 ky = origin.y;
                 break;
             case HeightOnly:
                 kx = origin.x;
-                ky = CAMERA_HEIGHT * 100 / sprite.rect.height * height;
+                ky = HEIGHT_CAMERA * pixelPerUnit / sprite.rect.height * height;
                 break;
             case Free:
-                kx = CAMERA_WIDTH * 100 / sprite.rect.width * width;
-                ky = CAMERA_HEIGHT * 100 / sprite.rect.height * height;
+                kx = WIDTH_CAMERA * pixelPerUnit / sprite.rect.width * width;
+                ky = HEIGHT_CAMERA * pixelPerUnit / sprite.rect.height * height;
                 break;
             case ByWidthEqually:
-                kx = CAMERA_WIDTH * 100 / sprite.rect.width * width;
+                kx = WIDTH_CAMERA * pixelPerUnit / sprite.rect.width * width;
                 ky = kx;
                 break;
             case ByHeightEqually:
-                ky = CAMERA_HEIGHT * 100 / sprite.rect.height * height;
+                ky = HEIGHT_CAMERA * pixelPerUnit / sprite.rect.height * height;
                 kx = ky;
                 break;
             default:

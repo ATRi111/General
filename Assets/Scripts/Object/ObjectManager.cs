@@ -54,11 +54,11 @@ namespace ObjectPool
         /// <param name="position">位置</param>
         /// <param name="eulerAngles">欧拉角</param>
         /// <returns>被激活的游戏物体</returns>
-        public CObject Activate(EObject eObject, Vector3 position, Vector3 eulerAngles)
+        public MyObject Activate(EObject eObject, Vector3 position, Vector3 eulerAngles)
         {
-            CObject obj = cObjectPools[(int)eObject].Activate(position, eulerAngles); 
+            MyObject obj = cObjectPools[(int)eObject].Activate(position, eulerAngles); 
             if (obj == null)
-                obj = Instantiate(odd.GetObject(eObject).Prefab).GetComponent<CObject>();
+                obj = Instantiate(odd.GetObject(eObject).Prefab).GetComponent<MyObject>();
             return obj;
         }
 
@@ -69,7 +69,7 @@ namespace ObjectPool
         /// <param name="position">位置</param>
         /// <param name="eulerAngleZ">z方向欧拉角</param>
         /// <returns>被激活的游戏物体</returns>
-        public CObject Activate(EObject eObject, Vector3 position, float eulerAngleZ = 0f)
+        public MyObject Activate(EObject eObject, Vector3 position, float eulerAngleZ = 0f)
         {
             return Activate(eObject,position, new Vector3(0f, 0f, eulerAngleZ));
         }

@@ -29,6 +29,12 @@ public class ServiceLocator : Singleton<ServiceLocator>
 
     public void Register(EService eService, Service service)
     {
-        serviceDict.Add(eService, service);
+        if (serviceDict.ContainsKey(eService))
+        {
+            Debug.Log($"服务引用的脚本发生了变化，,服务名称为{eService}");
+            serviceDict[eService] = service;
+        }
+        else
+            serviceDict.Add(eService, service);
     }
 }

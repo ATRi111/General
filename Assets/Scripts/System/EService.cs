@@ -5,7 +5,7 @@ public enum EService
     /// </summary>
     Default,
     EventSystem,
-    SceneManager,
+    LoadManager,
     GameManager,
     AudioController,
     ObjectManager,
