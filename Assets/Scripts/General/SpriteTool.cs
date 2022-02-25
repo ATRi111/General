@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using System.IO;
 using UnityEngine;
 using static SpriteScaleMode;
@@ -100,5 +102,16 @@ public static class SpriteTool
                 break;
         }
         return new Vector3(kx, ky, 1f);
+    }
+
+    public static IEnumerator ChangeColor(SpriteRenderer spriteRenderer, Color targetColor, float duration, Action callBack)
+    {
+        Color originalColor = spriteRenderer.color;
+        for (float timer = 0; timer < duration; timer += Time.fixedDeltaTime)
+        {
+            spriteRenderer.color = Color.Lerp(originalColor, targetColor, timer / duration);
+            yield return new WaitForFixedUpdate();
+        }
+        callBack?.Invoke();
     }
 }

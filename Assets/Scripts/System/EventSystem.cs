@@ -31,42 +31,42 @@ public class EventSystem : Service
     {
         if (typeDict[eEvent] != methodType)
         {
-            Debug.LogWarning("响应方法的类型不符合事件所要求的类型");
+            Debug.LogWarning($"响应方法的类型不符合事件所要求的类型,事件名为{eEvent}");
             return false;
         }
         return true;
     }
 
-    public void Register(EEvent eEvent, Action method)
+    public void Register(EEvent eEvent, Action callBack)
     {
-        if (TypeCheck(eEvent, method.GetType()))
-            eventDict[eEvent] = (Action)eventDict[eEvent] + method;
+        if (TypeCheck(eEvent, callBack.GetType()))
+            eventDict[eEvent] = (Action)eventDict[eEvent] + callBack;
     }
-    public void Register<T1>(EEvent eEvent, Action<T1> method)
+    public void Register<T1>(EEvent eEvent, Action<T1> callBack)
     {
-        if (TypeCheck(eEvent, method.GetType()))
-            eventDict[eEvent] = (Action<T1>)eventDict[eEvent] + method;
+        if (TypeCheck(eEvent, callBack.GetType()))
+            eventDict[eEvent] = (Action<T1>)eventDict[eEvent] + callBack;
     }
-    public void Register<T1, T2>(EEvent eEvent, Action<T1, T2> method)
+    public void Register<T1, T2>(EEvent eEvent, Action<T1, T2> callBack)
     {
-        if (TypeCheck(eEvent, method.GetType()))
-            eventDict[eEvent] = (Action<T1, T2>)eventDict[eEvent] + method;
+        if (TypeCheck(eEvent, callBack.GetType()))
+            eventDict[eEvent] = (Action<T1, T2>)eventDict[eEvent] + callBack;
     }
 
-    public void Unregister(EEvent eEvent, Action method)
+    public void Unregister(EEvent eEvent, Action callBack)
     {
-        if (TypeCheck(eEvent, method.GetType()))
-            eventDict[eEvent] = (Action)eventDict[eEvent] - method;
+        if (TypeCheck(eEvent, callBack.GetType()))
+            eventDict[eEvent] = (Action)eventDict[eEvent] - callBack;
     }
-    public void Unregister<T1>(EEvent eEvent, Action<T1> method)
+    public void Unregister<T1>(EEvent eEvent, Action<T1> callBack)
     {
-        if (TypeCheck(eEvent, method.GetType()))
-            eventDict[eEvent] = (Action<T1>)eventDict[eEvent] - method;
+        if (TypeCheck(eEvent, callBack.GetType()))
+            eventDict[eEvent] = (Action<T1>)eventDict[eEvent] - callBack;
     }
-    public void Unregister<T1, T2>(EEvent eEvent, Action<T1, T2> method)
+    public void Unregister<T1, T2>(EEvent eEvent, Action<T1, T2> callBack)
     {
-        if (TypeCheck(eEvent, method.GetType()))
-            eventDict[eEvent] = (Action<T1, T2>)eventDict[eEvent] - method;
+        if (TypeCheck(eEvent, callBack.GetType()))
+            eventDict[eEvent] = (Action<T1, T2>)eventDict[eEvent] - callBack;
     }
 
     public void ActivateEvent(EEvent eEvent)
