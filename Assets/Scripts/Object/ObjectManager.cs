@@ -25,8 +25,8 @@ namespace ObjectPool
             if (odd == null || odd.NumOfObjects == 0)
             {
                 Initializer initializer = Initializer.Instance;
-                initializer.NumOfLoadObject++;
-                initializer.NumOfLoadObject--;
+                initializer.Count_Initializations++;
+                initializer.Count_Initializations--;
                 return;
             }
             numOfObjects = odd.NumOfObjects;

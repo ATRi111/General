@@ -25,30 +25,27 @@ public class Initializer : Singleton<Initializer>
     private List<ScriptableObject> scripts;
 
     [SerializeField]
-    private int _NumOfLoadObject;
+    private int _Count_Initializations;
     /// <summary>
-    /// 剩余的需要加载的对象池数
+    /// 剩余的初始化任务数
     /// </summary>
-    public int NumOfLoadObject
+    public int Count_Initializations
     {
-        get => _NumOfLoadObject;
+        get => _Count_Initializations;
         set
         {
-            if (value < 0 || value == _NumOfLoadObject) 
+            if (value < 0 || value == _Count_Initializations) 
                 return;
             if (value == 0)
-            {
-                Debug.Log("对象池初始化完成");
                 StartCoroutine(StartGame());
-            }
-            _NumOfLoadObject = value;
+            _Count_Initializations = value;
         }
     }
 
     protected override void Awake()
     {
         base.Awake();
-        _NumOfLoadObject = 0;
+        _Count_Initializations = 0;
         Random.InitState(System.DateTime.Now.Second);
     }
 

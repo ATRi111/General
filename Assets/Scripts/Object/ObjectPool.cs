@@ -7,14 +7,14 @@ namespace ObjectPool
     {
         public int Size { get; private set; }
 
-        private MyObject[] cObjects;     //对象上的脚本
+        private MyObject[] myObjects;   //对象上的脚本
 
         private int nextIndex;          //下次在对象池中从这个下标开始查找，不完全可靠
 
         internal void Initialize(GameObject sample, int num)
         {
             Size = num;
-            cObjects = new MyObject[num];
+            myObjects = new MyObject[num];
             StartCoroutine(GenerateObject(sample, num));
         }
 
@@ -26,7 +26,7 @@ namespace ObjectPool
                 yield break;
             }
             Initializer initializer = Initializer.Instance;
-            initializer.NumOfLoadObject++;
+            initializer.Count_Initializations++;
             GameObject temp;
             int count = 0;
             for (; ; )
@@ -36,12 +36,12 @@ namespace ObjectPool
                 {
                     temp = Instantiate(sample);
                     temp.transform.parent = transform;
-                    cObjects[count] = temp.GetComponent<MyObject>();
-                    cObjects[count].Initialize();
+                    myObjects[count] = temp.GetComponent<MyObject>();
+                    myObjects[count].Initialize();
                     count++;
                     if (count >= num)
                     {
-                        initializer.NumOfLoadObject--;
+                        initializer.Count_Initializations--;
                         yield break;
                     }
                 }
@@ -57,22 +57,22 @@ namespace ObjectPool
             int depth = 0;
             for (int i = nextIndex; i < Size;)
             {
-                if (!cObjects[i].Active)
+                if (!myObjects[i].Active)
                 {
-                    cObjects[i].Activate(position, eulerAngles);
+                    myObjects[i].Activate(position, eulerAngles);
                     nextIndex = i + 1;
-                    return cObjects[i];
+                    return myObjects[i];
                 }
                 i += depth * 2 + 1;
                 depth++;
             }
             for (int i = 0; i < nextIndex; i++)
             {
-                if (!cObjects[i].Active)
+                if (!myObjects[i].Active)
                 {
-                    cObjects[i].Activate(position, eulerAngles);
+                    myObjects[i].Activate(position, eulerAngles);
                     nextIndex = i + 1;
-                    return cObjects[i];
+                    return myObjects[i];
                 }
                 i += depth * 2 + 1;
                 depth++;
