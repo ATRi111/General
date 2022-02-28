@@ -1,5 +1,6 @@
 using UnityEngine;
 
+//继承此类的脚本应该挂载ServiceLocator所在的游戏物体或其子物体上，否则可能要调用DontDestroyOnLoad(gameObject)
 public abstract class Service : MonoBehaviour
 {
     protected EService eService;
