@@ -33,26 +33,6 @@ public static class SpriteTool
     private const float HEIGHT_CAMERA = 10f;    //相机高度 = 相机尺寸 * 2
     private const float WIDTH_CAMERA = 17.78f;  //相机宽度 = 相机宽度 * 相机宽高比
 
-    public static Vector2 s_mid = new Vector2(0.5f, 0.5f);
-
-    /// <summary>
-    /// 加载一张图片，以原像素数显示（Pixel Per Unit为100）
-    /// </summary>
-    /// <param name="path">源文件路径</param>
-    public static Sprite LoadSptite(string path)
-    {
-        FileInfo fileInfo = FileTool.GetFileInfo(path);
-        using FileStream fileStream = new FileStream(fileInfo.FullName, FileMode.Open, FileAccess.Read);
-        byte[] bytes = new byte[fileStream.Length];
-        fileStream.Read(bytes, 0, (int)fileStream.Length);
-
-        Texture2D texture = new Texture2D(0, 0);
-        texture.LoadImage(bytes);
-        Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), s_mid);
-
-        return sprite;
-    }
-
     /// <summary>
     /// 调整Sprite的宽高
     /// </summary>
@@ -102,16 +82,5 @@ public static class SpriteTool
                 break;
         }
         return new Vector3(kx, ky, 1f);
-    }
-
-    public static IEnumerator ChangeColor(SpriteRenderer spriteRenderer, Color targetColor, float duration, Action callBack)
-    {
-        Color originalColor = spriteRenderer.color;
-        for (float timer = 0; timer < duration; timer += Time.fixedDeltaTime)
-        {
-            spriteRenderer.color = Color.Lerp(originalColor, targetColor, timer / duration);
-            yield return new WaitForFixedUpdate();
-        }
-        callBack?.Invoke();
     }
 }

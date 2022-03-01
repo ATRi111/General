@@ -7,17 +7,23 @@ public static class FileTool
     public static Encoding s_defaultEncoding = Encoding.UTF8;
 
     /// <summary>
+    /// 在path前补上Application.streamingAssetsPath
+    /// </summary>
+    public static string AsDefualtPath(this string path)
+    {
+        return Path.Combine(Application.streamingAssetsPath, path);
+    }
+    /// <summary>
     /// 获取文件信息
     /// </summary>
     /// <param name="path">路径</param>
     /// <param name="defaultPath">是否使用默认路径（Application.streamingAssetsPath）</param>
-    public static FileInfo GetFileInfo(string path, bool defaultPath = true)
+    public static FileInfo GetFileInfo(string path)
     {
-        string combine = defaultPath ? Path.Combine(Application.streamingAssetsPath, path) : path;
-        FileInfo fileInfo = new FileInfo(combine);
+        FileInfo fileInfo = new FileInfo(path);
         if (!fileInfo.Exists)
         {
-            Debug.LogWarning($"{path}文件不存在");
+            Debug.LogWarning($"文件不存在，路径为{path}");
             return null;
         }
         return fileInfo;
@@ -32,7 +38,7 @@ public static class FileTool
         }
         catch
         {
-            Debug.LogWarning($"无法加载{path}文件");
+            Debug.LogWarning($"无法获取StreamReader,路径为{path}");
             return null;
         }
     }

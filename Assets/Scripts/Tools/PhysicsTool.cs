@@ -36,7 +36,7 @@ public static class PhysicsTool
         return ret;
     }
 
-    public static Rect ToRect(this Bounds bounds)
+    public static Rect ToRect(Bounds bounds)
     {
         return new Rect(bounds.min, bounds.size);
     }

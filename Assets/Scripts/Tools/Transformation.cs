@@ -35,6 +35,10 @@ public class Transformation<T>
         Origin = origin;
         Target = target;
     }
+    protected virtual void OnFixedUpdate()
+    {
+        Timer += Time.fixedDeltaTime;
+    }
 }
 
 public class ColorChange : Transformation<Color>
