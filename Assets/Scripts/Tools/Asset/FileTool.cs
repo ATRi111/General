@@ -9,9 +9,9 @@ public static class FileTool
     /// <summary>
     /// 在path前补上Application.streamingAssetsPath
     /// </summary>
-    public static string AsDefualtPath(this string path)
+    public static string AsStremingAsset(this string fileName)
     {
-        return Path.Combine(Application.streamingAssetsPath, path);
+        return Path.Combine(Application.streamingAssetsPath, fileName);
     }
     /// <summary>
     /// 获取文件信息
@@ -39,6 +39,19 @@ public static class FileTool
         catch
         {
             Debug.LogWarning($"无法获取StreamReader,路径为{path}");
+            return null;
+        }
+    }
+
+    public static StreamWriter GetStreamWriter(string path)
+    {
+        try
+        {
+            return new StreamWriter(path);
+        }
+        catch
+        {
+            Debug.LogWarning($"无法创建StreamWriter,路径为{path}");
             return null;
         }
     }

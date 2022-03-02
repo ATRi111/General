@@ -90,5 +90,38 @@ public static class MathTool
         alpha = 1 - gamma - beta;
         return new Vector3(alpha, beta, gamma);
     }
+    /// <summary>
+    /// 计算双线性插值
+    /// </summary>
+    /// <returns>四个分量先后表示左下、左上、右上、右下的权重</returns>
+    public static Vector4 Bilinear(Vector2Int LeftBottom, Vector2Int RightUp, Vector2 P)
+    {
+        if (LeftBottom.x > RightUp.x || LeftBottom.y > RightUp.y)
+            throw new System.ArgumentException();
+        float alpha, beta, gamma, delta;
+        if (LeftBottom == RightUp)
+        {
+            alpha = beta = gamma = delta = 0.25f;
+        }
+        else if (LeftBottom.x == RightUp.x)
+        {
+            alpha = delta = 0.5f * (P.y - LeftBottom.y) / (RightUp.y - LeftBottom.y);
+            beta = gamma = 0.5f - alpha;
+        }
+        else if (LeftBottom.y == RightUp.y)
+        {
+            alpha = beta = 0.5f * (P.x - LeftBottom.x) / (RightUp.x - LeftBottom.x);
+            gamma = delta = 0.5f - alpha;
+        }
+        else
+        {
+            float s = (RightUp.x - LeftBottom.x) * (RightUp.y - LeftBottom.y);
+            alpha = (P.x - LeftBottom.x) * (P.y - LeftBottom.y) / s;
+            beta = (P.x - LeftBottom.x) * (RightUp.y - P.y) / s;
+            gamma = (RightUp.x - P.x) * (RightUp.y - P.y) / s;
+            delta = 1 - alpha - beta - gamma;
+        }
+        return new Vector4(alpha, beta, gamma, delta);
+    }
 }
 
