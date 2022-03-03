@@ -94,19 +94,19 @@ public static class MathTool
     /// 计算双线性插值
     /// </summary>
     /// <returns>两个变量分别表示P偏向左侧和偏向下侧的比例</returns>
-    public static Vector2 Bilinear(Vector2Int LeftBottom, Vector2Int RightUp, Vector2 P)
+    public static Vector2 Bilinear(int left, int right, int bottom, int up, Vector2 P)
     {
-        if (LeftBottom.x > RightUp.x || LeftBottom.y > RightUp.y)
+        if (left > right || bottom > up)
             throw new System.ArgumentException();
         float x, y;
-        if (LeftBottom.x == RightUp.x)
+        if (left == right)
             x = 0.5f;
         else
-            x = (P.x - LeftBottom.x) * (P.y - LeftBottom.y);
-        if (LeftBottom.y == RightUp.y)
+            x = (P.x - left) / (right - left);
+        if (bottom == up)
             y = 0.5f;
         else
-            y = (P.x - LeftBottom.x) * (RightUp.y - P.y);
+            y = (P.y - bottom) / (up - bottom);
         return new Vector2(x, y);
     }
 }
