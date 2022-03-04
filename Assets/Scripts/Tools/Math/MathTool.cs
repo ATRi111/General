@@ -79,6 +79,7 @@ public static class MathTool
     /// <summary>
     /// 计算重心坐标
     /// </summary>
+    /// <returns>三个分量分别表示A、B、C的权重</returns>
     public static Vector3 BarycentricCoordinates(Vector3 A,Vector3 B,Vector3 C,Vector3 P)
     {
         float alpha, beta, gamma;
@@ -93,21 +94,20 @@ public static class MathTool
     /// <summary>
     /// 计算双线性插值
     /// </summary>
-    /// <returns>两个变量分别表示P偏向左侧和偏向下侧的比例</returns>
-    public static Vector2 Bilinear(int left, int right, int bottom, int up, Vector2 P)
+    /// <returns>四个分量分别表示左下、左上、右上、右下的权重</returns>
+    public static Vector4 Bilinear(float left, float right, float bottom, float up, float X, float Y)
     {
         if (left > right || bottom > up)
             throw new System.ArgumentException();
         float x, y;
-        if (left == right)
-            x = 0.5f;
-        else
-            x = (P.x - left) / (right - left);
-        if (bottom == up)
-            y = 0.5f;
-        else
-            y = (P.y - bottom) / (up - bottom);
-        return new Vector2(x, y);
+        float alpha, beta, gamma, delta;
+        x = (left == right) ? 0.5f : (X - left) / (right - left);
+        y = (bottom == up) ? 0.5f : (Y - bottom) / (up - bottom);
+        alpha = x * y;
+        beta = x * (1f - y);
+        gamma = (1f - x) * (1f - y);
+        delta = 1 - alpha - beta - gamma;
+        return new Vector4(alpha, beta, gamma, delta);
     }
 }
 
