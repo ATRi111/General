@@ -105,9 +105,39 @@ public static class MathTool
         y = (bottom == up) ? 0.5f : (Y - bottom) / (up - bottom);
         alpha = x * y;
         beta = x * (1f - y);
-        gamma = (1f - x) * (1f - y);
-        delta = 1 - alpha - beta - gamma;
+        delta = (1f - x) * y;
+        gamma = 1f - alpha - beta - delta;
         return new Vector4(alpha, beta, gamma, delta);
+    }
+
+    /// <summary>
+    /// 求点到平面的有向距离
+    /// </summary>
+    /// <param name="normal">平面的法向量（平面没有旋转时）</param>
+    public static float GetSignedDistance(Vector3 point, Transform plane, Vector3 normal)
+    {
+        normal.Normalize();
+        return Vector3.Dot(plane.InverseTransformPoint(point), normal);
+    }
+
+    /// <summary>
+    /// 求点在平面上的投影（返回平面坐标系下的位置）
+    /// </summary>
+    /// <param name="normal">平面的法向量（平面没有旋转时）</param>
+    public static Vector3 Project_Local(Vector3 point, Transform plane, Vector3 normal)
+    {
+        float sd = GetSignedDistance(point, plane, normal);
+        Vector3 local = plane.InverseTransformPoint(point);
+        return local - sd * normal;
+    }
+
+    /// <summary>
+    /// 求点在平面上的投影
+    /// </summary>
+    /// <param name="normal">平面的法向量（平面没有旋转时）</param>
+    public static Vector3 Project(Vector3 point, Transform plane, Vector3 normal)
+    {
+        return plane.TransformPoint(Project_Local(point, plane, normal));
     }
 }
 
