@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Camera
+namespace MyCamera
 {
     [System.Serializable]
     public class CameraMove

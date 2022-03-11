@@ -1,10 +1,9 @@
 using UnityEngine;
-using System;
 
 /// <summary>
 /// 描述一段随时间推进发生的变化
 /// </summary>
-public class Transformation<T> where T :struct
+public class Transformation<T> where T : struct
 {
     /// <summary>
     /// 暂停时，OnFixedUpdate无行为

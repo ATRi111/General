@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.IO;
 using UnityEngine;
 using static SpriteScaleMode;
 
@@ -57,7 +54,7 @@ public static class SpriteTool
         switch (scaleMode)
         {
             case WidthOnly:
-                kx = WIDTH_CAMERA * pixelsPerUnit/ sprite.rect.width * width;
+                kx = WIDTH_CAMERA * pixelsPerUnit / sprite.rect.width * width;
                 ky = original.y;
                 break;
             case HeightOnly:

@@ -56,7 +56,7 @@ namespace ObjectPool
         /// <returns>被激活的游戏物体</returns>
         public MyObject Activate(EObject eObject, Vector3 position, Vector3 eulerAngles)
         {
-            MyObject obj = cObjectPools[(int)eObject].Activate(position, eulerAngles); 
+            MyObject obj = cObjectPools[(int)eObject].Activate(position, eulerAngles);
             if (obj == null)
                 obj = Instantiate(odd.GetObject(eObject).Prefab).GetComponent<MyObject>();
             return obj;
@@ -71,7 +71,7 @@ namespace ObjectPool
         /// <returns>被激活的游戏物体</returns>
         public MyObject Activate(EObject eObject, Vector3 position, float eulerAngleZ = 0f)
         {
-            return Activate(eObject,position, new Vector3(0f, 0f, eulerAngleZ));
+            return Activate(eObject, position, new Vector3(0f, 0f, eulerAngleZ));
         }
     }
 }

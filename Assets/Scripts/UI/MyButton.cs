@@ -12,5 +12,5 @@ public abstract class MyButton : MonoBehaviour
         m_button.onClick.AddListener(OnClick);
     }
 
-    public abstract void OnClick(); 
+    public abstract void OnClick();
 }

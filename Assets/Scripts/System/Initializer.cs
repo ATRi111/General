@@ -34,7 +34,7 @@ public class Initializer : Singleton<Initializer>
         get => _Count_Initializations;
         set
         {
-            if (value < 0 || value == _Count_Initializations) 
+            if (value < 0 || value == _Count_Initializations)
                 return;
             if (value == 0)
                 StartCoroutine(StartGame());

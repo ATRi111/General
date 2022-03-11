@@ -14,7 +14,7 @@ public class MyObject : MonoBehaviour
         get => _Active;
         private set
         {
-            if (value == _Active) 
+            if (value == _Active)
                 return;
             _Active = value;
             gameObject.SetActive(value);
@@ -54,8 +54,8 @@ public class MyObject : MonoBehaviour
         b_createdInPool = true;
         Active = true;
         transform.position = pos;
-        OnActivate();
         EulerAngles = eulerAngles;
+        OnActivate();
     }
     /// <summary>
     /// 物体被激活时的行为

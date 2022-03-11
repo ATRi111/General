@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Camera
+namespace MyCamera
 {
     [System.Serializable]
     public class SingleCameraMove

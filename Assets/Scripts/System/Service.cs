@@ -13,7 +13,7 @@ public abstract class Service : MonoBehaviour
         ServiceLocator.Instance.Register(eService, this);
     }
     /// <summary>
-    /// Service自动将自身登记到ServiceLocator前的行为，为Service分配枚举是必要的
+    /// 在此方法中为Service分配枚举常量，并执行其他初始化行为
     /// </summary>
     protected abstract void BeforeRegister();
 }

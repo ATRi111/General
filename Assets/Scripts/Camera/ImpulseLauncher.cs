@@ -1,7 +1,7 @@
 ﻿using Cinemachine;
 using UnityEngine;
 
-namespace Camera
+namespace MyCamera
 {
     [RequireComponent(typeof(CinemachineImpulseSource))]
     public class ImpulseLauncher : CameraComponent

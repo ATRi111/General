@@ -1,7 +1,7 @@
 ﻿using Cinemachine;
 using UnityEngine;
 
-namespace Camera
+namespace MyCamera
 {
     //此脚本添加在VirtualCamera上
     public class CameraCore : MonoBehaviour

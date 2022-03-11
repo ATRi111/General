@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
+using UnityEngine;
 
 public static class MathTool
 {
@@ -9,7 +9,7 @@ public static class MathTool
     /// 角度转二维矢量
     /// </summary>
     public static Vector2 ToDirection(this float angle)
-        => new Vector2(-Mathf.Sin(angle * Mathf.Deg2Rad), Mathf.Cos(angle * Mathf.Deg2Rad)); 
+        => new Vector2(-Mathf.Sin(angle * Mathf.Deg2Rad), Mathf.Cos(angle * Mathf.Deg2Rad));
     /// <summary>
     /// 二维矢量转角度
     /// </summary>
@@ -18,7 +18,7 @@ public static class MathTool
         float angle = 360f - Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         return angle;
     }
-    public static Vector3 ResetZ(this Vector3 v,float z = 0f)
+    public static Vector3 ResetZ(this Vector3 v, float z = 0f)
         => new Vector3(v.x, v.y, z);
     public static Vector3 AddZ(this Vector2 v)
         => new Vector3(v.x, v.y);
@@ -72,12 +72,13 @@ public static class MathTool
         return plane.TransformPoint(Project_Local(point, plane, normal));
     }
 
-    public static Vector3 BezierLerp(Vector3[] points,float percent)
+    public static Vector3 BezierLerp(Vector3[] points, float percent)
     {
         int count = points.Length;
-        switch(count)
+        switch (count)
         {
-            case 0: case 1:
+            case 0:
+            case 1:
                 throw new ArgumentException();
             case 2:
                 return Vector3.Lerp(points[0], points[1], percent);
@@ -88,7 +89,7 @@ public static class MathTool
                     newPoints[i] = Vector3.Lerp(points[i], points[i + 1], percent);
                 }
                 return BezierLerp(newPoints, percent);
-        }        
+        }
     }
 }
 
