@@ -4,8 +4,9 @@ public class PlayerInput : CharacterController
 {
     private Camera main;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         main = Camera.main;
     }
 

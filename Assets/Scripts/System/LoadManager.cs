@@ -7,9 +7,7 @@ public class LoadManager : Service
 {
     private EventSystem eventSystem;
 
-    [SerializeField]
     private int index_menu;
-    [SerializeField]
     private int index_max;
     /// <summary>
     /// 是否异步加载场景
@@ -17,7 +15,7 @@ public class LoadManager : Service
     public bool asynchronous;
 
     /// <summary>
-    /// 异步加载场景的事件
+    /// 开始异步加载场景时，发送异步操作
     /// </summary>
     public event Action<AsyncOperation> AsyncLoadScene;
 
@@ -33,17 +31,16 @@ public class LoadManager : Service
             if (value == _Index || value <= 0)
                 return;
             _Index = value;
-            eventSystem.ActivateEvent(EEvent.BeforeLoadScene, value);
             StartCoroutine(LoadSceneProcess(value, asynchronous));
         }
     }
 
-    protected override void BeforeRegister()
+    protected override void Awake()
     {
-        eService = EService.LoadManager;
-        eventSystem = ServiceLocator.Instance.GetService<EventSystem>(EService.EventSystem);
+        base.Awake();
         index_max = SceneManager.sceneCountInBuildSettings;
         index_menu = SceneManager.GetSceneByName("menu").buildIndex;
+        eventSystem = ServiceLocator.Instance.GetService<EventSystem>();
     }
 
     //禁止用不属于本类的方法加载场景
@@ -68,9 +65,10 @@ public class LoadManager : Service
 #endif
     }
 
-    /// <param name="confirm">加载完成后，是否需要确认</param>
+    /// <param name="confirm">加载到90%时是否需要确认</param>    
     private IEnumerator LoadSceneProcess(int index, bool asynchronous, bool confirm = false)
     {
+        eventSystem.ActivateEvent(EEvent.BeforeLoadScene, index);
         if (asynchronous)
         {
             AsyncOperation operation = SceneManager.LoadSceneAsync(index);

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 public enum ESound
 {
-    NullSound,
+    Null,
 }
 
 //每段音频对应唯一的ESound和String，在它们间转换时使用此类中的方法
@@ -25,10 +25,10 @@ public static class ESoundTranslator
     public static ESound ToESound(this string name)
     {
         if (string.IsNullOrWhiteSpace(name))
-            return ESound.NullSound;
+            return ESound.Null;
         if (eSoundDict.ContainsKey(name))
             return eSoundDict[name];
-        return ESound.NullSound;
+        return ESound.Null;
     }
 
     public static string ToName(this ESound eSound)

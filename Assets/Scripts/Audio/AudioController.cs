@@ -8,12 +8,7 @@ public class AudioController : Service
     [SerializeField]
     private AudioSource[] audioSources;
     private readonly Dictionary<ESound, AudioSource> audioDict = new Dictionary<ESound, AudioSource>();
-    private ESound activeBgm = ESound.NullSound;
-
-    protected override void BeforeRegister()
-    {
-        eService = EService.AudioController;
-    }
+    private ESound activeBgm = Null;
 
     private void Start()
     {
@@ -44,24 +39,30 @@ public class AudioController : Service
 
     public void PlaySound(ESound eSound)
     {
-        if (eSound == NullSound) return;
+        if (eSound == Null) 
+            return;
         AudioSource audio = audioDict[eSound];
-        if (audio == null || audio.isPlaying) return;
+        if (audio == null || audio.isPlaying) 
+            return;
         audio.Play();
     }
     public void PlaySoundLoop(ESound eSound)
     {
-        if (eSound == NullSound) return;
+        if (eSound == Null) 
+            return;
         AudioSource audio = audioDict[eSound];
-        if (audio == null || audio.isPlaying) return;
+        if (audio == null || audio.isPlaying) 
+            return;
         audio.loop = true;
         audio.Play();
     }
     public void StopSound(ESound eSound)
     {
-        if (eSound == NullSound) return;
+        if (eSound == Null) 
+            return;
         AudioSource audio = audioDict[eSound];
-        if (audio == null) return;
+        if (audio == null) 
+            return;
         audio.Stop();
     }
     public void StopAllsounds()
@@ -73,7 +74,7 @@ public class AudioController : Service
     }
     public void PlayBgm(ESound eSound)
     {
-        if (eSound == activeBgm || eSound == NullSound)
+        if (eSound == activeBgm || eSound == Null)
             return;
         StopSound(activeBgm);
         PlaySound(eSound);

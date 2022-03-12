@@ -1,19 +1,15 @@
 using UnityEngine;
 
-//继承此类的脚本应该挂载ServiceLocator所在的游戏物体或其子物体上，否则可能要调用DontDestroyOnLoad(gameObject)
+
+//为了不在场景切换时被销毁，继承此类的脚本通常挂载ServiceLocator所在的游戏物体或其子物体上，
+/// <summary>
+/// 服务，从服务定位器获取
+/// </summary>
 public abstract class Service : MonoBehaviour
 {
-    protected EService eService;
-
-    protected void Awake()
+    protected virtual void Awake()
     {
-        BeforeRegister();
-        if (eService == EService.Default)
-            Debug.LogWarning("没有为服务指定枚举类型");
-        ServiceLocator.Instance.Register(eService, this);
+        ServiceLocator.Instance.Register(this);
     }
-    /// <summary>
-    /// 在此方法中为Service分配枚举常量，并执行其他初始化行为
-    /// </summary>
-    protected abstract void BeforeRegister();
+
 }

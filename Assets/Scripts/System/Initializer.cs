@@ -61,7 +61,7 @@ public class Initializer : Singleton<Initializer>
     {
         yield return new WaitForSeconds(1f);
         Debug.Log("开始游戏");
-        ServiceLocator.Instance.GetService<LoadManager>(EService.LoadManager).LoadLevel(1);
+        ServiceLocator.Instance.GetService<LoadManager>().LoadLevel(1);
         Destroy(gameObject);
     }
 }

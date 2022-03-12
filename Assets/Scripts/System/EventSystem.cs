@@ -13,11 +13,6 @@ public class EventSystem : Service
     };
     private Dictionary<EEvent, Delegate> eventDict;
 
-    protected override void BeforeRegister()
-    {
-        eService = EService.EventSystem;
-    }
-
     private void Start()
     {
         eventDict = new Dictionary<EEvent, Delegate>();

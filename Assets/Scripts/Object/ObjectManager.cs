@@ -10,11 +10,6 @@ namespace ObjectPool
         private ObjectPool[] cObjectPools;  //对象池的脚本
         private int numOfObjects;           //对象的种类数，即对象池数
 
-        protected override void BeforeRegister()
-        {
-            eService = EService.ObjectManager;
-        }
-
         private void Start()
         {
             Initialize();
@@ -63,7 +58,7 @@ namespace ObjectPool
         }
 
         /// <summary>
-        /// 激活一个2D游戏物体，若对象池中的对象已用完，直接创建一个游戏物体
+        /// (用于2D游戏)激活一个游戏物体，若对象池中的对象已用完，直接创建一个游戏物体
         /// </summary>
         /// <param name="eObject">要激活的游戏物体对应的枚举</param>
         /// <param name="position">位置</param>
