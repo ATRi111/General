@@ -5,14 +5,12 @@ using UnityEngine;
 /// </summary>
 public class MyObject : MonoBehaviour
 {
-    public bool b_createdInPool;   //是否由对象池创建,若不是则直接摧毁而不是回收
-
     [SerializeField]
     private bool _Active;
     public bool Active
     {
         get => _Active;
-        private set
+        protected set
         {
             if (value == _Active)
                 return;
@@ -22,10 +20,10 @@ public class MyObject : MonoBehaviour
     }
 
     protected Vector3 _EulerAngles;
-    protected Vector3 EulerAngles
+    public Vector3 EulerAngles
     {
         get => _EulerAngles;
-        set
+        protected set
         {
             _EulerAngles = value;
             transform.eulerAngles = _EulerAngles;
@@ -35,13 +33,10 @@ public class MyObject : MonoBehaviour
     /// <summary>
     /// 禁止重写此方法，如有需要，写在Initialize中
     /// </summary>
-    protected void Awake()
-    {
-        return;
-    }
+    protected void Awake() { }
 
     /// <summary>
-    /// 被对象池创建时的行为
+    /// 被对象池创建时的行为，默认将对象禁用
     /// </summary>
     internal virtual void Initialize()
     {
@@ -51,7 +46,6 @@ public class MyObject : MonoBehaviour
 
     internal void Activate(Vector3 pos, Vector3 eulerAngles)
     {
-        b_createdInPool = true;
         Active = true;
         transform.position = pos;
         EulerAngles = eulerAngles;
@@ -66,13 +60,8 @@ public class MyObject : MonoBehaviour
     /// </summary>
     public void Recycle()
     {
-        if (b_createdInPool)
-        {
-            Active = false;
-            OnRecycle();
-        }
-        else
-            Destroy(gameObject);
+        Active = false;
+        OnRecycle();
     }
     /// <summary>
     /// 被回收时的行为

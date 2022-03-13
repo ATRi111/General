@@ -1,61 +1,63 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace ObjectPool
 {
     public class ObjectPool : MonoBehaviour
     {
-        public int Size { get; private set; }
+        private GameObject prefab;
+        private List<MyObject> myObjects;   //对象上的脚本
 
-        private MyObject[] myObjects;   //对象上的脚本
-
-        private int nextIndex;          //下次在对象池中从这个下标开始查找，不完全可靠
+        private int nextIndex;              //下次在对象池中从这个下标开始查找，不完全可靠
 
         internal void Initialize(GameObject sample, int num)
         {
-            Size = num;
-            myObjects = new MyObject[num];
-            StartCoroutine(GenerateObject(sample, num));
+            myObjects = new List<MyObject>(num);
+            prefab = sample;
+            if (prefab.GetComponent<MyObject>() == null)
+            {
+                Debug.LogError("对象池中的物体未挂载MyObject或其子类的脚本");
+                return;
+            }
+            StartCoroutine(GenerateObject(num));
         }
 
-        private IEnumerator GenerateObject(GameObject sample, int num)
+        private IEnumerator GenerateObject(int num)
         {
-            if (sample.GetComponent<MyObject>() == null)
-            {
-                Debug.LogWarning("对象池中的物体未挂载CObject或其子类的脚本");
-                yield break;
-            }
             Initializer initializer = Initializer.Instance;
             initializer.Count_Initializations++;
-            GameObject temp;
-            int count = 0;
-            for (; ; )
+            GameObject obj;
+            MyObject temp;
+            for (; myObjects.Count < num - 10; )
             {
                 //每帧生成10个物体
                 for (int i = 0; i < 10; i++)
                 {
-                    temp = Instantiate(sample);
-                    temp.transform.parent = transform;
-                    myObjects[count] = temp.GetComponent<MyObject>();
-                    myObjects[count].Initialize();
-                    count++;
-                    if (count >= num)
-                    {
-                        initializer.Count_Initializations--;
-                        yield break;
-                    }
+                    obj = Instantiate(prefab);
+                    obj.transform.parent = transform;
+                    temp = obj.GetComponent<MyObject>();
+                    myObjects.Add(temp);
+                    temp.Initialize();
                 }
                 yield return null;
             }
+            for (; myObjects.Count < num;)
+            {
+                obj = Instantiate(prefab);
+                obj.transform.parent = transform;
+                temp = obj.GetComponent<MyObject>();
+                myObjects.Add(temp);
+                temp.Initialize();
+            }
+            initializer.Count_Initializations--;
         }
 
         internal MyObject Activate(Vector3 position, Vector3 eulerAngles)
         {
-            if (Size == 0)
-                return null;
             //等差数列探测法
             int depth = 0;
-            for (int i = nextIndex; i < Size;)
+            for (int i = nextIndex; i < myObjects.Count;)
             {
                 if (!myObjects[i].Active)
                 {
@@ -77,8 +79,17 @@ namespace ObjectPool
                 i += depth * 2 + 1;
                 depth++;
             }
+
             Debug.LogWarning(gameObject.name + "池中的对象几乎用完了");
-            return null;
+            GameObject obj;
+            MyObject newObject;
+            obj = Instantiate(prefab);
+            obj.transform.parent = transform;
+            newObject = obj.GetComponent<MyObject>();
+            myObjects.Add(newObject);
+            newObject.Initialize();
+            newObject.Activate(position, eulerAngles);
+            return newObject;
         }
     }
 }

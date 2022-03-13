@@ -6,7 +6,7 @@ namespace ObjectPool
     {
         internal EObject EObject { get; private set; }
         /// <summary>
-        /// 此物体在对象池中需要的数量，0表示不使用对象池
+        /// 此物体在对象池中预生成的数量（对象池可以动态增大）
         /// </summary>
         internal int NumInPool { get; private set; }
         internal GameObject Prefab { get; set; }

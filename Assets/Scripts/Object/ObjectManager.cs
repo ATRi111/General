@@ -32,10 +32,10 @@ namespace ObjectPool
             for (int i = 0; i < numOfObjects; i++)
             {
                 data = odd.GetObject((EObject)i);
-                //创建游戏物体
+                //创建对象池
                 GameObject obj_pool = new GameObject("Pool" + i.ToString());
                 obj_pool.transform.parent = transform;
-                //挂脚本
+                //在对象池上挂脚本
                 script_pool = obj_pool.AddComponent<ObjectPool>();
                 script_pool.Initialize(data.Prefab, data.NumInPool);
                 cObjectPools[i] = script_pool;
@@ -43,7 +43,7 @@ namespace ObjectPool
         }
 
         /// <summary>
-        /// 激活一个游戏物体，若对象池中的对象已用完，直接创建一个游戏物体
+        /// 激活一个游戏物体，若对象池中的对象几乎用完，再创建一个对象并添加到对象池中
         /// </summary>
         /// <param name="eObject">要激活的游戏物体对应的枚举</param>
         /// <param name="position">位置</param>
@@ -52,13 +52,11 @@ namespace ObjectPool
         public MyObject Activate(EObject eObject, Vector3 position, Vector3 eulerAngles)
         {
             MyObject obj = cObjectPools[(int)eObject].Activate(position, eulerAngles);
-            if (obj == null)
-                obj = Instantiate(odd.GetObject(eObject).Prefab).GetComponent<MyObject>();
             return obj;
         }
 
         /// <summary>
-        /// (用于2D游戏)激活一个游戏物体，若对象池中的对象已用完，直接创建一个游戏物体
+        /// (用于2D游戏)激活一个游戏物体，若对象池中的对象已用完，再创建一个对象并添加到对象池中
         /// </summary>
         /// <param name="eObject">要激活的游戏物体对应的枚举</param>
         /// <param name="position">位置</param>
