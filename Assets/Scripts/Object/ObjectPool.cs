@@ -8,7 +8,6 @@ namespace ObjectPool
     {
         private GameObject prefab;
         private List<MyObject> myObjects;   //对象上的脚本
-
         private int nextIndex;              //下次在对象池中从这个下标开始查找，不完全可靠
 
         internal void Initialize(GameObject sample, int num)
@@ -38,7 +37,7 @@ namespace ObjectPool
                     obj.transform.parent = transform;
                     temp = obj.GetComponent<MyObject>();
                     myObjects.Add(temp);
-                    temp.Initialize();
+                    temp.CreateByPool();
                 }
                 yield return null;
             }
@@ -48,7 +47,7 @@ namespace ObjectPool
                 obj.transform.parent = transform;
                 temp = obj.GetComponent<MyObject>();
                 myObjects.Add(temp);
-                temp.Initialize();
+                temp.CreateByPool();
             }
             initializer.Count_Initializations--;
         }
@@ -87,8 +86,9 @@ namespace ObjectPool
             obj.transform.parent = transform;
             newObject = obj.GetComponent<MyObject>();
             myObjects.Add(newObject);
-            newObject.Initialize();
+            newObject.CreateByPool();
             newObject.Activate(position, eulerAngles);
+            nextIndex = 0;
             return newObject;
         }
     }

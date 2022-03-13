@@ -9,7 +9,7 @@ public class AssetLoadSample : MonoBehaviour
     private void Awake()
     {
         assetLoader = ServiceLocator.Instance.GetService<AssetLoader_Resoureces>();
-        assetLoader.LoadAssetAsync<GameObject>("AudioSource/Audio", AfterLoadAudio);
+        assetLoader.LoadAsset<GameObject>("AudioSource/Audio", AfterLoadAudio);
     }
 
     private void AfterLoadAudio(GameObject obj_audio)

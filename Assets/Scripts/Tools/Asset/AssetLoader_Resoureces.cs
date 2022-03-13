@@ -4,33 +4,45 @@ using UnityEngine;
 
 public class AssetLoader_Resoureces : AssetLoader
 {
-    public override T LoadAsset<T>(string path)
+    private class Coupling<T> where T : UnityEngine.Object
     {
-        return Resources.Load<T>(path);
+        private readonly ResourceRequest request;
+        private readonly Action<T> callBack;
+
+        public Coupling(ResourceRequest _request, Action<T> _callBack)
+        {
+            request = _request;
+            callBack = _callBack;
+        }
+
+        public void AfterLoadAsset(AsyncOperation asyncOperation)
+        {
+            try
+            {
+                callBack?.Invoke(request.asset as T);
+            }
+            catch
+            {
+                Debug.LogWarning($"无法异步加载资源");
+            }
+        }
     }
 
-    public override void LoadAssetAsync<T>(string path, Action<T> callBack)
+    protected override void Load<T>(string path, Action<T> callBack)
+    {
+        T asset = Resources.Load<T>(path);
+        callBack?.Invoke(asset);
+    }
+
+    protected override void LoadAsync<T>(string path, Action<T> callBack)
     {
         ResourceRequest request = Resources.LoadAsync<T>(path);
-        StartCoroutine(WaitForLoad(request, callBack,path));
+        Coupling<T> intermediary = new Coupling<T>(request, callBack);
+        request.completed += intermediary.AfterLoadAsset;
     }
 
     public override void UnLoadAsset<T>(T t)
     {
         Resources.UnloadAsset(t);
-    }
-
-    private IEnumerator WaitForLoad<T>(ResourceRequest request, Action<T> callBack,string path) where T : UnityEngine.Object
-    {
-        yield return request;
-        try
-        {
-            T asset = request.asset as T;
-            callBack?.Invoke(asset);
-        }
-        catch
-        {
-            Debug.LogWarning($"无法加载资源，路径为{path}");
-        }
     }
 }

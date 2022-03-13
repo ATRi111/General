@@ -37,13 +37,13 @@ namespace ObjectPool
                 obj_pool.transform.parent = transform;
                 //在对象池上挂脚本
                 script_pool = obj_pool.AddComponent<ObjectPool>();
-                script_pool.Initialize(data.Prefab, data.NumInPool);
+                script_pool.Initialize(data.Prefab, data.Num);
                 cObjectPools[i] = script_pool;
             }
         }
 
         /// <summary>
-        /// 激活一个游戏物体，若对象池中的对象几乎用完，再创建一个对象并添加到对象池中
+        /// 激活一个游戏物体，若对象池中的对象几乎用完，创建一个对象并添加到对象池中，再激活
         /// </summary>
         /// <param name="eObject">要激活的游戏物体对应的枚举</param>
         /// <param name="position">位置</param>
