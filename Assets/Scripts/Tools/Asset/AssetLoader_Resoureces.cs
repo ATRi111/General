@@ -15,7 +15,7 @@ public class AssetLoader_Resoureces : AssetLoader
             callBack = _callBack;
         }
 
-        public void AfterLoadAsset(AsyncOperation asyncOperation)
+        public void OnCompleteOperation(AsyncOperation asyncOperation)
         {
             try
             {
@@ -38,7 +38,7 @@ public class AssetLoader_Resoureces : AssetLoader
     {
         ResourceRequest request = Resources.LoadAsync<T>(path);
         Coupling<T> intermediary = new Coupling<T>(request, callBack);
-        request.completed += intermediary.AfterLoadAsset;
+        request.completed += intermediary.OnCompleteOperation;
     }
 
     public override void UnLoadAsset<T>(T t)

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5408748677500139053}
   - component: {fileID: 5408748677500139040}
   m_Layer: 0
-  m_Name: Audio
+  m_Name: "\u3068\u304A\u308A\u3083\u3093\u305B"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
