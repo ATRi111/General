@@ -6,13 +6,15 @@ public static class FileTool
 {
     public static Encoding s_defaultEncoding = Encoding.UTF8;
 
-    /// <summary>
-    /// 在path前补上Application.streamingAssetsPath
-    /// </summary>
-    public static string AsStremingAsset(this string fileName)
+    public static string StreamingAssetsPath(string fileName)
     {
         return Path.Combine(Application.streamingAssetsPath, fileName);
     }
+    public static string PersistentDataPath(string fileName)
+    {
+        return Path.Combine(Application.persistentDataPath, fileName);
+    }
+
     /// <summary>
     /// 获取文件信息
     /// </summary>
