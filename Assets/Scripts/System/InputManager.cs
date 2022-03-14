@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
 public class InputManager : Service
@@ -9,8 +8,8 @@ public class InputManager : Service
     /// </summary>
     /// <param name="combo">按键序列</param>
     /// <param name="interval">按下两个按键间的最长时间间隔</param>
-    public void StartComboCheck(KeyCode[] codes, float interval,Action<bool> callBack)
+    public void StartComboCheck(KeyCode[] codes, float interval, Action<bool> callBack)
     {
-        
+
     }
 }

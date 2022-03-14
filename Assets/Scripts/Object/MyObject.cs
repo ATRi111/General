@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace ObjectPool
@@ -15,7 +14,7 @@ namespace ObjectPool
         /// <param name="byPool">是否由对象池生成</param>
         /// <param name="pool">所属的对象池</param>
         /// <returns>生成的游戏物体的MyObject脚本</returns>
-        public static MyObject Create(GameObject prefab,bool byPool = false,ObjectPool pool = null)
+        public static MyObject Create(GameObject prefab, bool byPool = false, ObjectPool pool = null)
         {
             GameObject obj = Instantiate(prefab);
             MyObject myObject = obj.GetComponent<MyObject>();

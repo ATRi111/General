@@ -8,7 +8,7 @@ namespace ObjectPool
         [SerializeField]
         private ObjectManagerData initData;
 
-        private Dictionary<EObject,ObjectPool> objectPools; //对象池的脚本
+        private Dictionary<EObject, ObjectPool> objectPools; //对象池的脚本
         private int numOfPool;                              //对象池数
 
         private void Start()
@@ -46,7 +46,7 @@ namespace ObjectPool
         /// <returns>被激活的游戏物体</returns>
         public MyObject Activate(EObject eObject, Vector3 position, Vector3 eulerAngles)
         {
-            if(objectPools.ContainsKey(eObject))
+            if (objectPools.ContainsKey(eObject))
             {
                 MyObject obj = objectPools[eObject].Activate(position, eulerAngles);
                 return obj;

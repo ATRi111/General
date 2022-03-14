@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
 //路径不能包含扩展名

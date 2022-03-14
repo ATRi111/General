@@ -4,7 +4,7 @@ namespace ObjectPool
 {
     public enum EObject
     {
-        
+
     }
 
     /// <summary>

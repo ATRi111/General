@@ -26,7 +26,7 @@ namespace ObjectPool
             Initializer initializer = Initializer.Instance;
             initializer.Count_Initializations++;
             MyObject temp;
-            for (; myObjects.Count < num - 10; )
+            for (; myObjects.Count < num - 10;)
             {
                 //每帧生成10个物体
                 for (int i = 0; i < 10; i++)
@@ -57,7 +57,7 @@ namespace ObjectPool
             else
             {
                 Debug.LogWarning(gameObject.name + "中的对象用完了");
-                ret = MyObject.Create(prefab, true, this); 
+                ret = MyObject.Create(prefab, true, this);
                 ret.transform.parent = transform;
                 ret.Activate(position, eulerAngles);
             }

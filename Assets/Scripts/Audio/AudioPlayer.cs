@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class AudioController : Service
+public class AudioPlayer : Service
 {
     protected AssetLoader assetLoader;
 

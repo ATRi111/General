@@ -1,19 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using ObjectPool;
+using UnityEngine;
 
 public class Sample : MonoBehaviour
 {
-    private AudioController audioController;
+    private AudioPlayer audioPlayer;
     private ObjectManager objectManager;
     private MyAudioSource audioSource;
 
     private void Awake()
     {
-        audioController = ServiceLocator.Instance.GetService<AudioController>();
+        audioPlayer = ServiceLocator.Instance.GetService<AudioPlayer>();
         objectManager = ServiceLocator.Instance.GetService<ObjectManager>();
-        audioSource = audioController.CreateAudio("AudioSource/とおりゃんせ",transform,false);
+        audioSource = audioPlayer.CreateAudio("AudioSource/とおりゃんせ", transform, false);
         audioSource.Play(audioSource.TotalTime - 10f);
     }
 }
