@@ -18,14 +18,10 @@ public class AssetLoader_Resoureces : AssetLoader
 
         public void OnCompleteOperation(AsyncOperation asyncOperation)
         {
-            try
-            {
-                callBack?.Invoke(request.asset as T);
-            }
-            catch
-            {
-                Debug.LogWarning($"无法异步加载资源");
-            }
+            T asset = request.asset as T;
+            if (asset == null)
+                Debug.LogWarning("加载资源失败");
+            callBack?.Invoke(asset);
         }
     }
 

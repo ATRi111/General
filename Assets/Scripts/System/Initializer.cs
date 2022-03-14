@@ -11,8 +11,7 @@ interface IInitialize
 //①Initializer和SerciviceLocator的Awake
 //②EventSystem的Awake
 //③所有Service的Awake
-//④所有脚本的Start
-//⑤所有scripts的Initialize
+//④所有脚本的Start和所有scripts的Initialize
 
 /// <summary>
 /// 游戏初始化器，游戏启动后自毁
@@ -59,8 +58,8 @@ public class Initializer : Singleton<Initializer>
 
     private IEnumerator StartGame()
     {
-        yield return new WaitForSeconds(1f);
-        Debug.Log("开始游戏");
+        yield return null;
+        Debug.Log("初始化完成");
         ServiceLocator.Instance.GetService<LoadManager>().LoadLevel(1);
         Destroy(gameObject);
     }

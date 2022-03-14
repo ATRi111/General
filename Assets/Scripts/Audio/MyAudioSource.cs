@@ -2,15 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MyAudioSource : ObjectPool.MyObject
+public class MyAudioSource : MonoBehaviour
 {
     protected AudioSource audioSource;
-    protected float RemainingTime => audioSource.clip.length - audioSource.time;
+    public float TotalTime => audioSource.clip.length;
+    public float Time => audioSource.time;
+    public float RemainingTime => TotalTime - Time;
 
-    public override void OnCreate()
+    private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
-        audioSource.playOnAwake = true;
     }
 
     public void Play(float time = 0f)
@@ -39,7 +40,7 @@ public class MyAudioSource : ObjectPool.MyObject
 
     private IEnumerator LifeCycle()
     {
-        yield return RemainingTime;
+        yield return new WaitForSeconds(RemainingTime);
         Destroy(gameObject);
     }
 }

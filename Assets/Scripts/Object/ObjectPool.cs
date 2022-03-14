@@ -31,7 +31,7 @@ namespace ObjectPool
                 //每帧生成10个物体
                 for (int i = 0; i < 10; i++)
                 {
-                    temp = MyObject.Create(prefab, true);
+                    temp = MyObject.Create(prefab, true, this);
                     temp.transform.parent = transform;
                     myObjects.Enqueue(temp);
                 }
@@ -39,7 +39,7 @@ namespace ObjectPool
             }
             for (; myObjects.Count < num;)
             {
-                temp = MyObject.Create(prefab, true);
+                temp = MyObject.Create(prefab, true, this);
                 temp.transform.parent = transform;
                 myObjects.Enqueue(temp);
             }
@@ -57,7 +57,7 @@ namespace ObjectPool
             else
             {
                 Debug.LogWarning(gameObject.name + "池中的对象几乎用完了");
-                ret = MyObject.Create(prefab, true);
+                ret = MyObject.Create(prefab, true, this); 
                 ret.transform.parent = transform;
                 ret.Activate(position, eulerAngles);
             }
