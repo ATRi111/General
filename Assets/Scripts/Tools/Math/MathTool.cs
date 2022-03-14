@@ -72,6 +72,9 @@ public static class MathTool
         return plane.TransformPoint(Project_Local(point, plane, normal));
     }
 
+    /// <summary>
+    /// 求贝塞尔曲线上的一点
+    /// </summary>
     public static Vector3 BezierLerp(Vector3[] points, float percent)
     {
         int count = points.Length;

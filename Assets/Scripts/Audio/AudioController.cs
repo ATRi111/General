@@ -44,28 +44,4 @@ public class AudioController : Service
         assetLoader.LoadAsset<GameObject>(path, AfterLoad, false);  //如果不同步加载，就无法返回MyAudioSource
         return myAudioSource;
     }
-
-    /// <summary>
-    /// 查找MyAudioSource脚本
-    /// </summary>
-    /// <param name="transform">从这个transform及子物体中查找</param>
-    /// <param name="name">MyAudioSource脚本挂载的游戏物体的名字，若为空，返回第一个</param>
-    public MyAudioSource GetAudio(Transform transform,string name = null)
-    {
-        if(name == null)
-            return transform.GetComponentInChildren<MyAudioSource>();
-        return transform.Find(name).GetComponentInChildren<MyAudioSource>();
-    }
-
-    /// <summary>
-    /// 强制摧毁transform下所有挂载MyAudioSource的子物体
-    /// </summary>
-    public void DestroyAudio(Transform transform)
-    {
-        MyAudioSource[] myAudioSources = transform.GetComponentsInChildren<MyAudioSource>();
-        foreach (MyAudioSource source in myAudioSources)
-        {
-            Destroy(source.gameObject);
-        }
-    }
 }

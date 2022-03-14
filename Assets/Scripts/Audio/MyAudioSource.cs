@@ -7,8 +7,7 @@ public class MyAudioSource : MonoBehaviour
 {
     protected AudioSource audioSource;
     public float TotalTime => audioSource.clip.length;
-    public float Time => audioSource.time;
-    public float RemainingTime => TotalTime - Time;
+    public float CurrentTime => audioSource.time;
 
     private void Awake()
     {
@@ -41,7 +40,7 @@ public class MyAudioSource : MonoBehaviour
 
     private IEnumerator LifeCycle()
     {
-        yield return new WaitForSeconds(RemainingTime);
+        yield return new WaitForSeconds(TotalTime - CurrentTime);
         Destroy(gameObject);
     }
 }
