@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-//路径不能包含扩展名
+[DefaultExecutionOrder(-200)]
 public abstract class AssetLoader : Service
 {
     private class BufferUpdate<T> where T : UnityEngine.Object

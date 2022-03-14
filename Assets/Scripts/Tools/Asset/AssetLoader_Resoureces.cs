@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+//路径不能包含扩展名
 public class AssetLoader_Resoureces : AssetLoader
 {
     private class Coupling<T> where T : UnityEngine.Object

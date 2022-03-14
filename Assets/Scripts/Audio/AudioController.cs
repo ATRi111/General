@@ -1,83 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static ESound;
 
 public class AudioController : Service
 {
-    [SerializeField]
-    private AudioSource[] audioSources;
-    private readonly Dictionary<ESound, AudioSource> audioDict = new Dictionary<ESound, AudioSource>();
-    private ESound activeBgm = Null;
-
-    private void Start()
+    protected override void Awake()
     {
-        audioSources = GetComponentsInChildren<AudioSource>();
-        BuildDict();
+        base.Awake();
+
     }
 
-    private void BuildDict()
+    /// <summary>
+    /// 创建音源（游戏物体）
+    /// </summary>
+    /// <param name="path">音源路径</param>
+    /// <param name="transform">将音源设为transform的子物体，可以为null</param>
+    /// <returns></returns>
+    public AudioSource CreateAudio(string path,Transform transform)
     {
-        AudioSource FindSound(ESound eSound)
-        {
-            string name = eSound.ToName();
-            foreach (AudioSource item in audioSources)
-            {
-                if (item.gameObject.name == name)
-                    return item;
-            }
-            if (name != null)
-                Debug.LogWarning($"找不到名为{name}的Audiosource");
-            return null;
-        }
-
-        foreach (ESound eSound in Enum.GetValues(typeof(ESound)))
-        {
-            audioDict.Add(eSound, FindSound(eSound));
-        }
+        
+        return null;
     }
 
-    public void PlaySound(ESound eSound)
+    public void DestroyAudio()
     {
-        if (eSound == Null) 
-            return;
-        AudioSource audio = audioDict[eSound];
-        if (audio == null || audio.isPlaying) 
-            return;
-        audio.Play();
+
     }
-    public void PlaySoundLoop(ESound eSound)
+
+    public void GetAudio()
     {
-        if (eSound == Null) 
-            return;
-        AudioSource audio = audioDict[eSound];
-        if (audio == null || audio.isPlaying) 
-            return;
-        audio.loop = true;
-        audio.Play();
-    }
-    public void StopSound(ESound eSound)
-    {
-        if (eSound == Null) 
-            return;
-        AudioSource audio = audioDict[eSound];
-        if (audio == null) 
-            return;
-        audio.Stop();
-    }
-    public void StopAllsounds()
-    {
-        foreach (AudioSource item in audioSources)
-        {
-            item.Stop();
-        }
-    }
-    public void PlayBgm(ESound eSound)
-    {
-        if (eSound == activeBgm || eSound == Null)
-            return;
-        StopSound(activeBgm);
-        PlaySound(eSound);
-        activeBgm = eSound;
+
     }
 }

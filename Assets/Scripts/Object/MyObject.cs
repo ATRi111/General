@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace ObjectPool
@@ -7,7 +8,37 @@ namespace ObjectPool
     /// </summary>
     public class MyObject : MonoBehaviour
     {
-        protected internal bool b_createdByPool;
+        /// <summary>
+        /// 用此方法生成MyObject挂载的游戏物体，而不是Object.Instantiate
+        /// </summary>
+        /// <param name="prefab">要克隆的游戏物体</param>
+        /// <param name="byPool">是否由对象池生成</param>
+        /// <param name="pool">所属的对象池</param>
+        /// <returns>生成的游戏物体的MyObject脚本</returns>
+        public static MyObject Create(GameObject prefab,bool byPool = false,ObjectPool pool = null)
+        {
+            GameObject obj = Instantiate(prefab);
+            MyObject myObject = obj.GetComponent<MyObject>();
+            myObject.b_createdByPool = byPool;
+            if (byPool)
+            {
+                if (pool == null)
+                {
+                    Debug.LogWarning("未分配对象池");
+                }
+                else
+                {
+                    myObject._Active = true;
+                    myObject.Active = false;
+                    myObject.objectPoolAttached = pool;
+                }
+            }
+            myObject.OnCreate();
+            return myObject;
+        }
+
+        protected bool b_createdByPool;
+        protected ObjectPool objectPoolAttached;
 
         [SerializeField]
         private bool _Active;
@@ -23,16 +54,6 @@ namespace ObjectPool
             }
         }
 
-        /// <summary>
-        /// 由对象池创建时才能调用此方法，直接创建时应该调用OnCreate
-        /// </summary>
-        protected internal void CreateByPool()
-        {
-            b_createdByPool = true;
-            _Active = true;
-            Active = false;
-            OnCreate();
-        }
         /// <summary>
         /// 激活物体
         /// </summary>
@@ -50,23 +71,24 @@ namespace ObjectPool
         {
             if (b_createdByPool)
             {
-                Active = false;
                 OnRecycle();
+                Active = false;
+                objectPoolAttached.Recycle(this);
             }
             else
                 Destroy(gameObject);
         }
 
         /// <summary>
-        /// 物体首次被创建时的行为
+        /// 被创建时的行为
         /// </summary>
         public virtual void OnCreate() { }
         /// <summary>
-        /// 物体被激活时的行为
+        /// 被激活时的行为
         /// </summary>
         protected virtual void OnActivate() { }
         /// <summary>
-        /// 被回收或销毁时的行为
+        /// 被回收时的行为
         /// </summary>
         protected virtual void OnRecycle() { }
 
