@@ -10,7 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 75f64b6510f49974c9c101f9b0e98a61, type: 3}
-  m_Name: Object Asset Manager
+  m_Name: omd
   m_EditorClassIdentifier: 
-  prefabs: []
-  nums: 
+  datas: []

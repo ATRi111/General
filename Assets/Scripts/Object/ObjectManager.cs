@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace ObjectPool
@@ -5,10 +6,10 @@ namespace ObjectPool
     public class ObjectManager : Service
     {
         [SerializeField]
-        private ObjectDataDict odd;         //从中获取所需的数据
+        private ObjectManagerData initData;
 
-        private ObjectPool[] cObjectPools;  //对象池的脚本
-        private int numOfObjects;           //对象的种类数，即对象池数
+        private Dictionary<EObject,ObjectPool> objectPools; //对象池的脚本
+        private int numOfPool;                              //对象池数
 
         private void Start()
         {
@@ -17,33 +18,27 @@ namespace ObjectPool
 
         internal void Initialize()
         {
-            if (odd == null || odd.NumOfObjects == 0)
-            {
-                Initializer initializer = Initializer.Instance;
-                initializer.Count_Initializations++;
-                initializer.Count_Initializations--;
-                return;
-            }
-            numOfObjects = odd.NumOfObjects;
+            ObjectPoolData[] datas = initData.datas;
+            numOfPool = datas.Length;
 
-            cObjectPools = new ObjectPool[numOfObjects];
-            ObjectPool script_pool;
-            ObjectData data;
-            for (int i = 0; i < numOfObjects; i++)
+            objectPools = new Dictionary<EObject, ObjectPool>();
+            GameObject obj_pool;
+            ObjectPool pool;
+            ObjectPoolData data;
+            for (int i = 0; i < numOfPool; i++)
             {
-                data = odd.GetObject((EObject)i);
-                //创建对象池
-                GameObject obj_pool = new GameObject("Pool" + i.ToString());
+                data = datas[i];
+                obj_pool = new GameObject($"Pool:{data.eObject}");
                 obj_pool.transform.parent = transform;
-                //在对象池上挂脚本
-                script_pool = obj_pool.AddComponent<ObjectPool>();
-                script_pool.Initialize(data.Prefab, data.Num);
-                cObjectPools[i] = script_pool;
+                pool = obj_pool.AddComponent<ObjectPool>();
+                pool.Initialize(data.prefab, data.size);
+                objectPools.Add(data.eObject, pool);
             }
+            initData = null;
         }
 
         /// <summary>
-        /// 激活一个游戏物体，若对象池中的对象几乎用完，创建一个对象并添加到对象池中，再激活
+        /// 激活一个游戏物体，若对象池中的对象用完，创建一个对象并添加到对象池中，再激活
         /// </summary>
         /// <param name="eObject">要激活的游戏物体对应的枚举</param>
         /// <param name="position">位置</param>
@@ -51,12 +46,17 @@ namespace ObjectPool
         /// <returns>被激活的游戏物体</returns>
         public MyObject Activate(EObject eObject, Vector3 position, Vector3 eulerAngles)
         {
-            MyObject obj = cObjectPools[(int)eObject].Activate(position, eulerAngles);
-            return obj;
+            if(objectPools.ContainsKey(eObject))
+            {
+                MyObject obj = objectPools[eObject].Activate(position, eulerAngles);
+                return obj;
+            }
+            Debug.LogWarning($"{eObject}没有对应的对象池");
+            return null;
         }
 
         /// <summary>
-        /// (用于2D游戏)激活一个游戏物体，若对象池中的对象已用完，再创建一个对象并添加到对象池中
+        /// (用于2D游戏)激活一个游戏物体，若对象池中的对象用完，再创建一个对象并添加到对象池中
         /// </summary>
         /// <param name="eObject">要激活的游戏物体对应的枚举</param>
         /// <param name="position">位置</param>

@@ -93,10 +93,11 @@ namespace ObjectPool
         protected virtual void OnRecycle() { }
 
 
+
         //禁止重写以下方法
-        protected void Awake() { }
-        protected void Start() { }
-        protected void OnEnable() { }
-        private void OnDisable() { }
+        protected void Awake() { return; }
+        protected void Start() { return; }
+        protected void OnEnable() { return; }
+        private void OnDisable() { return; }
     }
 }

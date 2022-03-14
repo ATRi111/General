@@ -249,8 +249,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14524d6da35ec3c4f87f0abc4f19d9e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scripts:
-  - {fileID: 11400000, guid: 1428eafa11a5e2a49bb5a0473ddc3dd7, type: 2}
+  scripts: []
   _Count_Initializations: 0
 --- !u!1 &996342586
 GameObject:
@@ -295,7 +294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a149911696ed42a46866c537056d42e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  odd: {fileID: 11400000, guid: 1428eafa11a5e2a49bb5a0473ddc3dd7, type: 2}
+  initData: {fileID: 11400000, guid: 563b80ca440506041bc8a7fae0d3fc20, type: 2}
 --- !u!1 &1383342394
 GameObject:
   m_ObjectHideFlags: 0

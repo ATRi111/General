@@ -9,16 +9,16 @@ namespace ObjectPool
         private GameObject prefab;
         private Queue<MyObject> myObjects;  //对象上的脚本
 
-        internal void Initialize(GameObject sample, int num)
+        internal void Initialize(GameObject _prefab, int _size)
         {
-            myObjects = new Queue<MyObject>(num);
-            prefab = sample;
+            myObjects = new Queue<MyObject>(_size);
+            prefab = _prefab;
             if (prefab.GetComponent<MyObject>() == null)
             {
                 Debug.LogError("对象池中的物体未挂载MyObject或其子类的脚本");
                 return;
             }
-            StartCoroutine(GenerateObject(num));
+            StartCoroutine(GenerateObject(_size));
         }
 
         private IEnumerator GenerateObject(int num)
@@ -56,7 +56,7 @@ namespace ObjectPool
             }
             else
             {
-                Debug.LogWarning(gameObject.name + "池中的对象几乎用完了");
+                Debug.LogWarning(gameObject.name + "中的对象用完了");
                 ret = MyObject.Create(prefab, true, this); 
                 ret.transform.parent = transform;
                 ret.Activate(position, eulerAngles);

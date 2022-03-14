@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using ObjectPool;
 
-public class AudioSample : MonoBehaviour
+public class Sample : MonoBehaviour
 {
     private AudioController audioController;
     private ObjectManager objectManager;
