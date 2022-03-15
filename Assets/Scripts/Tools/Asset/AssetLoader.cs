@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[DefaultExecutionOrder(-200)]
 public abstract class AssetLoader : Service
 {
     private class BufferUpdate<T> where T : UnityEngine.Object

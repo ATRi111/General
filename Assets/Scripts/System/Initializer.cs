@@ -17,8 +17,10 @@ interface IInitialize
 /// 游戏初始化器，游戏启动后自毁
 /// </summary>
 [DefaultExecutionOrder(-200)]
-public class Initializer : Singleton<Initializer>
+public class Initializer : MonoBehaviour
 {
+    public static Initializer Instance { private set; get; }
+
     //需要在游戏刚开始时初始化的非Monobehavior脚本
     [SerializeField]
     private List<ScriptableObject> scripts;
@@ -36,16 +38,17 @@ public class Initializer : Singleton<Initializer>
             if (value < 0 || value == _Count_Initializations)
                 return;
             if (value == 0)
-                StartCoroutine(StartGame());
+                StartGame();
             _Count_Initializations = value;
         }
     }
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
+        Instance = this;
         _Count_Initializations = 0;
         Random.InitState(System.DateTime.Now.Second);
+        StartCoroutine(AutoStart());
     }
 
     private void Start()
@@ -56,12 +59,18 @@ public class Initializer : Singleton<Initializer>
         }
     }
 
-    private IEnumerator StartGame()
+    private void StartGame()
     {
-        yield return null;
         Debug.Log("初始化完成");
-        ServiceLocator.Instance.GetService<SceneManager>().LoadLevel(1);
+        ServiceLocator.GetService<SceneManager>().LoadLevel(1);
         Destroy(gameObject);
+    }
+
+    private IEnumerator AutoStart()
+    {
+        yield return new WaitForSeconds(1f);
+        if (Count_Initializations == 0)
+            StartGame();
     }
 }
 

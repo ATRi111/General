@@ -2,9 +2,9 @@ public class GameManager : Service
 {
     private EventSystem eventSystem;
 
-    protected override void Awake()
+    private void Start()
     {
-        base.Awake();
-        eventSystem = ServiceLocator.Instance.GetService<EventSystem>();
+        eventSystem = ServiceLocator.GetService<EventSystem>();
+        DontDestroyOnLoad(gameObject);
     }
 }

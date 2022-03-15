@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using static EEvent;
 
-[DefaultExecutionOrder(-100)]
 public class EventSystem : Service
 {
     private readonly Dictionary<EEvent, Type> typeDict = new Dictionary<EEvent, Type>()

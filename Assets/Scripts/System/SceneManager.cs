@@ -39,7 +39,11 @@ public class SceneManager : Service
         base.Awake();
         index_max = UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings;
         index_menu = UnityEngine.SceneManagement.SceneManager.GetSceneByName("menu").buildIndex;
-        eventSystem = ServiceLocator.Instance.GetService<EventSystem>();
+    }
+
+    private void Start()
+    {
+        eventSystem = ServiceLocator.GetService<EventSystem>();
     }
 
     //禁止用不属于本类的方法加载场景

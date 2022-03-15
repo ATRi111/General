@@ -9,6 +9,6 @@ public class CharacterController : MonoBehaviour
     protected virtual void Awake()
     {
         character = GetComponent<Character>();
-        eventSystem = ServiceLocator.Instance.GetService<EventSystem>();
+        eventSystem = ServiceLocator.GetService<EventSystem>();
     }
 }

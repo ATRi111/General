@@ -4,10 +4,9 @@ public class AudioPlayer : Service
 {
     protected AssetLoader assetLoader;
 
-    protected override void Awake()
+    private void Start()
     {
-        base.Awake();
-        assetLoader = ServiceLocator.Instance.GetService<AssetLoader_Resoureces>();
+        assetLoader = ServiceLocator.GetService<AssetLoader_Resoureces>();
     }
 
     /// <summary>

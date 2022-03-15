@@ -26,7 +26,7 @@ public static class FileTool
         if (!fileInfo.Exists)
         {
             if (create)
-                fileInfo.Create();
+                fileInfo.Create().Dispose();
             else
                 Debug.LogWarning($"{path}文件不存在");
         }

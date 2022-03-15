@@ -9,9 +9,20 @@ public class Sample : MonoBehaviour
 
     private void Awake()
     {
-        audioPlayer = ServiceLocator.Instance.GetService<AudioPlayer>();
-        objectManager = ServiceLocator.Instance.GetService<ObjectManager>();
-        audioSource = audioPlayer.CreateAudio("AudioSource/とおりゃんせ", transform, false);
-        audioSource.Play(audioSource.TotalTime - 10f);
+        Data data = new Data();
+        JsonTool.SaveAsJson(data,FileTool.StreamingAssetsPath("new.json"));
+    }
+}
+
+public class Data
+{
+    public int a;
+    public string b;
+    public GameObject c;
+
+    public Data()
+    {
+        a = Random.Range(0, 10);
+        b = Random.Range(0, 1).ToString();
     }
 }
