@@ -60,7 +60,7 @@ public class Initializer : Singleton<Initializer>
     {
         yield return null;
         Debug.Log("初始化完成");
-        ServiceLocator.Instance.GetService<LoadManager>().LoadLevel(1);
+        ServiceLocator.Instance.GetService<SceneManager>().LoadLevel(1);
         Destroy(gameObject);
     }
 }

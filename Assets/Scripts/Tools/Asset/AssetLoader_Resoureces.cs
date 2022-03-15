@@ -23,7 +23,7 @@ public class AssetLoader_Resoureces : AssetLoader
             callBack?.Invoke(asset);
         }
     }
-
+   
     protected override void Load<T>(string path, Action<T> callBack)
     {
         T asset = Resources.Load<T>(path);

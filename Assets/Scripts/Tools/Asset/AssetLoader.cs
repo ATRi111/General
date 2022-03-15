@@ -29,7 +29,7 @@ public abstract class AssetLoader : Service
     /// <summary>
     /// 加载资源
     /// </summary>
-    /// <param name="path">资源路径</param>
+    /// <param name="path">路径</param>
     /// <param name="callBack">回调函数（加载好的资源作为参数传入）</param>
     /// <param name="async">是否异步</param>
     public void LoadAsset<T>(string path, Action<T> callBack, bool async = true) where T : UnityEngine.Object

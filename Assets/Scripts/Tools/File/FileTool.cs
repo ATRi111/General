@@ -18,43 +18,18 @@ public static class FileTool
     /// <summary>
     /// 获取文件信息
     /// </summary>
-    /// <param name="path">路径</param>
-    /// <param name="defaultPath">是否使用默认路径（Application.streamingAssetsPath）</param>
-    public static FileInfo GetFileInfo(string path)
+    /// <param name="path">路径，要包含拓展名</param>
+    /// <param name="create">文件不存在时，是否新创建文件</param>
+    public static FileInfo GetFileInfo(string path, bool create = false)
     {
         FileInfo fileInfo = new FileInfo(path);
         if (!fileInfo.Exists)
         {
-            Debug.LogWarning($"文件不存在，路径为{path}");
-            return null;
+            if (create)
+                fileInfo.Create();
+            else
+                Debug.LogWarning($"{path}文件不存在");
         }
         return fileInfo;
-    }
-
-    public static StreamReader GetStreamReader(string path)
-    {
-        FileInfo fileInfo = GetFileInfo(path);
-        try
-        {
-            return new StreamReader(fileInfo.FullName, s_defaultEncoding);
-        }
-        catch
-        {
-            Debug.LogWarning($"无法获取StreamReader,路径为{path}");
-            return null;
-        }
-    }
-
-    public static StreamWriter GetStreamWriter(string path)
-    {
-        try
-        {
-            return new StreamWriter(path);
-        }
-        catch
-        {
-            Debug.LogWarning($"无法创建StreamWriter,路径为{path}");
-            return null;
-        }
     }
 }
