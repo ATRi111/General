@@ -39,7 +39,7 @@ public class SceneController : Service
     protected override void Awake()
     {
         base.Awake();
-        index_max = SceneManager.sceneCountInBuildSettings;
+        index_max = SceneManager.sceneCountInBuildSettings - 1;
         index_menu = SceneManager.GetSceneByName("menu").buildIndex;
         eventSystem = ServiceLocator.GetService<EventSystem>();
         eventSystem.CreateEvent(EEvent.BeforeLoadScene, typeof(UnityAction<int>));
