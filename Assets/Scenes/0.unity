@@ -304,12 +304,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1383342395}
-  - component: {fileID: 1383342399}
   - component: {fileID: 1383342397}
+  - component: {fileID: 1383342399}
   - component: {fileID: 1383342398}
   - component: {fileID: 1383342400}
   - component: {fileID: 1383342401}
   - component: {fileID: 1383342396}
+  - component: {fileID: 1383342402}
   m_Layer: 0
   m_Name: ServiceLocator
   m_TagString: Untagged
@@ -404,5 +405,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 01f1217225e6a7c4a8bbede057bafa8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1383342402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1383342394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cab0d8750ba8be047927af04e728ced6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
