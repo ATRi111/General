@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
-public class SceneManager : Service
+public class SceneController : Service
 {
     private EventSystem eventSystem;
 
@@ -37,13 +39,11 @@ public class SceneManager : Service
     protected override void Awake()
     {
         base.Awake();
-        index_max = UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings;
-        index_menu = UnityEngine.SceneManagement.SceneManager.GetSceneByName("menu").buildIndex;
-    }
-
-    private void Start()
-    {
+        index_max = SceneManager.sceneCountInBuildSettings;
+        index_menu = SceneManager.GetSceneByName("menu").buildIndex;
         eventSystem = ServiceLocator.GetService<EventSystem>();
+        eventSystem.CreateEvent(EEvent.BeforeLoadScene, typeof(UnityAction<int>));
+        eventSystem.CreateEvent(EEvent.AfterLoadScene, typeof(UnityAction<int>));
     }
 
     //禁止用不属于本类的方法加载场景
@@ -64,14 +64,14 @@ public class SceneManager : Service
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
-            Application.Quit();
+        Application.Quit();
 #endif
     }
 
     /// <param name="confirm">加载到90%时是否需要确认</param>    
     private IEnumerator LoadSceneProcess(int index, bool async, bool confirm = false)
     {
-        eventSystem.ActivateEvent(EEvent.BeforeLoadScene, index);
+        eventSystem.Invoke(EEvent.BeforeLoadScene, index);
         if (async)
         {
             AsyncOperation operation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(index);
@@ -85,6 +85,6 @@ public class SceneManager : Service
             UnityEngine.SceneManagement.SceneManager.LoadScene(index);
         }
         yield return null;
-        eventSystem.ActivateEvent(EEvent.AfterLoadScene, index);
+        eventSystem.Invoke(EEvent.AfterLoadScene, index);
     }
 }

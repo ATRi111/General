@@ -62,7 +62,7 @@ public class Initializer : MonoBehaviour
     private void StartGame()
     {
         Debug.Log("初始化完成");
-        ServiceLocator.GetService<SceneManager>().LoadLevel(1);
+        ServiceLocator.GetService<SceneController>().LoadLevel(1);
         Destroy(gameObject);
     }
 

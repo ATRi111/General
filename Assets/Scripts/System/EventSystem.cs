@@ -1,28 +1,20 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static EEvent;
+using UnityEngine.Events;
 
-public class EventSystem : Service
+[DefaultExecutionOrder(-100)]
+public sealed class EventSystem : Service
 {
-    private readonly Dictionary<EEvent, Type> typeDict = new Dictionary<EEvent, Type>()
-    {
-        {BeforeLoadScene,typeof(Action<int>) },
-        {AfterLoadScene,typeof(Action<int>) },
-    };
-    private Dictionary<EEvent, Delegate> eventDict;
+    private readonly Dictionary<EEvent, Type> typeDict = new Dictionary<EEvent, Type>();
+    private Dictionary<EEvent, Delegate> eventDict = new Dictionary<EEvent, Delegate>();
 
-    private void Start()
+    private bool Check(EEvent eEvent, Type methodType)
     {
-        eventDict = new Dictionary<EEvent, Delegate>();
-        foreach (EEvent key in typeDict.Keys)
+        if(!typeDict.ContainsKey(eEvent))
         {
-            eventDict.Add(key, null);
+            Debug.LogWarning($"名为{eEvent}的事件不存在");
         }
-    }
-
-    private bool TypeCheck(EEvent eEvent, Type methodType)
-    {
         if (typeDict[eEvent] != methodType)
         {
             Debug.LogWarning($"响应方法的类型不符合事件所要求的类型,事件名为{eEvent}");
@@ -31,51 +23,82 @@ public class EventSystem : Service
         return true;
     }
 
-    public void Register(EEvent eEvent, Action callBack)
+    public void CreateEvent(EEvent eEvent, Type type)
     {
-        if (TypeCheck(eEvent, callBack.GetType()))
-            eventDict[eEvent] = (Action)eventDict[eEvent] + callBack;
-    }
-    public void Register<T1>(EEvent eEvent, Action<T1> callBack)
-    {
-        if (TypeCheck(eEvent, callBack.GetType()))
-            eventDict[eEvent] = (Action<T1>)eventDict[eEvent] + callBack;
-    }
-    public void Register<T1, T2>(EEvent eEvent, Action<T1, T2> callBack)
-    {
-        if (TypeCheck(eEvent, callBack.GetType()))
-            eventDict[eEvent] = (Action<T1, T2>)eventDict[eEvent] + callBack;
-    }
-
-    public void Unregister(EEvent eEvent, Action callBack)
-    {
-        if (TypeCheck(eEvent, callBack.GetType()))
-            eventDict[eEvent] = (Action)eventDict[eEvent] - callBack;
-    }
-    public void Unregister<T1>(EEvent eEvent, Action<T1> callBack)
-    {
-        if (TypeCheck(eEvent, callBack.GetType()))
-            eventDict[eEvent] = (Action<T1>)eventDict[eEvent] - callBack;
-    }
-    public void Unregister<T1, T2>(EEvent eEvent, Action<T1, T2> callBack)
-    {
-        if (TypeCheck(eEvent, callBack.GetType()))
-            eventDict[eEvent] = (Action<T1, T2>)eventDict[eEvent] - callBack;
+        if(!type.IsSubclassOf(typeof(Delegate)))
+        {
+            Debug.LogWarning($"{type}不是Delegate的子类");
+            return;
+        }
+        if(eventDict.ContainsKey(eEvent))
+        {
+            Debug.LogWarning($"名为{eEvent}的事件已存在");
+            return;
+        }
+        typeDict.Add(eEvent, type);
+        eventDict.Add(eEvent, null);
     }
 
-    public void ActivateEvent(EEvent eEvent)
+    public void AddListener(EEvent eEvent, UnityAction callBack)
     {
-        if (TypeCheck(eEvent, typeof(Action)))
-            (eventDict[eEvent] as Action)?.Invoke();
+        if (Check(eEvent, callBack.GetType()))
+            eventDict[eEvent] = eventDict[eEvent] as UnityAction + callBack;
     }
-    public void ActivateEvent<T1>(EEvent eEvent, T1 arg1)
+    public void AddListener<T1>(EEvent eEvent, UnityAction<T1> callBack)
     {
-        if (TypeCheck(eEvent, typeof(Action<T1>)))
-            (eventDict[eEvent] as Action<T1>)?.Invoke(arg1);
+        if (Check(eEvent, callBack.GetType()))
+            eventDict[eEvent] = eventDict[eEvent] as UnityAction<T1> + callBack;
     }
-    public void ActivateEvent<T1, T2>(EEvent eEvent, T1 arg1, T2 arg2)
+    public void AddListener<T1, T2>(EEvent eEvent, UnityAction<T1, T2> callBack)
     {
-        if (TypeCheck(eEvent, typeof(Action<T1, T2>)))
-            (eventDict[eEvent] as Action<T1, T2>)?.Invoke(arg1, arg2);
+        if (Check(eEvent, callBack.GetType()))
+            eventDict[eEvent] = eventDict[eEvent] as UnityAction<T1, T2>  + callBack;
+    }
+    public void AddListener<T1, T2, T3>(EEvent eEvent, UnityAction<T1, T2, T3> callBack)
+    {
+        if (Check(eEvent, callBack.GetType()))
+            eventDict[eEvent] = eventDict[eEvent] as UnityAction<T1, T2, T3> + callBack;
+    }
+
+    public void RemoveListener(EEvent eEvent, UnityAction callBack)
+    {
+        if (Check(eEvent, callBack.GetType()))
+            eventDict[eEvent] = eventDict[eEvent] as UnityAction - callBack;
+    }
+    public void RemoveListener<T1>(EEvent eEvent, UnityAction<T1> callBack)
+    {
+        if (Check(eEvent, callBack.GetType()))
+            eventDict[eEvent] = eventDict[eEvent] as UnityAction<T1> - callBack;
+    }
+    public void RemoveListener<T1, T2>(EEvent eEvent, UnityAction<T1, T2> callBack)
+    {
+        if (Check(eEvent, callBack.GetType()))
+            eventDict[eEvent] = eventDict[eEvent] as UnityAction<T1, T2> - callBack;
+    }
+    public void RemoveListener<T1, T2 ,T3>(EEvent eEvent, UnityAction<T1, T2, T3> callBack)
+    {
+        if (Check(eEvent, callBack.GetType()))
+            eventDict[eEvent] = eventDict[eEvent] as UnityAction<T1, T2, T3> - callBack;
+    }
+
+    public void Invoke(EEvent eEvent)
+    {
+        if (Check(eEvent, typeof(UnityAction)))
+            (eventDict[eEvent] as UnityAction)?.Invoke();
+    }
+    public void Invoke<T1>(EEvent eEvent, T1 arg1)
+    {
+        if (Check(eEvent, typeof(UnityAction<T1>)))
+            (eventDict[eEvent] as UnityAction<T1>)?.Invoke(arg1);
+    }
+    public void Invoke<T1, T2>(EEvent eEvent, T1 arg1, T2 arg2)
+    {
+        if (Check(eEvent, typeof(UnityAction<T1, T2>)))
+            (eventDict[eEvent] as UnityAction<T1, T2>)?.Invoke(arg1, arg2);
+    }
+    public void Invoke<T1, T2, T3>(EEvent eEvent, T1 arg1, T2 arg2, T3 arg3)
+    {
+        if (Check(eEvent, typeof(UnityAction<T1, T2, T3>)))
+            (eventDict[eEvent] as UnityAction<T1, T2, T3>)?.Invoke(arg1, arg2, arg3);
     }
 }
