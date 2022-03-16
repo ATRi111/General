@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Events;
 
 public enum EUpdateMode
@@ -20,7 +21,6 @@ public enum EUpdateMode
     /// </summary>
     NextUpdate,
 }
-
 
 public class GameCycle : Service
 {

@@ -10,6 +10,8 @@ public static class ServiceLocator
     public static T GetService<T>() where T : Service
     {
         Type type = typeof(T);
+        if (!serviceDict.ContainsKey(type)) 
+            Debug.LogError($"没有类型为{type}的服务");
         return serviceDict[type] as T;
     }
 

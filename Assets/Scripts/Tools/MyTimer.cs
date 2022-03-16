@@ -3,9 +3,9 @@ using UnityEngine;
 /// <summary>
 /// 描述一段随时间推进发生的变化
 /// </summary>
-public class Transformation<T> where T : struct
+public class MyTimer<T> where T : struct
 {
-    private GameCycle gameCycle;
+    private readonly GameCycle gameCycle;
     /// <summary>
     /// 暂停时，OnFixedUpdate无行为
     /// </summary>
@@ -31,7 +31,7 @@ public class Transformation<T> where T : struct
     /// </summary>
     public virtual T Current => default;
     public virtual bool Completed => Timer >= Duration;
-    public Transformation(T origin, T target, float duration)
+    public MyTimer(T origin, T target, float duration)
     {
         Duration = duration;
         Origin = origin;
@@ -46,7 +46,10 @@ public class Transformation<T> where T : struct
             return;
         Timer += Time.deltaTime;
         if (Completed)
+        {
             Paused = true;
+            Timer = Duration;
+        }
     }
 
     public virtual void Restart()
@@ -54,12 +57,21 @@ public class Transformation<T> where T : struct
         Paused = false;
         Timer = 0;
     }
+
+    /// <summary>
+    /// 永久停止，之后一般要回收
+    /// </summary>
+    public void Dispose()
+    {
+        gameCycle.RemoveFromGameCycle(EUpdateMode.Update, OnUpdate);
+    }
+
 }
 
 /// <summary>
 /// 基本的往复变化
 /// </summary>
-public class Circulation<T> : Transformation<T> where T : struct
+public class Circulation<T> : MyTimer<T> where T : struct
 {
     protected override void OnUpdate()
     {
@@ -80,7 +92,7 @@ public class Circulation<T> : Transformation<T> where T : struct
 /// <summary>
 /// 基本的反复变化
 /// </summary>
-public class Repeataion<T> : Transformation<T> where T : struct
+public class Repeataion<T> : MyTimer<T> where T : struct
 {
     protected override void OnUpdate()
     {

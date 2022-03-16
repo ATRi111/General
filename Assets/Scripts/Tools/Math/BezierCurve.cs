@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BezierCurve : Transformation<Vector3>
+public class BezierCurve : MyTimer<Vector3>
 {
     private readonly Vector3[] Points;
     public BezierCurve(Vector3[] points, float duration) : base(points[0], points[points.Length - 1], duration)
