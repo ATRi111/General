@@ -24,7 +24,6 @@ public class ColorChangeSample : MonoBehaviour
 
     private void FixedUpdate()
     {
-        change.OnFixedUpdate();
         spriteRenderer.color = change.Current;
     }
 

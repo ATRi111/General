@@ -4,10 +4,10 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [DefaultExecutionOrder(-100)]
-public sealed class EventSystem : Service
+public class EventSystem : Service
 {
     private readonly Dictionary<EEvent, Type> typeDict = new Dictionary<EEvent, Type>();
-    private Dictionary<EEvent, Delegate> eventDict = new Dictionary<EEvent, Delegate>();
+    private readonly Dictionary<EEvent, Delegate> eventDict = new Dictionary<EEvent, Delegate>();
 
     private bool Check(EEvent eEvent, Type methodType)
     {

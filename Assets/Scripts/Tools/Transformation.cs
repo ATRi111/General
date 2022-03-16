@@ -5,6 +5,7 @@ using UnityEngine;
 /// </summary>
 public class Transformation<T> where T : struct
 {
+    private GameCycle gameCycle;
     /// <summary>
     /// 暂停时，OnFixedUpdate无行为
     /// </summary>
@@ -35,13 +36,15 @@ public class Transformation<T> where T : struct
         Duration = duration;
         Origin = origin;
         Target = target;
+        gameCycle = ServiceLocator.GetService<GameCycle>();
+        gameCycle.AttachToGameCycle(EUpdateMode.Update,OnUpdate);
     }
-    //创建类实例后，在fiexedupdate中调用此方法
-    public virtual void OnFixedUpdate()
+
+    protected virtual void OnUpdate()
     {
         if (Paused)
             return;
-        Timer += Time.fixedDeltaTime;
+        Timer += Time.deltaTime;
         if (Completed)
             Paused = true;
     }
@@ -52,15 +55,15 @@ public class Transformation<T> where T : struct
         Timer = 0;
     }
 }
+
 /// <summary>
 /// 基本的往复变化
 /// </summary>
-/// <typeparam name="T"></typeparam>
 public class Circulation<T> : Transformation<T> where T : struct
 {
-    public override void OnFixedUpdate()
+    protected override void OnUpdate()
     {
-        base.OnFixedUpdate();
+        base.OnUpdate();
         if (Completed)
         {
             Timer -= Duration;
@@ -73,15 +76,15 @@ public class Circulation<T> : Transformation<T> where T : struct
 
     public Circulation(T origin, T target, float duration) : base(origin, target, duration) { }
 }
+
 /// <summary>
 /// 基本的反复变化
 /// </summary>
-/// <typeparam name="T"></typeparam>
 public class Repeataion<T> : Transformation<T> where T : struct
 {
-    public override void OnFixedUpdate()
+    protected override void OnUpdate()
     {
-        base.OnFixedUpdate();
+        base.OnUpdate();
         if (Completed)
         {
             Timer -= Duration;
@@ -91,14 +94,3 @@ public class Repeataion<T> : Transformation<T> where T : struct
     public Repeataion(T origin, T target, float duration) : base(origin, target, duration) { }
 }
 
-public class BezierCurve : Transformation<Vector3>
-{
-    private readonly Vector3[] Points;
-    public BezierCurve(Vector3[] points, float duration) : base(points[0], points[points.Length - 1], duration)
-    {
-        int count = points.Length;
-        Points = points;
-    }
-
-    public override Vector3 Current => MathTool.BezierLerp(Points, Timer / Duration);
-}

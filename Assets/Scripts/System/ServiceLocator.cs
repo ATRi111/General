@@ -6,9 +6,7 @@ public static class ServiceLocator
 {
     private static readonly Dictionary<Type, Service> serviceDict = new Dictionary<Type, Service>();
 
-    /// <summary>
-    /// 获取类型为T的服务
-    /// </summary>
+    /// <typeparam name="T">可以获取某个子类，再将其赋值给父类，这种情况下，T应指定为子类</typeparam>
     public static T GetService<T>() where T : Service
     {
         Type type = typeof(T);
