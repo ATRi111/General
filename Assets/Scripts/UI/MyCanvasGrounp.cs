@@ -2,7 +2,7 @@ using UnityEngine;
 
 //挂在需要隐藏-显示的UI物体上
 [RequireComponent(typeof(CanvasGroup))]
-public class MyUIElement : MonoBehaviour
+public class MyCanvasGrounp : MonoBehaviour
 {
     protected CanvasGroup canvasGroup;
     public CanvasGroup GetCanvasGroup()

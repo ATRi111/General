@@ -21,17 +21,17 @@ public class SceneController : Service
     public event Action<AsyncOperation> AsyncLoadScene;
 
     [SerializeField]
-    private int _Index;
+    private int index;
     public int Index
     {
-        get => _Index;
+        get => index;
         private set
         {
             if (value > index_max)
                 value = index_menu;
-            if (value == _Index || value <= 0)
+            if (value == index || value <= 0)
                 return;
-            _Index = value;
+            index = value;
             StartCoroutine(LoadSceneProcess(value, asynchronous));
         }
     }

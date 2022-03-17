@@ -9,7 +9,7 @@ public enum ERandomGrounp
 
 public static class RandomTool
 {
-    private static readonly Dictionary<ERandomGrounp, System.Random> groups;
+    private static readonly Dictionary<ERandomGrounp, System.Random> groups = new Dictionary<ERandomGrounp, System.Random>();
 
     static RandomTool()
     {

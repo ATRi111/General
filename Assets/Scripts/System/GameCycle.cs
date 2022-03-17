@@ -20,6 +20,14 @@ public enum EUpdateMode
     /// 下次Update调用
     /// </summary>
     NextUpdate,
+    /// <summary>
+    /// 每次LateUpdate调用
+    /// </summary>
+    LateUpdate,
+    /// <summary>
+    /// 下次LateUpdate调用
+    /// </summary>
+    NextLateUpdate,
 }
 
 public class GameCycle : Service
@@ -62,5 +70,10 @@ public class GameCycle : Service
         cycle[EUpdateMode.NextFixedUpdate] = null;
     }
 
-
+    private void LateUpdate()
+    {
+        cycle[EUpdateMode.LateUpdate]?.Invoke();
+        cycle[EUpdateMode.NextLateUpdate]?.Invoke();
+        cycle[EUpdateMode.NextLateUpdate] = null;
+    }
 }

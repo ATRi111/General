@@ -26,27 +26,27 @@ public class Initializer : MonoBehaviour
     private List<ScriptableObject> scripts;
 
     [SerializeField]
-    private int _Count_Initializations;
+    private int count_initializations;
     /// <summary>
     /// 剩余的初始化任务数
     /// </summary>
     public int Count_Initializations
     {
-        get => _Count_Initializations;
+        get => count_initializations;
         set
         {
-            if (value < 0 || value == _Count_Initializations)
+            if (value < 0 || value == count_initializations)
                 return;
             if (value == 0)
                 StartGame();
-            _Count_Initializations = value;
+            count_initializations = value;
         }
     }
 
     private void Awake()
     {
         Instance = this;
-        _Count_Initializations = 0;
+        count_initializations = 0;
         Random.InitState(System.DateTime.Now.Second);
         StartCoroutine(AutoStart());
     }

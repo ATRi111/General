@@ -3,22 +3,26 @@ using UnityEngine;
 
 public class Sample : MonoBehaviour
 {
-    private class IntChange : MyTimer<float>
-    {
-        public IntChange(float origin, float target, float duration) : base(origin, target, duration) { }
-        public override float Current => Origin + (Target - Origin) * (Timer / Duration);
-    }
-
     private EventSystem eventSystem;
-    public float a;
+    private SpriteRenderer spriteRenderer;
+    private ColorChange_Circulation change;
 
     private void Awake()
     {
         eventSystem = ServiceLocator.GetService<EventSystem>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        change = new ColorChange_Circulation();
+        change.Initialize(spriteRenderer.color, spriteRenderer.color.ResetAlpha(0f), 2f);
     }
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+            change.Paused = !change.Paused;
+    }
 
+    private void FixedUpdate()
+    {
+        spriteRenderer.color = change.Current;
     }
 }

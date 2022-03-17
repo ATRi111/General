@@ -27,7 +27,7 @@ namespace ObjectPool
                 }
                 else
                 {
-                    myObject._Active = true;
+                    myObject.active = true;
                     myObject.Active = false;
                     myObject.objectPoolAttached = pool;
                 }
@@ -40,15 +40,15 @@ namespace ObjectPool
         protected ObjectPool objectPoolAttached;
 
         [SerializeField]
-        private bool _Active;
+        private bool active;
         public bool Active
         {
-            get => _Active;
+            get => active;
             protected set
             {
-                if (value == _Active)
+                if (value == active)
                     return;
-                _Active = value;
+                active = value;
                 gameObject.SetActive(value);
             }
         }
