@@ -1,4 +1,3 @@
-using LitJson;
 using System;
 using System.IO;
 using UnityEngine;
@@ -15,7 +14,7 @@ public static class JsonTool
         {
             FileInfo info = FileTool.GetFileInfo(path, true);
             using StreamWriter writer = new StreamWriter(path, false, FileTool.s_defaultEncoding);
-            writer.WriteLine(JsonMapper.ToJson(t));
+            writer.WriteLine(JsonUtility.ToJson(t));
         }
         catch(Exception e)
         {
@@ -30,14 +29,15 @@ public static class JsonTool
     /// <param name="path">路径，要加拓展名</param>
     public static T LoadFromJson<T>(string path)
     {
-        FileInfo info = FileTool.GetFileInfo(path);
+        FileTool.GetFileInfo(path);
         try
         {
-            return JsonMapper.ToObject<T>(File.ReadAllText(path));
+            return JsonUtility.FromJson<T>(File.ReadAllText(path));
         }
-        catch
+        catch (Exception e)
         {
             Debug.LogWarning($"读取Json失败，路径为{path}");
+            Debug.LogError(e);
             return default;
         }
     }
