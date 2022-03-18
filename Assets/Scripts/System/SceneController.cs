@@ -8,8 +8,8 @@ public class SceneController : Service
 {
     private EventSystem eventSystem;
 
-    private int index_menu;
-    private int index_max;
+    public static int Index_Boot { get; private set; } = 1;
+    public static int Index_Max { get; private set; }
     /// <summary>
     /// 是否异步加载场景
     /// </summary>
@@ -18,7 +18,7 @@ public class SceneController : Service
     /// <summary>
     /// 开始异步加载场景时，发送异步操作
     /// </summary>
-    public event Action<AsyncOperation> AsyncLoadScene;
+    public event UnityAction<AsyncOperation> AsyncLoadScene;
 
     [SerializeField]
     private int index;
@@ -27,8 +27,8 @@ public class SceneController : Service
         get => index;
         private set
         {
-            if (value > index_max)
-                value = index_menu;
+            if (value > Index_Max)
+                value = Index_Boot;
             if (value == index || value <= 0)
                 return;
             index = value;
@@ -39,8 +39,7 @@ public class SceneController : Service
     protected override void Awake()
     {
         base.Awake();
-        index_max = SceneManager.sceneCountInBuildSettings - 1;
-        index_menu = SceneManager.GetSceneByName("menu").buildIndex;
+        Index_Max = SceneManager.sceneCountInBuildSettings - 1;
         eventSystem = ServiceLocator.GetService<EventSystem>();
         eventSystem.CreateEvent(EEvent.BeforeLoadScene, typeof(UnityAction<int>));
         eventSystem.CreateEvent(EEvent.AfterLoadScene, typeof(UnityAction<int>));
@@ -57,7 +56,7 @@ public class SceneController : Service
     }
     public void RetuenToMenu()
     {
-        Index = index_menu;
+        Index = Index_Boot;
     }
     public void Quit()
     {

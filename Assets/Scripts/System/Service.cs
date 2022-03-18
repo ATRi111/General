@@ -6,7 +6,7 @@ using UnityEngine;
 public abstract class Service : MonoBehaviour
 {
     /// <summary>
-    /// 再脚本顺序不受控制的情况下，不要在Awake中获取其他服务
+    /// 如果要在Awake中获取其他服务，注意脚本执行顺序
     /// </summary>
     protected virtual void Awake()
     {

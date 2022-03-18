@@ -24,7 +24,6 @@ namespace ObjectPool
         private IEnumerator GenerateObject(int num)
         {
             Initializer initializer = Initializer.Instance;
-            initializer.Count_Initializations++;
             MyObject temp;
             for (; myObjects.Count < num - 10;)
             {

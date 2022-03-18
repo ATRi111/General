@@ -18,8 +18,10 @@ namespace ObjectPool
 
         internal void Initialize()
         {
+            Initializer initializer = Initializer.Instance;
             ObjectPoolData[] datas = initData.datas;
             numOfPool = datas.Length;
+            initializer.Count_Initializations += numOfPool;
 
             objectPools = new Dictionary<EObject, ObjectPool>();
             GameObject obj_pool;
