@@ -51,7 +51,7 @@ public class MyTimer<T>
         }
     }
     /// <summary>
-    /// 是否在上一次Update之后下一次Update之前刚刚完成
+    /// 是否在上一次Update之后下一次LateUpdate之前完成
     /// </summary>
     public bool JustCompleted { get; protected set; }
 

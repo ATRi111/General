@@ -16,7 +16,7 @@ public class TextBox : MonoBehaviour
     {
         m_text = GetComponent<Text>();
         typeWriter = new TypeWriter();
-        ShowText("Hello World");
+        ShowText("Hello World", true);
     }
 
     public void ShowText(string text,bool immediate = false)
