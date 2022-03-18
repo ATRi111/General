@@ -13,13 +13,16 @@ public class MyAudioSource : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
     }
 
-    public void Play(float time = 0f)
+    public void Play(float time = 0f, bool loop = false)
     {
         audioSource.time = time;
+        audioSource.loop = loop;
         audioSource.Play();
         StopAllCoroutines();
-        StartCoroutine(LifeCycle());
+        if (!loop)
+            StartCoroutine(LifeCycle());
     }
+
     public void Continue()
     {
         audioSource.Play();
@@ -40,6 +43,11 @@ public class MyAudioSource : MonoBehaviour
     private IEnumerator LifeCycle()
     {
         yield return new WaitForSeconds(TotalTime - CurrentTime);
+        Destroy(gameObject);
+    }
+
+    public void Destroy()
+    {
         Destroy(gameObject);
     }
 }

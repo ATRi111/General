@@ -15,7 +15,7 @@ public class AudioPlayer : Service
     /// <param name="path">音源路径</param>
     /// <param name="transform">将音源设为transform的子物体，可以为null</param>
     /// <param name="play">是否立刻播放音频</param>
-    public MyAudioSource CreateAudio(string path, Transform transform, bool play = true)
+    public MyAudioSource CreateAudio(string path, Transform transform = null, bool play = true)
     {
         GameObject obj;
         MyAudioSource myAudioSource = null;
@@ -38,6 +38,8 @@ public class AudioPlayer : Service
                 myAudioSource.Stop();
         }
 
+        if (transform == null)
+            transform = this.transform;
         assetLoader.LoadAsset<GameObject>(path, AfterLoad, false);  //如果不同步加载，就无法返回MyAudioSource
         return myAudioSource;
     }
