@@ -82,7 +82,7 @@ public class MyTimer<T>
 
     public MyTimer()
     {
-        gameCycle = ServiceLocator.GetService<GameCycle>();
+        gameCycle = Service.Get<GameCycle>();
         paused = true;
         completed = false;
     }

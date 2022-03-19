@@ -4,7 +4,7 @@ public class GameManager : Service
 
     private void Start()
     {
-        eventSystem = ServiceLocator.GetService<EventSystem>();
+        eventSystem = Get<EventSystem>();
         DontDestroyOnLoad(gameObject);
     }
 }

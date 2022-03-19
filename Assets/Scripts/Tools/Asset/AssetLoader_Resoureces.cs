@@ -1,7 +1,9 @@
 using System;
 using UnityEngine;
 
-//路径不能包含扩展名
+/// <summary>
+/// 利用此类加载资源时，路径为Resources文件夹内部的路径，且不能包含拓展名
+/// </summary>
 public class AssetLoader_Resoureces : AssetLoader
 {
     private class Coupling<T> where T : UnityEngine.Object

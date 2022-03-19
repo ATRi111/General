@@ -10,7 +10,7 @@ public class InputManager : Service
     {
         base.Awake();
         mainCamera = Camera.main;
-        eventSystem = ServiceLocator.GetService<EventSystem>();
+        eventSystem = Get<EventSystem>();
     }
 
     private void Start()

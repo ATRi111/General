@@ -9,6 +9,6 @@ public class PlayerInput : CharacterController
     {
         base.Awake();
         main = Camera.main;
-        inputManager = ServiceLocator.GetService<InputManager>();
+        inputManager = Service.Get<InputManager>();
     }
 }

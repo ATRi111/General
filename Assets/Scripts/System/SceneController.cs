@@ -40,7 +40,7 @@ public class SceneController : Service
     {
         base.Awake();
         Index_Max = SceneManager.sceneCountInBuildSettings - 1;
-        eventSystem = ServiceLocator.GetService<EventSystem>();
+        eventSystem = Get<EventSystem>();
         eventSystem.CreateEvent(EEvent.BeforeLoadScene, typeof(UnityAction<int>));
         eventSystem.CreateEvent(EEvent.AfterLoadScene, typeof(UnityAction<int>));
     }

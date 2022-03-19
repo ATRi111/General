@@ -10,7 +10,7 @@ public class DraggableGameObject2D : MonoBehaviour
 
     protected virtual void Awake()
     {
-        inputManager = ServiceLocator.GetService<InputManager>();
+        inputManager = Service.Get<InputManager>();
     }
 
     protected virtual void OnMouseDown()

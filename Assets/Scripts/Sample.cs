@@ -9,7 +9,7 @@ public class Sample : MonoBehaviour
 
     private void Awake()
     {
-        eventSystem = ServiceLocator.GetService<EventSystem>();
+        eventSystem = Service.Get<EventSystem>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         change = new ColorChange_Circulation();
         change.Initialize(spriteRenderer.color, spriteRenderer.color.ResetAlpha(0f), 2f);
