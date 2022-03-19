@@ -25,9 +25,10 @@ public class MyAudioSource : MonoBehaviour
 
     public void Continue()
     {
-        audioSource.Play();
+        audioSource.UnPause();
         StopAllCoroutines();
-        StartCoroutine(LifeCycle());
+        if (!audioSource.loop)
+            StartCoroutine(LifeCycle());
     }
     public void Pause()
     {
