@@ -8,6 +8,8 @@ public static class MenuTools
 	public static void OpenScene0()
 	{
 		EditorSceneManager.OpenScene("Assets/Scenes/0.unity");
+		SceneAsset asset = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/Scenes/0.unity");
+		UnityEditor.ProjectWindowUtil.ShowCreatedAsset(asset);
 	}
 
 }
