@@ -7,6 +7,7 @@ public class Sample : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private ColorChange_Circulation change;
 
+
     private void Awake()
     {
         eventSystem = Service.Get<EventSystem>();
