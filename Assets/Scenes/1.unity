@@ -247,6 +247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b395a7724aa9014890c2addaa39583d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 0
   data: {fileID: 11400000, guid: 7cd090dbb3dc53f44a9c0f6bc44d11ae, type: 2}
 --- !u!4 &597375007
 Transform:
@@ -310,7 +311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
