@@ -4,7 +4,7 @@ using UnityEngine.Events;
 namespace Services
 {
     /// <summary>
-    /// 此类脱离对象池也可以使用
+    /// 使用时，直接添加此组件（而不是继承）
     /// </summary>
     public sealed class MyObject : MonoBehaviour, IMyObject
     {
