@@ -1,10 +1,22 @@
 using System;
+using UnityEngine;
 
 namespace Services
 {
+    [Serializable]
     public class SaveManagerCore
     {
-        internal WholeSaveData RuntimeData { get; set; }
+        [SerializeField]
+        private WholeSaveData runtimeData;
+        internal WholeSaveData RuntimeData
+        {
+            get
+            {
+                runtimeData ??= new WholeSaveData();
+                return runtimeData;
+            }
+            set => runtimeData = value;
+        }
 
         internal void Write(string savePath)
         {

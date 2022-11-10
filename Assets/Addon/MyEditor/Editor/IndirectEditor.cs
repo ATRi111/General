@@ -11,7 +11,7 @@ namespace MyEditor
     public abstract class IndirectEditor
     {
         public bool foldout;
-        public string m_label;
+        public string label;
 
         public virtual void Initialize(SerializedProperty serializedProperty, string label)
         {
@@ -22,20 +22,20 @@ namespace MyEditor
                     info.SetValue(this, serializedProperty.FindPropertyRelative(info.Name));
             }
             foldout = false;
-            m_label = label;
+            this.label = label;
         }
 
-        public virtual void OnInspectorGUI(bool foldable = true)
+        public virtual void OnInspectorGUI()
         {
-            if (foldable)
+            //FoldoutGroup²»ÄÜÇ¶Ì×
+            foldout = EditorGUILayout.BeginFoldoutHeaderGroup(foldout, label);
+            EditorGUILayout.EndFoldoutHeaderGroup();
+            if (foldout)
             {
-                foldout = EditorGUILayout.BeginFoldoutHeaderGroup(foldout, m_label);
-                if (foldout)
-                    MyOnInspectorGUI();
-                EditorGUILayout.EndFoldoutHeaderGroup();
-            }
-            else
+                EditorGUI.indentLevel++;
                 MyOnInspectorGUI();
+                EditorGUI.indentLevel--;
+            }
         }
 
         protected abstract void MyOnInspectorGUI();

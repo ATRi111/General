@@ -57,5 +57,11 @@ namespace Services
             }
             Debug.Log($"已通过{objects.Length}个对象中的{count}个创建音频预制体");
         }
+
+        [MenuItem("Tools/File/OpenPersistantDataPath")]
+        public static void OpenPersistantDataPath()
+        {
+            EditorUtility.RevealInFinder(Application.persistentDataPath);
+        }
     }
 }

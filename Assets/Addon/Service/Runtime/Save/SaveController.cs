@@ -5,7 +5,7 @@ namespace Services
     /// </summary>
     /// <typeparam name="Tdata">游戏对象对应的存档数据类</typeparam>
     /// <typeparam name="TObject">游戏对象类</typeparam>
-    public abstract class Savable<Tdata,TObject> where Tdata :SingleSaveData
+    public abstract class SaveController<Tdata,TObject> where Tdata :SingleSaveData
     {
         protected SaveManagerBase saveManager;
 
@@ -16,12 +16,12 @@ namespace Services
         /// </summary>
         public abstract string Identifier { get; }
 
-        public Savable(TObject obj)
+        public SaveController(TObject obj)
         {
             this.obj = obj;
             saveManager = ServiceLocator.Get<SaveManagerBase>();
-            saveManager.AfterLoad += OnLoad;
-            saveManager.BeforeSave += OnSave;
+            saveManager.LoadRequest += OnLoad;
+            saveManager.SaveRequest += OnSave;
             if (saveManager.NeedLoad)
                 OnLoad();
         }
@@ -53,8 +53,8 @@ namespace Services
 
         public void Dispose()
         {
-            saveManager.AfterLoad -= OnLoad;
-            saveManager.BeforeSave -= OnSave;
+            saveManager.LoadRequest -= OnLoad;
+            saveManager.SaveRequest -= OnSave;
         }
     }
 }
