@@ -5,25 +5,52 @@ namespace Services
     /// </summary>
     /// <typeparam name="Tdata">游戏对象对应的存档数据类</typeparam>
     /// <typeparam name="TObject">游戏对象类</typeparam>
-    public abstract class SaveController<Tdata,TObject> where Tdata :SingleSaveData
+    public abstract class SaveController<Tdata, TObject> where Tdata : SingleSaveData
     {
-        protected SaveManagerBase saveManager;
+        protected SaveManager saveManager;
 
         protected TObject obj;
+
+        private bool active;
+        /// <summary>
+        /// 是否启用存档/读档。
+        /// 通常，物体被禁用或销毁后应当禁用
+        /// </summary>
+        public bool Active
+        {
+            get => active;
+            set
+            {
+                if (active != value)
+                {
+                    active = value;
+                    if (value)
+                    {
+                        saveManager.LoadRequest += OnLoad;
+                        saveManager.SaveRequest += OnSave;
+                        if (saveManager.NeedLoad)
+                            OnLoad();
+                    }
+                    else
+                    {
+                        saveManager.LoadRequest -= OnLoad;
+                        saveManager.SaveRequest -= OnSave;
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// 标识符，此属性在构造函数中就会被调用，所以不能依赖obj以外的对象
         /// </summary>
         public abstract string Identifier { get; }
 
-        public SaveController(TObject obj)
+        public SaveController(TObject obj, bool active_init = true)
         {
             this.obj = obj;
-            saveManager = ServiceLocator.Get<SaveManagerBase>();
-            saveManager.LoadRequest += OnLoad;
-            saveManager.SaveRequest += OnSave;
-            if (saveManager.NeedLoad)
-                OnLoad();
+            saveManager = Singleton.GetInstance<SaveManager>();
+            if (active_init)
+                Active = true;
         }
 
         protected virtual void OnLoad()
@@ -50,11 +77,5 @@ namespace Services
         /// 通过自身的数据修改自身的运行时存档数据
         /// </summary>
         public abstract void ToData(Tdata data);
-
-        public void Dispose()
-        {
-            saveManager.LoadRequest -= OnLoad;
-            saveManager.SaveRequest -= OnSave;
-        }
     }
 }
