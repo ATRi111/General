@@ -23,16 +23,13 @@ namespace MyEditor
             {
                 foreach (FieldInfo info in infos)
                 {
-                    if (MyEditorUtility.GetAttribute<AutoAttribute>(info) != null && info.FieldType == typeof(SerializedProperty))
+                    if (AutoAttribute.TryGetPropertyName(info, out string name))
                     {
-                        try
-                        {
-                            info.SetValue(this, serializedObject.FindProperty(info.Name));
-                        }
-                        catch
-                        {
-                            Debug.Log($"{target.name}找不到{info.Name}");
-                        }
+                        SerializedProperty temp = serializedObject.FindProperty(name);
+                        if(temp != null)
+                            info.SetValue(this, temp);
+                        else
+                            Debug.Log($"{target.GetType()}找不到名为{name}的字段");
                     }
                 }
             }
@@ -45,6 +42,14 @@ namespace MyEditor
         {
             serializedObject.Update();
             EditorGUILayout.BeginVertical();
+            System.Type targetType = target.GetType();
+            Object obj = MyEditorUtility.FindMonoScrpit(targetType);
+            if (obj != null)
+            {
+                EditorGUI.BeginDisabledGroup(true);
+                EditorGUILayout.ObjectField("Script", obj, targetType, false);
+                EditorGUI.EndDisabledGroup();
+            }
 
             MyOnInspectorGUI();
 

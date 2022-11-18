@@ -1,5 +1,6 @@
 using System.Reflection;
 using UnityEditor;
+using UnityEngine;
 
 namespace MyEditor
 {
@@ -18,8 +19,14 @@ namespace MyEditor
             FieldInfo[] fields = GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             foreach (FieldInfo info in fields)
             {
-                if (MyEditorUtility.HasAttribute<AutoAttribute>(info) && info.FieldType == typeof(SerializedProperty))
-                    info.SetValue(this, serializedProperty.FindPropertyRelative(info.Name));
+                if (AutoAttribute.TryGetPropertyName(info, out string name))
+                {
+                    SerializedProperty temp = serializedProperty.FindPropertyRelative(name);
+                    if (temp != null)
+                        info.SetValue(this, serializedProperty.FindPropertyRelative(name));
+                    else
+                        Debug.Log($"{serializedProperty.name}找不到名为{name}的字段");
+                }
             }
             foldout = false;
             this.label = label;

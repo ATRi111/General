@@ -1,5 +1,6 @@
 using MyEditor;
 using UnityEditor;
+using UnityEngine;
 
 namespace Services
 {
@@ -7,7 +8,14 @@ namespace Services
     public class SaveManagerBaseEditor : AutoEditor
     {
         [Auto]
+        public SerializedProperty core;
         public SerializedProperty runtimeData;
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            runtimeData = core.FindPropertyRelative(nameof(runtimeData));
+        }
 
         protected override void MyOnInspectorGUI()
         {

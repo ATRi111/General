@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
@@ -7,10 +8,39 @@ namespace MyEditor
 {
     public static class MyEditorUtility
     {
+        /// <summary>
+        /// 查找某个类的脚本文件（需要确保类名和脚本文件名一致）
+        /// </summary>
+        public static UnityEngine.Object FindMonoScrpit(Type type)
+        {
+            static string GetLast(string s, char seperator)
+            {
+                string[] temp = s.ToString().Split(seperator);
+                return temp[temp.Length - 1];
+            }
+
+            string shortName = GetLast(type.ToString(), '.');
+            string[] guids = AssetDatabase.FindAssets($"{shortName} t:Script");
+
+            for (int i = 0; i < guids.Length; i++)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guids[i]);
+                string fileName = GetLast(path, '/');
+                if (fileName == shortName + ".cs")
+                {
+                    UnityEngine.Object ret = AssetDatabase.LoadAssetAtPath(path, typeof(MonoScript));
+                    return ret;
+                }
+            }
+
+            return null;
+        }
+
         public static bool HasAttribute<T>(MemberInfo member, bool inherit = false) where T : Attribute
         {
             return member.GetCustomAttributes(typeof(T), inherit).Length > 0;
         }
+        
         public static T GetAttribute<T>(MemberInfo member, bool inherit = false) where T : Attribute
         {
             object[] ret = member.GetCustomAttributes(typeof(T), inherit);
@@ -23,45 +53,24 @@ namespace MyEditor
             => e.GetHashCode();
 
         /// <summary>
-        /// 世界坐标尺寸转Scene窗口尺寸（用屏幕高度的倍数表示）
+        /// 获取Sprite的包围盒（相对于其所在游戏物体的本地坐标）
         /// </summary>
-        public static float WorldToSceneSize(float size)
+        public static Rect GetSpriteAABB(Sprite sprite)
         {
-            return size / SceneView.currentDrawingSceneView.camera.orthographicSize / 2;
-        }
-        /// <summary>
-        /// Scene窗口尺寸（用屏幕高度的倍数表示）转世界坐标尺寸
-        /// </summary>
-        public static float ScreenToWorldSize(float size)
-        {
-            return size * SceneView.currentDrawingSceneView.camera.orthographicSize * 2;
+            Vector2 size = sprite.rect.size / sprite.pixelsPerUnit;
+            Vector2 pivot = new Vector2(sprite.pivot.x / sprite.texture.width, sprite.pivot.y / sprite.texture.height);
+            Vector2 position = - new Vector2(pivot.x * size.x, pivot.y * size.y);
+            return new Rect(position, size);
         }
 
-        public static Vector2 Projection(Vector2 v, Vector2 target)
-        {
-            if (target == Vector2.zero)
-                return Vector2.zero;
-            target = target.normalized;
-            return target * Vector2.Dot(v, target);
-        }
-        public static bool Parallel(Vector3 v1, Vector3 v2)
-        {
-            return Vector3.Cross(v1, v2) == Vector3.zero || Vector3.Cross(v1, -v2) == Vector3.zero;
-        }
         /// <summary>
-        /// 计算某点到某射线原点的向量在该射线方向上的投影的长度
+        /// 获取Sprite的物理形状（相对于其所在游戏物体的本地坐标，仅适用于只有单个物理形状的图片）
         /// </summary>
-        public static float DistanceOnDirection(Ray ray, Vector3 point)
+        public static List<Vector2> GetSpritePhysicsShape(Sprite sprite)
         {
-            Vector3 v = point - ray.origin;
-            return Vector3.Dot(v, ray.direction);
-        }
-        /// <summary>
-        /// 过指定点作与射线方向垂直的平面，返回与射线的交点
-        /// </summary>
-        public static Vector3 GetPointOnRay(Ray ray, Vector3 worldPosition)
-        {
-            return ray.GetPoint(DistanceOnDirection(ray, worldPosition));
+            List<Vector2> ret = new List<Vector2>();
+            sprite.GetPhysicsShape(0, ret);
+            return ret;
         }
     }
 }

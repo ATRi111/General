@@ -7,7 +7,7 @@ namespace Services
     /// <typeparam name="TObject">游戏对象类</typeparam>
     public abstract class SaveController<Tdata, TObject> where Tdata : SingleSaveData
     {
-        protected SaveManager saveManager;
+        protected SaveManagerBase saveManager;
 
         protected TObject obj;
 
@@ -48,7 +48,7 @@ namespace Services
         public SaveController(TObject obj, bool active_init = true)
         {
             this.obj = obj;
-            saveManager = Singleton.GetInstance<SaveManager>();
+            saveManager = ServiceLocator.Get<SaveManagerBase>();
             if (active_init)
                 Active = true;
         }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MyEditor
 {
-    public static class Handle
+    public static class HandleUI
     {
         public static void DrawLine(Vector3 p1, Vector3 p2, float thickness)
         {

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace MyEditor.ShapeEditor
@@ -10,22 +11,22 @@ namespace MyEditor.ShapeEditor
         Point
     }
 
-    public class PolygonEditor : MonoBehaviour
+    public class PolygonEditor : ShapeEditor
     {
+
         public EPolygonStyle style;
         public List<Vector3> localPoints;
 
-        private void Reset()
+        public override Rect GetAABB()
         {
-            localPoints = new List<Vector3>() { new Vector3(-1, -1, 0), new Vector3(-1, +1, 0), new Vector3(+1, +1, 0), new Vector3(+1, -1, 0), };
+            Rect local = ExternalTool.GetAABB(localPoints);
+            return new Rect(local.position + Position2D, local.size);
         }
+
         public void GetLocalPoints(List<Vector3> ret)
         {
             ret.Clear();
-            for (int i = 0; i < localPoints.Count; i++)
-            {
-                ret.Add(localPoints[i]);
-            }
+            ret.AddRange(localPoints);
         }
         public void GetLocalPoints(List<Vector2> ret)
         {
@@ -42,6 +43,12 @@ namespace MyEditor.ShapeEditor
             {
                 ret.Add(localPoints[i] + transform.position);
             }
+        }
+
+        protected override void Reset()
+        {
+            base.Reset();
+            localPoints = new List<Vector3>() { new Vector3(-1, -1, 0), new Vector3(-1, +1, 0), new Vector3(+1, +1, 0), new Vector3(+1, -1, 0), };
         }
     }
 }

@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -5,7 +6,7 @@ namespace MyEditor.ShapeEditor
 {
     public abstract class Editor_ShapeEditor : AutoEditor
     {
-        protected int selectedIndex;  //当前控制的点的索引
+        protected int selectedIndex;  //当前拖拽的点的索引
         protected bool b_edit;        //是否处于编辑状态
 
         protected override void OnEnable()
@@ -23,7 +24,17 @@ namespace MyEditor.ShapeEditor
             {
                 b_edit = !b_edit;
                 focusMode = b_edit ? EFocusMode.Lock : EFocusMode.Default;
+                UnityEditor.Tools.current = b_edit ? Tool.None : Tool.Move;
                 SceneView.RepaintAll();
+            }
+
+            SpriteRenderer spriteRenderer = target.GetComponent<SpriteRenderer>();
+            if(spriteRenderer!= null && spriteRenderer.sprite != null)
+            {
+                if(GUILayout.Button("match sprite"))
+                {
+                    MatchSprite(spriteRenderer.sprite);
+                }
             }
         }
 
@@ -32,7 +43,7 @@ namespace MyEditor.ShapeEditor
             //serializedObject不应该用在这里，但确实有用，而且不知道应该用什么代替
             serializedObject.Update();
             if (currentEvent.type == EventType.Repaint)
-                Draw();
+                Paint();
             if (b_edit)
             {
                 switch (currentEvent.type)
@@ -56,7 +67,7 @@ namespace MyEditor.ShapeEditor
             serializedObject.ApplyModifiedProperties();
         }
 
-        protected virtual void Draw() { }
+        protected virtual void Paint() { }
 
         protected virtual void OnLeftMouseDown() { }
         protected virtual void OnRightMouseDown() { }
@@ -65,5 +76,7 @@ namespace MyEditor.ShapeEditor
             selectedIndex = -1;
         }
         protected virtual void OnLeftMouseDrag() { }
+
+        protected abstract void MatchSprite(Sprite sprite);
     }
 }

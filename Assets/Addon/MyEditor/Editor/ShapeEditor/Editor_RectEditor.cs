@@ -7,7 +7,6 @@ namespace MyEditor.ShapeEditor
     public class Editor_RectEditor : Editor_ShapeEditor
     {
         private ShapeEditorSettings settings;
-        private Vector2 Position2D => new Vector3(rectEditor.transform.position.x, rectEditor.transform.position.y);
 
         [Auto]
         public SerializedProperty offset, size;
@@ -39,8 +38,9 @@ namespace MyEditor.ShapeEditor
             size.vector2Value = new Vector2(Mathf.Max(0.2f, size.vector2Value.x), Mathf.Max(0.2f, size.vector2Value.y));
         }
 
-        protected override void Draw()
+        protected override void Paint()
         {
+            base.Paint();
             Rect rect = rectEditor.WorldRect;
             vertices[0] = rect.min;
             vertices[1] = new Vector2(rect.xMin, rect.yMax);
@@ -48,7 +48,7 @@ namespace MyEditor.ShapeEditor
             vertices[3] = new Vector2(rect.xMax, rect.yMin);
             vertices[4] = rect.min;
             Handles.color = settings.LineColor;
-            Handle.DrawLines(vertices, 2f);
+            HandleUI.DrawLines(vertices, 2f);
             if (b_edit)
             {
                 int index = GetIndex();
@@ -56,7 +56,7 @@ namespace MyEditor.ShapeEditor
                 {
                     mids[i] = 0.5f * (vertices[i] + vertices[i + 1]);
                     Handles.color = index == i ? settings.SelectedPointColor : settings.PointColor;
-                    Handle.DrawDot(mids[i], MyEditorUtility.ScreenToWorldSize(settings.DefaultDotSize));
+                    HandleUI.DrawDot(mids[i], SceneViewUtility.ScreenToWorldSize(settings.DefaultDotSize));
                 }
             }
         }
@@ -68,10 +68,10 @@ namespace MyEditor.ShapeEditor
 
         protected override void OnLeftMouseDrag()
         {
-            Vector2 mousePosition = MyEditorUtility.GetPointOnRay(mouseRay, mids[selectedIndex]);
-            Vector2 delta = MyEditorUtility.Projection(mousePosition - mids[selectedIndex], direction[selectedIndex]);
+            Vector2 mousePosition = ExternalTool.GetPointOnRay(mouseRay, mids[selectedIndex]);
+            Vector2 delta = ExternalTool.Projection(mousePosition - mids[selectedIndex], direction[selectedIndex]);
             mids[selectedIndex] += delta;
-            offset.vector2Value = 0.5f * (mids[selectedIndex] + mids[(selectedIndex + 2) % 4]) - Position2D;
+            offset.vector2Value = 0.5f * (mids[selectedIndex] + mids[(selectedIndex + 2) % 4]) - rectEditor.Position2D;
             size.vector2Value += new Vector2(delta.x * direction[selectedIndex].x, delta.y * direction[selectedIndex].y);
         }
 
@@ -82,11 +82,18 @@ namespace MyEditor.ShapeEditor
                 Vector3 closestPoint = HandleUtility.ClosestPointToPolyLine(vertices);
                 for (int i = 0; i < vertices.Length - 1; i++)
                 {
-                    if (MyEditorUtility.Parallel(closestPoint - vertices[i], vertices[i + 1] - closestPoint))
+                    if (ExternalTool.Parallel(closestPoint - vertices[i], vertices[i + 1] - closestPoint))
                         return i;
                 }
             }
             return -1;
+        }
+
+        protected override void MatchSprite(Sprite sprite)
+        {
+            Rect rect = MyEditorUtility.GetSpriteAABB(sprite);
+            offset.vector2Value = rect.center;
+            size.vector2Value = rect.size;
         }
     }
 }

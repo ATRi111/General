@@ -52,7 +52,7 @@ namespace Services
     }
 
     /// <summary>
-    ///自动获取其他服务，仅用于Service的子类
+    ///自动获取其他服务，仅在Service的子类中使用
     /// </summary>
     [AttributeUsage(AttributeTargets.Field)]
     internal class OtherAttribute : Attribute

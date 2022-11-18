@@ -5,7 +5,8 @@ namespace Services
 {
     public class AssetLoader : Service
     {
-        private readonly SceneControllerBase sceneController;
+        [Other]
+        private SceneControllerBase sceneController;
 
         internal AssetLoaderCore core;
 

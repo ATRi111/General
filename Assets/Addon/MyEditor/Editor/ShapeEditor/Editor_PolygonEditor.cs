@@ -26,46 +26,49 @@ namespace MyEditor.ShapeEditor
             polygonEditor.GetWorldPoints(worldPoints);
             style.EnumField<EPolygonStyle>("style");
             localPoints.ListField("points");
+            if (b_edit)
+                EditorGUILayout.HelpBox("Right click to delete a point", MessageType.None);
             base.MyOnInspectorGUI();
         }
 
-        protected override void Draw()
+        protected override void Paint()
         {
+            base.Paint();
             polygonEditor.GetWorldPoints(worldPoints);
             Handles.color = settings.LineColor;
             switch (polygonEditor.style)
             {
                 case EPolygonStyle.PolyLine:
-                    Handle.DrawLines(worldPoints, 2f, false);
+                    HandleUI.DrawLines(worldPoints, 2f, false);
                     break;
                 case EPolygonStyle.ClosedPolyLine:
-                    Handle.DrawLines(worldPoints, 2f, true);
+                    HandleUI.DrawLines(worldPoints, 2f, true);
                     break;
             }
 
             if (b_edit)
             {
                 Handles.color = settings.PointColor;
-                int selected = GetPointIndex();
+                int index = GetIndex();
                 for (int i = 0; i < worldPoints.Count; i++)
                 {
-                    Handles.color = selectedIndex == i ? settings.SelectedPointColor : settings.PointColor;
-                    Handle.DrawDot(worldPoints[i], MyEditorUtility.ScreenToWorldSize(settings.DefaultDotSize));
+                    Handles.color = index == i ? settings.SelectedPointColor : settings.PointColor;
+                    HandleUI.DrawDot(worldPoints[i], SceneViewUtility.ScreenToWorldSize(settings.DefaultDotSize));
                 }
 
-                if (selected == -1)
+                if (index == -1)
                 {
                     Handles.color = settings.NewPointColor;
                     int insert = GetPointIndexOnLine(out Vector3 closest);
                     if (insert != -1)
-                        Handle.DrawDot(closest, MyEditorUtility.ScreenToWorldSize(settings.DefaultDotSize));
+                        HandleUI.DrawDot(closest, SceneViewUtility.ScreenToWorldSize(settings.DefaultDotSize));
                 }
             }
         }
 
         protected override void OnLeftMouseDown()
         {
-            selectedIndex = GetPointIndex();
+            selectedIndex = GetIndex();
             if (selectedIndex == -1)
             {
                 int insert = GetPointIndexOnLine(out Vector3 closest);
@@ -79,29 +82,32 @@ namespace MyEditor.ShapeEditor
         }
         protected override void OnRightMouseDown()
         {
-            int delete = GetPointIndex();
-            if (delete != -1)
+            if(localPoints.arraySize < 3)
             {
-                Debug.Log(delete);
-                localPoints.DeleteArrayElementAtIndex(delete);
+                Debug.LogWarning($"至少应当有两个点");
+                return;
             }
+
+            int delete = GetIndex();
+            if (delete != -1)
+                localPoints.DeleteArrayElementAtIndex(delete);
         }
         protected override void OnLeftMouseDrag()
         {
             if (selectedIndex >= 0)
             {
                 localPoints.GetArrayElementAtIndex(selectedIndex).vector3Value =
-                    MyEditorUtility.GetPointOnRay(mouseRay, worldPoints[selectedIndex]) - polygonEditor.transform.position;
+                    ExternalTool.GetPointOnRay(mouseRay, worldPoints[selectedIndex]) - polygonEditor.transform.position;
             }
         }
 
-        private int GetPointIndex()
+        private int GetIndex()
         {
             Vector3 temp;
             for (int i = 0; i < worldPoints.Count; i++)
             {
                 temp = worldPoints[i];
-                if ((MyEditorUtility.GetPointOnRay(mouseRay, temp) - temp).sqrMagnitude < settings.HitPointSqrDistance)
+                if ((ExternalTool.GetPointOnRay(mouseRay, temp) - temp).sqrMagnitude < settings.HitPointSqrDistance)
                     return i;
             }
             return -1;
@@ -125,7 +131,7 @@ namespace MyEditor.ShapeEditor
                             closestPoint = HandleUtility.ClosestPointToPolyLine(vertices.ToArray());
                             for (int i = 0; i < vertices.Count - 1; i++)
                             {
-                                if (MyEditorUtility.Parallel(closestPoint - vertices[i], vertices[i + 1] - closestPoint))
+                                if (ExternalTool.Parallel(closestPoint - vertices[i], vertices[i + 1] - closestPoint))
                                     return (i + 1) % vertices.Count;
                             }
                         }
@@ -133,6 +139,17 @@ namespace MyEditor.ShapeEditor
                     break;
             }
             return -1;
+        }
+
+        protected override void MatchSprite(Sprite sprite)
+        {
+            List<Vector2> outline = MyEditorUtility.GetSpritePhysicsShape(sprite);
+            localPoints.ClearArray();
+            for (int i = 0; i < outline.Count; i++)
+            {
+                localPoints.arraySize++;
+                localPoints.GetArrayElementAtIndex(i).vector3Value = outline[i];
+            }
         }
     }
 }
