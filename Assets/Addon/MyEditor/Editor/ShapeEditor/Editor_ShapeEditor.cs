@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -28,7 +27,7 @@ namespace MyEditor.ShapeEditor
                 SceneView.RepaintAll();
             }
 
-            SpriteRenderer spriteRenderer = target.GetComponent<SpriteRenderer>();
+            SpriteRenderer spriteRenderer = (target as MonoBehaviour).GetComponent<SpriteRenderer>();
             if(spriteRenderer!= null && spriteRenderer.sprite != null)
             {
                 if(GUILayout.Button("match sprite"))
