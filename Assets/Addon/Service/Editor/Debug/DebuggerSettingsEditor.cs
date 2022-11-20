@@ -1,7 +1,5 @@
 using UnityEditor;
 using UnityEditorInternal;
-using UnityEngine;
-using static UnityEditor.Rendering.FilterWindow;
 
 namespace Services
 {
