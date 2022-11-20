@@ -2,7 +2,6 @@ using UnityEngine;
 
 namespace Services
 {
-    [CreateAssetMenu]
     public class DebuggerSettings : ScriptableObject
     {
         public bool[] flags;
