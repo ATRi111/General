@@ -30,8 +30,8 @@ namespace Services
             }
             catch(Exception e)
             {
-                Debug.LogError($"无法加载资源，资源路径为{path}");
-                Debug.LogError(e);
+                Debugger.LogError($"无法加载资源，资源路径为{path}", EMessageType.System);
+                Debugger.LogError(e.ToString(), EMessageType.System);
                 return null;
             }
         }
@@ -44,8 +44,8 @@ namespace Services
             }
             catch(Exception e)
             {
-                Debug.LogError(e);
-                Debug.LogError($"无法加载资源，资源路径为{path}");
+                Debugger.LogError(e.ToString(), EMessageType.System);
+                Debugger.LogError($"无法加载资源，资源路径为{path}", EMessageType.System);
             }
         }
 

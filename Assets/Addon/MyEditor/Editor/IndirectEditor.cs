@@ -28,7 +28,7 @@ namespace MyEditor
                         Debug.Log($"{serializedProperty.name}找不到名为{name}的字段");
                 }
             }
-            foldout = false;
+            foldout = true;
             this.label = label;
         }
 

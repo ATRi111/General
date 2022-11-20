@@ -43,8 +43,8 @@ namespace Services
             }
             catch (Exception e)
             {
-                Debug.LogWarning(e);
-                Debug.LogWarning("无法读取存档，创建新存档");
+                Debugger.LogWarning(e.ToString(), EMessageType.System);
+                Debugger.LogWarning("无法读取存档，创建新存档", EMessageType.System);
             }
         }
 
@@ -56,8 +56,8 @@ namespace Services
             }
             catch (Exception e)
             {
-                Debug.LogWarning(e);
-                Debug.LogWarning("无法写入存档");
+                Debugger.LogWarning(e.ToString(), EMessageType.System);
+                Debugger.LogWarning("无法写入存档", EMessageType.System);
             }
         }
     }

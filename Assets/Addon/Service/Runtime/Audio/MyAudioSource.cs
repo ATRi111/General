@@ -43,7 +43,7 @@ namespace Services
                     {
                         if (Loop)
                         {
-                            Debug.LogWarning("循环中的音频不会自毁");
+                            Debugger.LogWarning("循环中的音频不会自毁", EMessageType.Audio);
                             return;
                         }
                         gameCycle.AttachToGameCycle(EInvokeMode.Update, SelfDestroy);
@@ -63,7 +63,7 @@ namespace Services
             gameCycle = ServiceLocator.Get<GlobalGameCycle>();
             AudioSource = GetComponent<AudioSource>();
             if (AudioSource.playOnAwake)
-                Debug.LogWarning($"{gameObject}的playOnAwake不应设为true");
+                Debugger.LogWarning($"{gameObject}的playOnAwake不应设为true", EMessageType.Audio);
         }
 
         public virtual void Play(float time = 0f, bool loop = false)

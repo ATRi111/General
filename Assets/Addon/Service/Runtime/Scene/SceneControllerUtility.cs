@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Services
@@ -28,7 +27,7 @@ namespace Services
         {
             if (sceneIndexDict.TryGetValue(sceneName, out int index))
                 return index;
-            Debug.LogWarning($"BuildSettings中没有名为{sceneName}的场景 ");
+            Debugger.LogWarning($"BuildSettings中没有名为{sceneName}的场景 ", EMessageType.System);
             return -1;
         }
 
@@ -36,7 +35,7 @@ namespace Services
         {
             if (sceneNameDict.TryGetValue(sceneIndex, out string name))
                 return name;
-            Debug.LogWarning($"BuildSettings中没有索引为{sceneIndex}的场景 ");
+            Debugger.LogWarning($"BuildSettings中没有索引为{sceneIndex}的场景 ", EMessageType.System);
             return null;
         }
 

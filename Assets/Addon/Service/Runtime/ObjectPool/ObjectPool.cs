@@ -12,7 +12,7 @@ namespace Services
         {
             if (prefab.GetComponent<IMyObject>() == null)
             {
-                Debug.LogError("对象池中的物体未实现IMyObject");
+                Debugger.LogError("对象池中的物体未实现IMyObject", EMessageType.System);
                 return;
             }
             this.prefab = prefab;
@@ -37,7 +37,7 @@ namespace Services
         internal void Create(int count = 1)
         {
             if (count > 100)
-                Debug.LogWarning("大量的预生成应分散到多帧执行");
+                Debugger.LogWarning("大量的预生成应分散到多帧执行", EMessageType.System);
             for (int i = 0; i < count; i++)
             {
                 IMyObject newObject = ObjectPoolUtility.Clone(prefab, true, this);

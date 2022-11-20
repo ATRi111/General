@@ -20,8 +20,8 @@ namespace Services
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"写Json失败，路径为{path}");
-                Debug.LogError(e);
+                Debugger.LogWarning($"写Json失败，路径为{path}", EMessageType.System);
+                Debugger.LogError(e.ToString(), EMessageType.System);
             }
         }
 
@@ -38,8 +38,8 @@ namespace Services
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"读取Json失败，路径为{path}");
-                Debug.LogWarning(e);
+                Debugger.LogWarning($"读取Json失败，路径为{path}", EMessageType.System);
+                Debugger.LogWarning(e.ToString(), EMessageType.System);
                 return null;
             }
         }

@@ -18,7 +18,7 @@ namespace Services
         {
             T asset = request.asset as T;
             if (asset == null)
-                Debug.LogWarning("加载资源失败");
+                Debugger.LogWarning("加载资源失败", EMessageType.System);
             callBack?.Invoke(asset);
         }
     }

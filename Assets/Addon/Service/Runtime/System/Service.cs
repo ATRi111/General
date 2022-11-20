@@ -5,18 +5,22 @@ using UnityEngine;
 namespace Services
 {
     /// <summary>
-    /// 可通过Get获取继承此类的子类对象，每个类的对象应当是唯一的
+    /// 全局可获取的对象，不应同时存在超过一个同类型的对象
     /// </summary>
     public class Service : MonoBehaviour
     {
         /// <summary>
-        /// 注册时声明的Type，其他脚本要获取此类服务时，也使用注册时声明的Type
+        /// 注册时声明的Type，其他脚本要获取此类服务时，也要使用注册时声明的Type
         /// </summary>
         public virtual Type RegisterType => GetType();
+        protected virtual EConflictSolution Solution => EConflictSolution.DestroyNew;
+
+        public string Informantion { get; protected set; }
 
         protected virtual void Awake()
         {
-            ServiceLocator.Register(this);
+            Informantion = $"服务类型:{GetType()},所在游戏物体:{gameObject.name}";
+            ServiceLocator.Register(this, Solution);
         }
 
         protected void Start()
@@ -27,6 +31,12 @@ namespace Services
         }
 
         protected internal virtual void Init() { }
+
+        public virtual void Destroy()
+        {
+            ServiceLocator.Unregister(this);
+            Destroy(this);
+        }
 
         internal void GetOtherService()
         {
@@ -48,6 +58,11 @@ namespace Services
                     info.SetValue(this, ServiceLocator.Get(type));
                 }
             }
+        }
+
+        public override string ToString()
+        {
+            return Informantion;
         }
     }
 

@@ -69,7 +69,7 @@ namespace Services
                 if (create)
                     fileInfo.Create().Dispose();
                 else
-                    Debug.LogWarning($"{path}文件不存在");
+                    Debugger.LogWarning($"{path}文件不存在", EMessageType.System);
             }
             return fileInfo;
         }

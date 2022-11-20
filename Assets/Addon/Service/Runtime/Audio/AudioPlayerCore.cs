@@ -10,7 +10,7 @@ namespace Services
             GameObject obj = Object.Instantiate(prefab);
             if (!obj.TryGetComponent(out MyAudioSource myAudioSource))
             {
-                Debug.LogWarning("创建的游戏物体未挂载MyAudioSource脚本");
+                Debugger.LogWarning("创建的游戏物体未挂载MyAudioSource脚本", EMessageType.Audio);
                 return null;
             }
             obj.transform.parent = parent;

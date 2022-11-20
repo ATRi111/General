@@ -25,7 +25,7 @@ namespace Services
             }
             if (typeDict[eEvent] != methodType)
             {
-                Debug.LogWarning($"响应方法的类型不符合事件所要求的类型,事件名为{eEvent}");
+                Debugger.LogWarning($"响应方法的类型不符合事件所要求的类型,事件名为{eEvent}", EMessageType.System);
                 return false;
             }
             return true;
@@ -35,12 +35,12 @@ namespace Services
         {
             if (!type.IsSubclassOf(typeof(Delegate)))
             {
-                Debug.LogWarning($"{type}不是Delegate的子类");
+                Debugger.LogWarning($"{type}不是Delegate的子类", EMessageType.System);
                 return;
             }
             if (eventDict.ContainsKey(eEvent))
             {
-                Debug.LogWarning($"名为{eEvent}的事件已存在");
+                Debugger.LogWarning($"名为{eEvent}的事件已存在", EMessageType.System);
                 return;
             }
             typeDict.Add(eEvent, type);
