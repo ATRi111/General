@@ -1,5 +1,4 @@
 using UnityEditor;
-using UnityEditorInternal;
 
 namespace Services
 {
@@ -7,7 +6,6 @@ namespace Services
     public class DebuggerSettingsEditor : Editor
     {
         public SerializedProperty flags;
-        public ReorderableList list;
 
         private bool foldout;
 
