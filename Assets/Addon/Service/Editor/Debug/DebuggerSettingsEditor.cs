@@ -25,7 +25,7 @@ namespace Services
                 for (int i = 0; i < flags.arraySize; i++)
                 {
                     SerializedProperty element = flags.GetArrayElementAtIndex(i);
-                    EditorGUILayout.Toggle(((EMessageType)i).ToString(), element.boolValue);
+                    element.boolValue = EditorGUILayout.Toggle(((EMessageType)i).ToString(), element.boolValue);
                 }
                 EditorGUI.indentLevel--;
             }
