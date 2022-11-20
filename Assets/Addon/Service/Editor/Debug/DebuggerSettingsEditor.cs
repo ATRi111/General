@@ -31,7 +31,6 @@ namespace Services
                 }
                 EditorGUI.indentLevel--;
             }
-           
         }
     }
 }
