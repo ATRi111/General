@@ -25,7 +25,6 @@ namespace Services
                 {
                     GameInitSettings initSettings = Resources.Load<GameInitSettings>("GameInitSettings");
                     initSettings.index_startGame = i;
-                    Debug.Log(initSettings.index_startGame);
                     SceneManager.LoadScene(0);
                     return;
                 }
