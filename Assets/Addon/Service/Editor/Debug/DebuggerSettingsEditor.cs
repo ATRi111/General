@@ -18,6 +18,7 @@ namespace Services
 
         public override void OnInspectorGUI()
         {
+            serializedObject.Update();
             Fix();
             foldout = EditorGUILayout.BeginFoldoutHeaderGroup(foldout, "Flags");
             EditorGUILayout.EndFoldoutHeaderGroup();
@@ -31,6 +32,7 @@ namespace Services
                 }
                 EditorGUI.indentLevel--;
             }
+            serializedObject.ApplyModifiedProperties();
         }
 
         private void Fix()

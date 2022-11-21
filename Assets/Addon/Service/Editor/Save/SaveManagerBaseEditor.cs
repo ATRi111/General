@@ -1,25 +1,25 @@
-using MyEditor;
 using UnityEditor;
 using UnityEngine;
 
 namespace Services
 {
     [CustomEditor(typeof(SaveManagerBase), true)]
-    public class SaveManagerBaseEditor : AutoEditor
+    public class SaveManagerBaseEditor : Editor
     {
-        [Auto]
         public SerializedProperty core;
         public SerializedProperty runtimeData;
 
-        protected override void OnEnable()
+        private void OnEnable()
         {
-            base.OnEnable();
+            core = serializedObject.FindProperty(nameof(core));
             runtimeData = core.FindPropertyRelative(nameof(runtimeData));
         }
 
-        protected override void MyOnInspectorGUI()
+        public override void OnInspectorGUI()
         {
-            runtimeData.PropertyField("运行时数据");
+            serializedObject.Update();
+            EditorGUILayout.PropertyField(runtimeData, new GUIContent("运行时数据"));
+            serializedObject.ApplyModifiedProperties();
         }
     }
 }
