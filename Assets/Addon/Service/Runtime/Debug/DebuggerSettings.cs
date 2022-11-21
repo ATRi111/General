@@ -1,17 +1,19 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Services
 {
     public class DebuggerSettings : ScriptableObject
     {
-        public bool[] flags;
+        public List<bool> flags;
         
         public DebuggerSettings()
         {
-            flags = new bool[System.Enum.GetValues(typeof(EMessageType)).Length];
-            for (int i = 0; i < flags.Length; i++)
+            flags = new List<bool>();
+            int length = System.Enum.GetValues(typeof(EMessageType)).Length;
+            for (int i = 0; i < length; i++)
             {
-                flags[i] = true;
+                flags.Add(false);
             }
         }
 

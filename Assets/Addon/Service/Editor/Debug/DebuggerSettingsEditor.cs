@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 
 namespace Services
@@ -17,6 +18,7 @@ namespace Services
 
         public override void OnInspectorGUI()
         {
+            Fix();
             foldout = EditorGUILayout.BeginFoldoutHeaderGroup(foldout, "Flags");
             EditorGUILayout.EndFoldoutHeaderGroup();
             if (foldout)
@@ -28,6 +30,26 @@ namespace Services
                     element.boolValue = EditorGUILayout.Toggle(((EMessageType)i).ToString(), element.boolValue);
                 }
                 EditorGUI.indentLevel--;
+            }
+        }
+
+        private void Fix()
+        {
+            int length = Enum.GetValues(typeof(EMessageType)).Length;
+            int current = flags.arraySize;
+            if (length > current)
+            {
+                for (int i = current; i < length; i++)
+                {
+                    flags.InsertArrayElementAtIndex(i);
+                }
+            }
+            else
+            {
+                for (int i = current - 1; i > length - 1; i--)
+                {
+                    flags.DeleteArrayElementAtIndex(i);
+                }
             }
         }
     }

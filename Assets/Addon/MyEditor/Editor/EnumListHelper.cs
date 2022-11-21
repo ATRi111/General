@@ -5,7 +5,7 @@ using UnityEngine.Events;
 namespace MyEditor
 {
     /// <summary>
-    /// 用于绘制与枚举类型对应的列表
+    /// 用于绘制与枚举类型对应的列表(必须是一般的从0开始递增的枚举)
     /// </summary>
     public class EnumListDrawer
     {
@@ -29,6 +29,7 @@ namespace MyEditor
 
         public void OnInspectorGUI()
         {
+            Fix();
             foldout = EditorGUILayout.BeginFoldoutHeaderGroup(foldout, label);
             EditorGUILayout.EndFoldoutHeaderGroup();
             if (foldout)
@@ -41,6 +42,29 @@ namespace MyEditor
                     DrawElement?.Invoke(i, enumName, serializedProperty);
                 }
                 EditorGUI.indentLevel--;
+            }
+        }
+
+        /// <summary>
+        /// 枚举常量的数目改变时，需要调用此方法修复
+        /// </summary>
+        private void Fix()
+        {
+            int length = Enum.GetValues(enumType).Length;
+            int current = list.arraySize;
+            if(length > current)
+            {
+                for (int i = current; i < length; i++)
+                {
+                    list.InsertArrayElementAtIndex(i);
+                }
+            }
+            else
+            {
+                for (int i = current - 1; i > length - 1; i--)
+                {
+                    list.DeleteArrayElementAtIndex(i);
+                }
             }
         }
     }
