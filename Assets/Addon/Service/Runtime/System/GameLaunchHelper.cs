@@ -7,12 +7,13 @@ namespace Services
     internal class GameLaunchHelper : MonoBehaviour
     {
 #if UNITY_EDITOR
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        private static void RestartCheck()
+        private void Awake()
         {
             GameObject serviceLocator = GameObject.Find("ServiceLocator");
             if (serviceLocator == null)
                 Restart();
+            else
+                Destroy(gameObject);
         }
 
         private static void Restart()
@@ -24,18 +25,12 @@ namespace Services
                 {
                     GameInitSettings initSettings = Resources.Load<GameInitSettings>("GameInitSettings");
                     initSettings.index_startGame = i;
+                    Debug.Log(initSettings.index_startGame);
                     SceneManager.LoadScene(0);
                     return;
                 }
             }
-
-            Debug.LogError("请将当前场景添加到BuildSettings中");
-            Application.Quit();
         }
 #endif
-        private void Awake()
-        {
-            Destroy(gameObject);
-        }
     }
 }
