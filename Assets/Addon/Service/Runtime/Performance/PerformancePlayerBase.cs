@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -10,19 +10,12 @@ namespace Services
         private PerformanceManagerBase manager;
 
         public PlayableDirector Director { get; private set; }
-        public EDollType useDollFlags;
-        private int[] enumValues;
+        public List<bool> useDolls;
 
         protected virtual void Awake()
         {
             Director = GetComponent<PlayableDirector>();
             manager = ServiceLocator.Get<PerformanceManagerBase>();
-            Array temp = Enum.GetValues(typeof(EDollType));
-            enumValues = new int[temp.Length];
-            for (int i = 0; i < temp.Length; i++)
-            {
-                enumValues[i] = temp.GetValue(i).GetHashCode();
-            }
 
             if (Director.playOnAwake)
             {
@@ -33,12 +26,10 @@ namespace Services
 
         protected virtual void Register_Play()
         {
-            for (int i = 0; i <= enumValues.Length; i++ )
+            for (int i = 0; i <= useDolls.Count; i++ )
             {
-                if ((enumValues[i] & (int)useDollFlags) != 0)
-                {
-                    manager.UseDoll?.Invoke((EDollType)enumValues[i]);
-                }
+                if(useDolls[i])
+                    manager.UseDoll?.Invoke((EDollType)i);
             }
         }
 
@@ -49,12 +40,10 @@ namespace Services
 
         protected virtual void Register_Stop()
         {
-            for(int i = 0; i <= enumValues.Length; i++ )
+            for (int i = 0; i <= useDolls.Count; i++)
             {
-                if ((enumValues[i] & (int)useDollFlags) != 0)
-                {
-                    manager.StopUseDoll?.Invoke((EDollType)enumValues[i]);
-                }
+                if (useDolls[i])
+                    manager.StopUseDoll?.Invoke((EDollType)i);
             }
         }
     }
