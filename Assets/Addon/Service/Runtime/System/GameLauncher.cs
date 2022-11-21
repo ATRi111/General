@@ -4,6 +4,8 @@ using UnityEngine;
 [DefaultExecutionOrder(-999)]
 public class GameLauncher : MonoBehaviour
 {
+    public static int StartGameIndex;
+
     private static int count_incomplete;
     /// <summary>
     /// 剩余的初始化任务数
@@ -19,6 +21,11 @@ public class GameLauncher : MonoBehaviour
                 StartGame();
             count_incomplete = value;
         }
+    }
+
+    static GameLauncher()
+    {
+        StartGameIndex = -1;
     }
 
     private void Awake()
@@ -39,7 +46,11 @@ public class GameLauncher : MonoBehaviour
 
     private static void StartGame()
     {
-        GameInitSettings settings = Resources.Load<GameInitSettings>("GameInitSettings");
-        ServiceLocator.Get<SceneControllerBase>().LoadScene(settings == null ? 1 : settings.index_startGame);
+        if (StartGameIndex == -1)
+        {
+            GameInitSettings settings = Resources.Load<GameInitSettings>("GameInitSettings");
+            StartGameIndex = settings == null ? 1 : settings.startGameIndex;
+        }
+        ServiceLocator.Get<SceneControllerBase>().LoadScene(StartGameIndex);
     }
 }

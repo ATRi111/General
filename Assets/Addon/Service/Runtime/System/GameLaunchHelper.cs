@@ -23,8 +23,7 @@ namespace Services
                 string name = SceneControllerUtility.GetSceneName(SceneUtility.GetScenePathByBuildIndex(i));
                 if (name == SceneControllerUtility.SceneName)
                 {
-                    GameInitSettings initSettings = Resources.Load<GameInitSettings>("GameInitSettings");
-                    initSettings.index_startGame = i;
+                    GameLauncher.StartGameIndex = i;
                     SceneManager.LoadScene(0);
                     return;
                 }
