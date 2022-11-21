@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Services
+namespace Tools
 {
     [System.Serializable]
     public class Semaphore
