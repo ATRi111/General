@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79860dc59c0e40e4ba4b0bbaae031fea, type: 3}
+  m_Name: PointEditorSettings
+  m_EditorClassIdentifier: 
+  DefaultLineThickness: 1
+  DefaultDotSize: 0.01
+  LineColor: {r: 0.121673584, g: 1, b: 0, a: 1}
+  PointColor: {r: 0.20011996, g: 0.6320754, b: 0, a: 1}
+  SelectedPointColor: {r: 1, g: 0, b: 0, a: 1}
+  NewPointColor: {r: 1, g: 0.90539324, b: 0, a: 1}
+  HitPointDistance: 20
+  HitLineDistance: 10
+  ContainHitObjectDistance: 100
+  HitObjectDistance: 10
+  DefaultDistance: 5
