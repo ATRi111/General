@@ -1,7 +1,8 @@
 namespace Services.Save
 {
     /// <summary>
-    /// 控制某种对游戏象的存档读档，使用时新建此类实例，不影响原有逻辑
+    /// 可以控制单个游戏对象的数据的存取;
+    /// 要使用此类，首先为要控制的游戏对象定义对应的存档数据类，然后运行时创建一个此类的示例
     /// </summary>
     /// <typeparam name="Tdata">游戏对象对应的存档数据类</typeparam>
     /// <typeparam name="TObject">游戏对象类</typeparam>
@@ -14,7 +15,7 @@ namespace Services.Save
         private bool active;
         /// <summary>
         /// 是否启用存档/读档。
-        /// 通常，物体被禁用或销毁后应当禁用
+        /// 通常，物体被禁用或销毁前应当禁用
         /// </summary>
         public bool Active
         {
@@ -53,28 +54,34 @@ namespace Services.Save
                 Active = true;
         }
 
+        /// <summary>
+        /// 读档时的行为
+        /// </summary>
         protected virtual void OnLoad()
         {
             FromData(FindSelf(saveManager.RuntimeData));
         }
 
+        /// <summary>
+        /// 存档时的行为
+        /// </summary>
         protected virtual void OnSave()
         {
             ToData(FindSelf(saveManager.RuntimeData));
         }
 
         /// <summary>
-        /// 从整个存档数据中找到自身的数据
+        /// 在此方法中规定如何从整个存档数据中找到自身的数据
         /// </summary>
         protected abstract Tdata FindSelf(WholeSaveData whole);
 
         /// <summary>
-        /// 通过自身的运行时存档数据修改自身的数据
+        /// 在此方法中定义存档数据如何转化为游戏对象的数据
         /// </summary>
         public abstract void FromData(Tdata data);
 
         /// <summary>
-        /// 通过自身的数据修改自身的运行时存档数据
+        /// 在此方法中定义游戏对象的数据如何转化为存档数据
         /// </summary>
         public abstract void ToData(Tdata data);
     }

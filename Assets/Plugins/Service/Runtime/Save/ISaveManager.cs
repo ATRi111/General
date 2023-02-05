@@ -5,7 +5,7 @@ namespace Services.Save
     public interface ISaveManager : IService
     {
         /// <summary>
-        /// 是否需要读档
+        /// 是否需要读档；许多对象会在发出读档请求之后才会生成，所以这些对象通过NeedLoad属性判断是否要读档
         /// </summary>
         bool NeedLoad { get; set; }
         WholeSaveData RuntimeData { get; }
