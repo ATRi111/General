@@ -17,9 +17,6 @@ namespace Services.ObjectPools
         public IMyObject Activate(string identifier, Vector3 position, Vector3 eulerAngles, Transform parent = null)
             => core.Activate(identifier, position, eulerAngles, parent);
 
-        public IMyObject Activate(string identifier, Vector3 position, float eulerAngleZ = 0f, Transform parent = null)
-            => core.Activate(identifier, position, new Vector3(0f, 0f, eulerAngleZ), parent);
-
         public void PreCreate(string identifier, int count)
             => core.PreCreate(identifier, count);
     }

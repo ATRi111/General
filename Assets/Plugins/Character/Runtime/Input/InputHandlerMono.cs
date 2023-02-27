@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Character
 {
-    //禁止手动添加此脚本
+    //使用InputHandler时，会自动创建带有此脚本的游戏物体，禁止手动添加此脚本
     internal class InputHandlerMono : MonoBehaviour
     {
         private void Awake()
