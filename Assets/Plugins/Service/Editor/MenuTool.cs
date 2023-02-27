@@ -24,7 +24,7 @@ namespace Services
             ProjectWindowUtil.ShowCreatedAsset(asset);
         }
 
-        [MenuItem("Tools/Audio/CreateAudioSource #A")]
+        [MenuItem("Tools/Service/Audio/CreateAudioSource #A")]
         //用于批量创建带有AudioSource的Prefab
         public static void CreateAudioPrefab()
         {
