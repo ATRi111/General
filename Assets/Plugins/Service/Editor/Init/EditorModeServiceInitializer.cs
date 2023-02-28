@@ -32,6 +32,7 @@ namespace Services
             if(obj == null)
             {
                 obj = new GameObject(nameof(ServiceLocator));
+                obj.AddComponent<DontDestroy>();
                 sb.AppendLine($"添加游戏物体:{nameof(ServiceLocator)}");
             }
             else
