@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEditor;
 using UnityEngine;
 
@@ -15,24 +16,49 @@ namespace Services
             window.Show();
         }
 
+        private static StringBuilder sb;
+
         public static void Init()
         {
+            sb = new StringBuilder();
             InitBaseObject();
             InitAllService();
+            Debugger.Log(sb, EMessageType.System);
         }
 
         public static void InitBaseObject()
         {
             GameObject obj = GameObject.Find(nameof(ServiceLocator));
             if(obj == null)
+            {
                 obj = new GameObject(nameof(ServiceLocator));
+                sb.AppendLine($"添加游戏物体:{nameof(ServiceLocator)}");
+            }
+            else
+            {
+                sb.AppendLine($"游戏物体已存在:{nameof(ServiceLocator)}");
+            }
 
             obj = GameObject.Find(nameof(GameLauncher));
             if (obj == null)
+            {
                 obj = new GameObject(nameof(GameLauncher));
+                sb.AppendLine($"添加游戏物体:{nameof(GameLauncher)}");
+            }
+            else
+            {
+                sb.AppendLine($"游戏物体已存在:{nameof(GameLauncher)}");
+            }
 
             if(obj.GetComponent<GameLauncher>() == null)
+            {
                 obj.AddComponent<GameLauncher>();
+                sb.AppendLine($"添加组件:{nameof(GameLauncher)}");
+            }
+            else
+            {
+                sb.AppendLine($"组件已存在:{nameof(GameLauncher)}");
+            }
         }
 
         public static void InitAllService()
@@ -59,6 +85,7 @@ namespace Services
 
             Debugger.settings.Paste();
 
+            sb.AppendLine("发现并新添加的Service类型:");
             foreach (Type type in targets)
             {
                 InitTargetdService(type, parent);
@@ -68,14 +95,15 @@ namespace Services
         public static void InitTargetdService(Type target, Transform parent)
         {
             string original = target.ToString();
-            string search = original[(original.LastIndexOf('.') + 2)..];
-            GameObject obj = GameObject.Find(search);
+            string name = original[(original.LastIndexOf('.') + 2)..];
+            GameObject obj = GameObject.Find(name);
             if(obj == null)
             {
-                obj = new GameObject(search);
+                obj = new GameObject(name);
                 InitService init = obj.AddComponent<InitService>();
-                init.search = search;
+                init.search = name;
                 obj.transform.SetParent(parent);
+                sb.AppendLine(name);
             }
         }
     }
