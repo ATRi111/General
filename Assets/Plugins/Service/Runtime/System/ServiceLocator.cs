@@ -40,10 +40,10 @@ namespace Services
         /// 获取一个类型的服务
         /// </summary>
         /// <typeparam name="T">此参数必须是继承了IService的接口类型，此接口代表了有同样功能的一类服务</typeparam>
-        internal static T Get<T>() where T : class, IService
+        public static T Get<T>() where T : class, IService
             => Get(typeof(T)) as T;
 
-        internal static Service Get(Type type)
+        public static Service Get(Type type)
         {
             if (!IService.ExtendsIService(type))
             {
