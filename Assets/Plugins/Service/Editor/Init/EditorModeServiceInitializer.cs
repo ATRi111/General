@@ -8,7 +8,14 @@ namespace Services
     internal static class EditorModeServiceInitializer
     {
         [MenuItem("Tools/Service/InitializeService")]
-        public static void CompleteInit()
+        public static void ComfirmInit()
+        {
+            InitServiceConfirmWindow window = EditorWindow.GetWindow<InitServiceConfirmWindow>("Confirm"); 
+            window.callBack += Init;
+            window.Show();
+        }
+
+        public static void Init()
         {
             InitBaseObject();
             InitAllService();
@@ -62,11 +69,14 @@ namespace Services
         {
             string original = target.ToString();
             string search = original[(original.LastIndexOf('.') + 2)..];
-            GameObject obj = new GameObject(search);
-            InitService init = obj.AddComponent<InitService>();
-            init.search = search;
-
-            obj.transform.SetParent(parent);
+            GameObject obj = GameObject.Find(search);
+            if(obj == null)
+            {
+                obj = new GameObject(search);
+                InitService init = obj.AddComponent<InitService>();
+                init.search = search;
+                obj.transform.SetParent(parent);
+            }
         }
     }
 }

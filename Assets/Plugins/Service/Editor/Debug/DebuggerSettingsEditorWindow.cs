@@ -20,6 +20,8 @@ namespace Services
         {
             settings = Resources.Load<DebuggerSettings>(nameof(DebuggerSettings));
             foldout = true;
+            minSize = new Vector2(200, 200);
+            maxSize = new Vector2(300, 500);
         }
 
         private void OnGUI()
