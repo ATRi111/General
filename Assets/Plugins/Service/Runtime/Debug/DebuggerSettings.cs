@@ -17,9 +17,14 @@ namespace Services
             }
         }
 
-        public bool AllowLog(EMessageType type)
+        public bool GetAllowLog(EMessageType type)
         {
             return flags[(int)type];
+        }
+
+        public void SetAllowLog(EMessageType type, bool value)
+        {
+            flags[(int)type] = value;
         }
     }
 }

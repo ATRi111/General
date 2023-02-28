@@ -30,7 +30,7 @@ namespace Services
 
         private static void Log(object message, EMessageType type, UnityAction<object> method)
         {
-            if (settings.AllowLog(type))
+            if (settings.GetAllowLog(type))
             {
                 message = FormatMessage(message, type);
                 method.Invoke(message);
@@ -44,7 +44,7 @@ namespace Services
 
         public static void LogException(Exception e, EMessageType type = EMessageType.Default)
         {
-            if (settings.AllowLog(type))
+            if (settings.GetAllowLog(type))
             {
                 Debug.LogException(e);
             }
