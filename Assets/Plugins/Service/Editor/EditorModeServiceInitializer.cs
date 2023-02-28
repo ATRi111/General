@@ -33,7 +33,7 @@ namespace Services
             HashSet<Type> targets = new HashSet<Type>();
             string[] guids = AssetDatabase.FindAssets("t:MonoScript", new[] { "Assets/Plugins/Service" });
 
-            bool temp = Debugger.settings.GetAllowLog(EMessageType.System);
+            Debugger.settings.Copy();
             Debugger.settings.SetAllowLog(EMessageType.System, false);
 
             for (int i = 0; i < guids.Length; i++)
@@ -50,7 +50,7 @@ namespace Services
             }
             Transform parent = GameObject.Find(nameof(ServiceLocator)).transform;
 
-            Debugger.settings.SetAllowLog(EMessageType.System, temp);
+            Debugger.settings.Paste();
 
             foreach (Type type in targets)
             {

@@ -11,6 +11,7 @@ namespace Services
         static Debugger()
         {
             settings = Resources.Load<DebuggerSettings>(nameof(DebuggerSettings));
+            settings.Copy();
         }
 
         public static void Log(object message, EMessageType type = EMessageType.Default)
