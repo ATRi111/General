@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Character
 {
     /// <summary>
-    /// 要检测的输入事件的时间段
+    /// 检测输入事件的时间段
     /// </summary>
     public enum EInputDuration
     {
@@ -23,7 +23,7 @@ namespace Character
     }
 
     /// <summary>
-    /// 记录输入。如果要获取当下的输入，直接调用InputManager中的API即可;此类保存的是过去的输入以及无法直接获取的输入
+    /// 保存的过去的输入,包括无法直接获取的输入
     /// </summary>
     public static class InputRecoder 
     {
@@ -31,6 +31,8 @@ namespace Character
 
         public static bool GetButtonUp(string axisName,EInputDuration duration)
         {
+            if (!items.ContainsKey(axisName))
+                AddItem(axisName);
             RecordItem item = items[axisName];
             return duration switch
             {
@@ -43,6 +45,8 @@ namespace Character
 
         public static bool GetButtonDown(string axisName,EInputDuration duration)
         {
+            if (!items.ContainsKey(axisName))
+                AddItem(axisName);
             RecordItem item = items[axisName];
             return duration switch
             {
@@ -53,12 +57,18 @@ namespace Character
             };
         }
 
+        /// <summary>
+        /// 添加对一个轴的输入检测（访问一个轴的输入时，如果尚未添加，则会自动添加；但未事先添加可能导致第一次获取到错误的结果）
+        /// </summary>
         public static void AddItem(string axisName)
         {
             if(!items.ContainsKey(axisName))
                 items.Add(axisName, new RecordItem());
         }
 
+        /// <summary>
+        /// 取消对一个轴的输入检测
+        /// </summary>
         public static void RemoveItem(string axisName)
         {
             items.Remove(axisName);
