@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Character
@@ -16,6 +13,11 @@ namespace Character
         //从上次FixedUpdate结束后到现在，是否至少发生一次
         internal bool up_fixedUpdate;
         internal bool down_fixedUpdate;
+
+        public RecordItem(string axisName)
+        {
+            this.axisName = axisName;
+        }
 
         internal void AfterUpdate()
         {

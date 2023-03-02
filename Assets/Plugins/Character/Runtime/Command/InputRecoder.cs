@@ -58,12 +58,12 @@ namespace Character
         }
 
         /// <summary>
-        /// 添加对一个轴的输入检测（访问一个轴的输入时，如果尚未添加，则会自动添加；但未事先添加可能导致第一次获取到错误的结果）
+        /// 添加对一个轴的输入检测（访问一个轴时，如果尚未添加，则会自动添加；但未事先添加可能导致第一次获取到错误的结果）
         /// </summary>
         public static void AddItem(string axisName)
         {
-            if(!items.ContainsKey(axisName))
-                items.Add(axisName, new RecordItem());
+            if (!items.ContainsKey(axisName))
+                items.Add(axisName, new RecordItem(axisName));
         }
 
         /// <summary>
