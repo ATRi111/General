@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Character
 {
     //此脚本会自动创建，不要手动创建
-    public class InputRecoderMono : MonoBehaviour
+    public class InputRecorderMono : MonoBehaviour
     {
         private void OnEnable()
         {
@@ -21,7 +21,7 @@ namespace Character
         {
             for (; ; )
             {
-                InputRecoder.AfterUpdate();
+                InputRecorder.AfterUpdate();
                 yield return null;
             }
         }
@@ -30,7 +30,7 @@ namespace Character
         {
             for(; ; )
             {
-                InputRecoder.AfterFixedUpdate();
+                InputRecorder.AfterFixedUpdate();
                 yield return new WaitForFixedUpdate();
             }
         }

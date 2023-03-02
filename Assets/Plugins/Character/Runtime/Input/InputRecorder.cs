@@ -25,7 +25,7 @@ namespace Character
     /// <summary>
     /// 保存的过去的输入,包括无法直接获取的输入
     /// </summary>
-    public static class InputRecoder 
+    public static class InputRecorder 
     {
         private readonly static Dictionary<string, RecordItem> items;
 
@@ -74,11 +74,11 @@ namespace Character
             items.Remove(axisName);
         }
 
-        static InputRecoder()
+        static InputRecorder()
         {
             items = new Dictionary<string, RecordItem>();
-            GameObject obj = new GameObject(nameof(InputRecoderMono));
-            obj.AddComponent<InputRecoderMono>();
+            GameObject obj = new GameObject(nameof(InputRecorderMono));
+            obj.AddComponent<InputRecorderMono>();
             Object.DontDestroyOnLoad(obj);
         }
 

@@ -5,7 +5,7 @@ public class Test : MonoBehaviour
 {
     private void FixedUpdate()
     {
-        if(InputRecoder.GetButtonDown("Jump",EInputDuration.FromFixedUpdate))
+        if(InputRecorder.GetButtonDown("Jump",EInputDuration.FromFixedUpdate))
         {
             Debug.Log(Time.time);
         }
