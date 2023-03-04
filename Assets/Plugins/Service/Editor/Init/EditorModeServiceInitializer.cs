@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 namespace Services
@@ -60,6 +61,7 @@ namespace Services
             {
                 sb.AppendLine($"组件已存在:{nameof(GameLauncher)}");
             }
+            EditorSceneManager.MarkSceneDirty(UnityEngine.SceneManagement.SceneManager.GetActiveScene());
         }
 
         public static void InitAllService()
@@ -91,6 +93,7 @@ namespace Services
             {
                 InitTargetdService(type, parent);
             }
+            EditorSceneManager.MarkSceneDirty(UnityEngine.SceneManagement.SceneManager.GetActiveScene());
         }
 
         public static void InitTargetdService(Type target, Transform parent)
@@ -106,6 +109,7 @@ namespace Services
                 obj.transform.SetParent(parent);
                 sb.AppendLine(name);
             }
+            EditorSceneManager.MarkSceneDirty(UnityEngine.SceneManagement.SceneManager.GetActiveScene());
         }
     }
 }

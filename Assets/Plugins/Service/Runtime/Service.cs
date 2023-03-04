@@ -1,3 +1,4 @@
+using Services.SceneManagement;
 using System;
 using System.Reflection;
 using UnityEngine;
@@ -21,7 +22,7 @@ namespace Services
             ServiceLocator.Register(this, Solution);
         }
 
-        protected void Start()
+        protected virtual void Start()
         {
             AutoServiceAttribute.Apply(this);
             Init();
@@ -55,9 +56,15 @@ namespace Services
             {
                 Type type = info.FieldType;
                 AutoServiceAttribute attribute = ServiceUtility.GetAttribute<AutoServiceAttribute>(info, true);
-                if (attribute != null && type.IsSubclassOf(typeof(Service)))
+                if (attribute != null)
                 {
-                    info.SetValue(obj, ServiceLocator.Get(IService.GetSubInterfaceOfIService(type)));
+                    Debugger.settings.Copy();
+                    Debugger.settings.SetAllowLog(EMessageType.System, false);
+                    Type interfaceType = IService.GetSubInterfaceOfIService(type);
+                    Debugger.settings.Paste();
+
+                    if (interfaceType != null)
+                        info.SetValue(obj, ServiceLocator.Get(interfaceType));
                 }
             }
         }
