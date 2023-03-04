@@ -16,11 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 075de0d074cc6a84db66140e08f44cb2
-  m_SerializeEntries:
-  - m_GUID: 6b8f807d6a955814689be1a972c7848e
-    m_Address: "\u6A4B\u672C\u76F4\u6A39 - Freesia"
-    m_ReadOnly: 0
-    m_SerializedLabels: []
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 3e529fcc779eae248a67795ce43bf27b, type: 2}
   m_SchemaSet:
