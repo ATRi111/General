@@ -18,7 +18,8 @@
 ## ServiceLocator
 
 - 唯一的静态类，用于获取各种Service
-- 各种Service是通过Type来区分的。获取Service子类时要指定Type。这个Type不是要获取的类的Type，而是该类实现的D类接口的Type（对于每个D类接口，同时至多有一个实现该接口的实例存在，但运行前或运行时，该实例可能会改变。如果以D类接口的类型为参数，当实现D类接口的具体Service改变时，获取Service的语句就不用修改了）
+- 各种Service是通过Type来区分的。获取Service子类时要指定Type。这个Type不是要获取的类的Type，而是该类实现的D类接口的Type
+- 对于每个D类接口，同时至多有一个实现该接口的实例存在，但运行前或运行时，该实例可能会改变。如果以D类接口的类型为参数，当实现D类接口的具体Service改变时，获取Service的语句就不用修改了。这里的思想参考了服务定位器模式和依赖倒置
 
 # 工作流
 
@@ -28,7 +29,7 @@
 
 <img src="Image/image-20230228214033173.png" alt="image-20230228214033173" style="zoom:50%;" />
 
-创建一个空场景，作为初始场景（`MenuTool`中有一个快速键返回初始场景的方法，注意初始场景的命名）
+创建一个空场景，作为初始场景（`MenuTool`脚本中有一个方法实现了快速键返回初始场景，注意初始场景的命名和该方法的关系）
 
 <img src="Image/image-20230228214640512.png" alt="image-20230228214640512" style="zoom:50%;" />
 
@@ -36,9 +37,9 @@
 
 ![image-20230228214801818](Image/image-20230228214801818.png)
 
-GameLaucher和ServiceLocator上的脚本不需要修改。ServiceLocator下的每个游戏物体对应了一个D类接口。由于可能有若干个类直接或间接地实现D类接口，无法自动确定要创建其中的哪一个，所以需要人为指定（**各种Service并不是必须要在0场景创建好。如果希望使用时再创建，需要另写逻辑**）
+GameLaucher和ServiceLocator上的脚本不需要修改。ServiceLocator下的每个游戏物体对应了一个D类接口。由于可能有若干个类直接或间接地实现D类接口，无法自动确定要创建其中的哪一个，所以还需要人为添加Service脚本（**各种Service并不是一定要在0场景创建好。如果希望使用时再创建，需要另写逻辑**）
 
-InitService脚本的作用仅仅是便捷地替换出其他Service。Search变量即相当于搜索栏，搜索名称包含该字符串且类型为Service子类的脚本；下方的按钮是搜索结果，选择其中一个点击，便会添加对应类型的组件，然后移除InitService组件
+为了方便人为添加Service，使用InitService脚本。InitService脚本没有具体功能，其作用仅仅是便捷地替换出其他Service。Search变量即相当于搜索栏，搜索名称包含该字符串且类型为Service子类的脚本；下方的按钮是搜索结果，选择其中一个点击，便会把InitService组件替换成该组件
 
 ## 运行时Service初始化
 
