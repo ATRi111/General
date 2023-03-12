@@ -7,7 +7,7 @@ namespace AStar
     {
         private PathFindingProcess process;
 
-        public Vector2 Position { get; private set; }
+        public Vector2Int Position { get; private set; }
 
         private ENodeType type;
         public ENodeType Type
@@ -32,7 +32,7 @@ namespace AStar
         /// <summary>
         /// 经过该点时，起点到终点的距离（假设该点到终点无障碍）
         /// </summary>
-        public float FCost => process.CurrentWeight * HCost + GCost;
+        public float FCost => process.State.CurrentWeight * HCost + GCost;
 
         private PathNode _Parent;
         //上一个方块
@@ -46,7 +46,7 @@ namespace AStar
             }
         }
 
-        internal PathNode(PathFindingProcess process,Vector2 position)
+        internal PathNode(PathFindingProcess process,Vector2Int position)
         {
             this.process = process;
             Position = position;

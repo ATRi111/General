@@ -21,14 +21,14 @@ namespace AStar
         /// <summary>
         /// 默认的用于计算两节点间能否移动的方法（不考虑是否相邻）
         /// </summary>
-        public static bool ChechPassable_Default(PathNode _,PathNode to)
+        public static bool CheckPassable_Default(PathNode _,PathNode to)
         {
             return to.Type != ENodeType.Block;
         }
         /// <summary>
         /// 默认的用于确定节点类型的方法
         /// </summary>
-        public static ENodeType DefineNodeType_Default(Vector2 _)
+        public static ENodeType DefineNodeType_Default(Vector2Int _)
         {
             return ENodeType.Blank;
         }
@@ -37,11 +37,11 @@ namespace AStar
         /// <summary>
         /// 四个方向的向量的集合
         /// </summary>
-        public static readonly ReadOnlyCollection<Vector2> fourDirections;
+        public static readonly ReadOnlyCollection<Vector2Int> fourDirections;
         /// <summary>
         /// 求曼哈顿距离
         /// </summary>
-        public static float ManhattanDistance(Vector2 a, Vector2 b)
+        public static float ManhattanDistance(Vector2Int a, Vector2Int b)
             => Mathf.Abs(a.x - b.x) * Side + Mathf.Abs(a.y - b.y) * Side;
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace AStar
         public static void GetAdjoinNodes_Four(PathFindingProcess process, PathNode node, List<PathNode> ret)
         {
             ret.Clear();
-            foreach (Vector2 direction in fourDirections)
+            foreach (Vector2Int direction in fourDirections)
             {
                 ret.Add(process.GetNode(node.Position + direction));
             }
@@ -63,11 +63,11 @@ namespace AStar
         /// <summary>
         /// 八个方向的向量的集合
         /// </summary>
-        public static readonly ReadOnlyCollection<Vector2> eightDirections;
+        public static readonly ReadOnlyCollection<Vector2Int> eightDirections;
         /// <summary>
         /// 求切比雪夫距离
         /// </summary>
-        public static float ChebyshevDistance(Vector2 a, Vector2 b)
+        public static float ChebyshevDistance(Vector2Int a, Vector2Int b)
         {
             float deltaX = Mathf.Abs(a.x - b.x);
             float deltaY = Mathf.Abs(a.y - b.y);
@@ -81,7 +81,7 @@ namespace AStar
         public static void GetAdjoinNodes_Eight(PathFindingProcess process, PathNode node, List<PathNode> ret)
         {
             ret.Clear();
-            foreach (Vector2 direction in eightDirections)
+            foreach (Vector2Int direction in eightDirections)
             {
                 ret.Add(process.GetNode(node.Position + direction));
             }
@@ -90,26 +90,26 @@ namespace AStar
 
         static PathFindingUtility()
         {
-            Vector2[] eight = new Vector2[]
+            Vector2Int[] eight = new Vector2Int[]
             {
-                Vector2.up,
-                Vector2.left + Vector2.up,
-                Vector2.left,
-                Vector2.left + Vector2.down,
-                Vector2.down,
-                Vector2.right + Vector2.down,
-                Vector2.right,
-                Vector2.right + Vector2.up,
+                Vector2Int.up,
+                Vector2Int.left + Vector2Int.up,
+                Vector2Int.left,
+                Vector2Int.left + Vector2Int.down,
+                Vector2Int.down,
+                Vector2Int.right + Vector2Int.down,
+                Vector2Int.right,
+                Vector2Int.right + Vector2Int.up,
             };
-            eightDirections = new ReadOnlyCollection<Vector2>(eight);
-            Vector2[] four = new Vector2[]
+            eightDirections = new ReadOnlyCollection<Vector2Int>(eight);
+            Vector2Int[] four = new Vector2Int[]
             {
-                 Vector2.up,
-                Vector2.left,
-                Vector2.down,
-                Vector2.right,
+                 Vector2Int.up,
+                Vector2Int.left,
+                Vector2Int.down,
+                Vector2Int.right,
             };
-            fourDirections = new ReadOnlyCollection<Vector2>(four);
+            fourDirections = new ReadOnlyCollection<Vector2Int>(four);
         }
     }
 }
