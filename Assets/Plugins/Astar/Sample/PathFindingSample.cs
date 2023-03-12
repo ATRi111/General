@@ -14,6 +14,7 @@ public class PathFindingSample : MonoBehaviour
     {
         PathFindingSettings settings = new PathFindingSettings(true)
         {
+            CalculateWeight = (x) => 2,
             DefineNodeType = DefineNodeType
         };
         process = new PathFindingProcess(settings);
@@ -31,7 +32,7 @@ public class PathFindingSample : MonoBehaviour
     }
 
     private Vector2Int WorldToNode(Vector3 world)
-        => new Vector2Int((int)world.x, (int)world.y);
+        => new Vector2Int(Mathf.FloorToInt(world.x), Mathf.FloorToInt(world.y));
 
     private Vector3 NodeToWorld(Vector2Int node)
         => new Vector3(node.x + 0.5f, node.y + 0.5f, -1f);
