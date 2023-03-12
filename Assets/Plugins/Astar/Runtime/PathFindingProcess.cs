@@ -36,6 +36,7 @@ namespace AStar
         /// </summary>
         internal void GetAdjoinPassableNodes(PathNode from)
         {
+            state.adjoins_original.Clear();
             state.adjoins_handled.Clear();
             settings.GetAdjoinNodes.Invoke(this, from, state.adjoins_original);
             foreach (PathNode to in state.adjoins_original)
@@ -109,6 +110,7 @@ namespace AStar
             GetAdjoinPassableNodes(temp);
             state.currentWeight = settings.CalculateWeight(this);
 
+            
             foreach (PathNode node in state.adjoins_handled)
             {
                 switch (node.Type)

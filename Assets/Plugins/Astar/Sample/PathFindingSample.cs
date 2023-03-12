@@ -14,7 +14,7 @@ public class PathFindingSample : MonoBehaviour
     {
         PathFindingSettings settings = new PathFindingSettings(true)
         {
-            CalculateWeight = (x) => 2,
+            CalculateWeight = (x) => 1,
             DefineNodeType = DefineNodeType
         };
         process = new PathFindingProcess(settings);
