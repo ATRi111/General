@@ -1,4 +1,4 @@
-namespace AStarOnGrid
+namespace AStar
 {
     public enum ENodeType
     {
@@ -18,5 +18,9 @@ namespace AStarOnGrid
         /// 最终路径中的点
         /// </summary>
         Route,
+        /// <summary>
+        /// 无法同行节点
+        /// </summary>
+        Block,
     }
 }

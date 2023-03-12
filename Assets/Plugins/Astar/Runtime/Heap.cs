@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace AStarOnGrid
+namespace AStar
 {
     //在Comparer中使用x-y时为最小堆
     public class Heap<T>

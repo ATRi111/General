@@ -1,14 +1,13 @@
 using System.Collections.Generic;
-using Tools;
 using UnityEngine;
 
-namespace AStarOnGrid
+namespace AStar
 {
-    public class AStarNode
+    public class PathNode
     {
-        public const int Side = 10;     //边长
-        public const int Diagnol = 14;  //对角线长
-        public Vector2Int Position { get; private set; }
+        private PathFindingProcess process;
+
+        public Vector2 Position { get; private set; }
 
         private ENodeType type;
         public ENodeType Type
@@ -20,21 +19,24 @@ namespace AStarOnGrid
             }
         }
 
-        public int GCost;
+        /// <summary>
+        /// 起点到该点的距离（路径已确定）
+        /// </summary>
+        public float GCost;
 
         /// <summary>
         /// 该点到终点的距离（假设无障碍）
         /// </summary>
-        public int HCost;
+        public float HCost;
 
         /// <summary>
         /// 经过该点时，起点到终点的距离（假设该点到终点无障碍）
         /// </summary>
-        public float FCost => PathFinding.Weight * HCost + GCost;
+        public float FCost => process.CurrentWeight * HCost + GCost;
 
-        private AStarNode _Parent;
+        private PathNode _Parent;
         //上一个方块
-        public AStarNode Parent
+        public PathNode Parent
         {
             get => _Parent;
             set
@@ -44,38 +46,44 @@ namespace AStarOnGrid
             }
         }
 
-        internal AStarNode(Vector2Int position)
+        internal PathNode(PathFindingProcess process,Vector2 position)
         {
+            this.process = process;
             Position = position;
             Type = ENodeType.Blank;
         }
 
-        public void CalculateHCost(AStarNode end)
+        public void CalculateHCost(PathNode end)
         {
             HCost = CalculateDistance(end);
         }
 
-        public int CalculateDistance(AStarNode other)
+        public float CalculateDistance(PathNode other)
         {
-            return GeometryTool.ChebyshevDistanceInt(Position, other.Position, Side, Diagnol);
+            return process.Settings.CalculateDistance(Position, other.Position);
         }
 
         /// <summary>
         /// 回溯路径
         /// </summary>
-        public void Recall(List<Vector2Int> ret = null)
+        public void Recall(List<PathNode> ret = null)
         {
             Type = ENodeType.Route;
             if (Parent != null)
                 Parent.Recall(ret);
             if (ret != null)
-                ret.Add(Position);
+                ret.Add(this);
+        }
+
+        public override string ToString()
+        {
+            return Position.ToString();
         }
     }
 
-    public class Comparer_Cost : IComparer<AStarNode>
+    public class Comparer_Cost : IComparer<PathNode>
     {
-        public int Compare(AStarNode x, AStarNode y)
+        public int Compare(PathNode x, PathNode y)
         {
             return (int)Mathf.Sign(x.FCost - y.FCost);
         }
