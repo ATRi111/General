@@ -19,7 +19,7 @@ namespace AStar
         /// </summary>
         Route,
         /// <summary>
-        /// 无法同行节点
+        /// 无法通行节点
         /// </summary>
         Block,
     }

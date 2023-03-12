@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace AStar
@@ -43,6 +44,11 @@ namespace AStar
                     state.adjoins_handled.Add(to);
             }
         }
+
+        public PathNode[] GetAllNodes()
+        {
+            return state.discoveredNodes.Values.ToArray();
+        }
         #endregion
 
         #region 状态量
@@ -72,7 +78,7 @@ namespace AStar
         #endregion
 
         #region 运行过程
-        public void Start(Vector2Int fromPos, Vector2Int toPos, List<PathNode> ret)
+        public void Start(Vector2Int fromPos, Vector2Int toPos, List<PathNode> ret = null)
         {
             isRunning = true;
             state.depth = 0;
