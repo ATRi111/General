@@ -17,9 +17,16 @@ namespace AStar
 
         internal Heap<PathNode> open;
 
+        [SerializeField]
+        internal PathNode currentNode;
+        /// <summary>
+        /// 当前访问的点
+        /// </summary>
+        public PathNode CurrentNode => currentNode;
+
         internal PathNode nearest;
         /// <summary>
-        /// 当前认为的最优路径末端的点
+        /// 当前已访问的离终点最近的点
         /// </summary>
         public PathNode Nearest => nearest;
         [SerializeField]

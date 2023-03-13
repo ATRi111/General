@@ -105,9 +105,9 @@ namespace AStar
             if (!CheckNextStep())
                 return;
 
-            PathNode temp = state.open.Pop();
-            temp.Type = ENodeType.Close;
-            GetAdjoinPassableNodes(temp);
+            state.currentNode = state.open.Pop();
+            state.currentNode.Type = ENodeType.Close;
+            GetAdjoinPassableNodes(state.currentNode);
             state.currentWeight = settings.CalculateWeight(this);
 
             
@@ -117,18 +117,18 @@ namespace AStar
                 {
                     case ENodeType.Blank:
                         node.CalculateHCost(To);
-                        node.Parent = temp;
+                        node.Parent = state.currentNode;
                         node.Type = ENodeType.Open;
                         state.open.Push(node);
                         break;
                     case ENodeType.Route:
-                        node.Parent = temp;
+                        node.Parent = state.currentNode;
                         state.nearest = node;
                         Stop();
                         break;
                     case ENodeType.Open:
-                        if (node.GCost > temp.GCost + temp.CalculateDistance(node))
-                            node.Parent = temp;
+                        if (node.GCost > state.currentNode.GCost + state.currentNode.CalculateDistance(node))
+                            node.Parent = state.currentNode;
                         break;
                 }
                 if (node.HCost < state.nearest.HCost)

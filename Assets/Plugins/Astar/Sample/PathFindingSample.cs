@@ -14,7 +14,10 @@ public class PathFindingSample : MonoBehaviour
     {
         PathFindingSettings settings = new PathFindingSettings(true)
         {
-            CalculateWeight = (x) => 1,
+            CalculateWeight = (x) =>
+            {
+                return x.State.CurrentNode.FCost / x.From.FCost;
+            },
             DefineNodeType = DefineNodeType
         };
         process = new PathFindingProcess(settings);
