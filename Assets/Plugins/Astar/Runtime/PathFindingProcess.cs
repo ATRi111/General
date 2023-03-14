@@ -21,13 +21,13 @@ namespace AStar
         //节点在被访问时才会被创建
         internal PathNode GetNode(Vector2Int pos)
         {
-            if (state.discoveredNodes.ContainsKey(pos))
-                return state.discoveredNodes[pos];
+            if (discoveredNodes.ContainsKey(pos))
+                return discoveredNodes[pos];
             PathNode node = new PathNode(this, pos)
             {
                 Type = settings.DefineNodeType(pos)
             };
-            state.discoveredNodes.Add(pos, node);
+            discoveredNodes.Add(pos, node);
             return node;
         }
 
@@ -36,19 +36,19 @@ namespace AStar
         /// </summary>
         internal void GetAdjoinPassableNodes(PathNode from)
         {
-            state.adjoins_original.Clear();
-            state.adjoins_handled.Clear();
-            settings.GetAdjoinNodes.Invoke(this, from, state.adjoins_original);
-            foreach (PathNode to in state.adjoins_original)
+            adjoins_original.Clear();
+            adjoins_handled.Clear();
+            settings.GetAdjoinNodes.Invoke(this, from, adjoins_original);
+            foreach (PathNode to in adjoins_original)
             {
                 if (to.Type != ENodeType.Close && settings.CheckPassable(from, to))
-                    state.adjoins_handled.Add(to);
+                    adjoins_handled.Add(to);
             }
         }
 
         public PathNode[] GetAllNodes()
         {
-            return state.discoveredNodes.Values.ToArray();
+            return discoveredNodes.Values.ToArray();
         }
         #endregion
 
@@ -69,12 +69,38 @@ namespace AStar
         /// </summary>
         public PathNode To { get; private set; }
 
+        internal readonly Dictionary<Vector2, PathNode> discoveredNodes = new Dictionary<Vector2, PathNode>();
+
+        internal readonly List<PathNode> adjoins_original = new List<PathNode>();
+        internal readonly List<PathNode> adjoins_handled = new List<PathNode>();
+
+        internal Heap<PathNode> open;
+
         [SerializeField]
-        private PathFindingState state;
+        internal PathNode currentNode;
         /// <summary>
-        /// 当前状态
+        /// 当前访问的点
         /// </summary>
-        public PathFindingState State => state;
+        public PathNode CurrentNode => currentNode;
+
+        internal PathNode nearest;
+        /// <summary>
+        /// 当前已访问的离终点最近的点
+        /// </summary>
+        public PathNode Nearest => nearest;
+        [SerializeField]
+        internal int depth;
+        /// <summary>
+        /// 搜索步数
+        /// </summary>
+        public int Depth => depth;
+
+        [SerializeField]
+        internal float currentWeight;
+        /// <summary>
+        /// 寻路的当前一步中,HCost的权重
+        /// </summary>
+        public float CurrentWeight => currentWeight;
 
         #endregion
 
@@ -82,10 +108,11 @@ namespace AStar
         public void Start(Vector2Int fromPos, Vector2Int toPos, List<PathNode> ret = null)
         {
             isRunning = true;
-            state.depth = 0;
+            depth = 0;
+            currentWeight = 1f;
 
-            state.discoveredNodes.Clear();
-            state.open = new Heap<PathNode>(settings.capacity, new Comparer_Cost());
+            discoveredNodes.Clear();
+            open = new Heap<PathNode>(settings.capacity, new Comparer_Cost());
             output = ret;
             
             To = GetNode(toPos);
@@ -96,8 +123,8 @@ namespace AStar
             From.Parent = null;
             From.CalculateHCost(To);
 
-            state.open.Push(From);
-            state.nearest = From;
+            open.Push(From);
+            nearest = From;
         }
 
         public void NextStep()
@@ -105,35 +132,35 @@ namespace AStar
             if (!CheckNextStep())
                 return;
 
-            state.currentNode = state.open.Pop();
-            state.currentNode.Type = ENodeType.Close;
-            GetAdjoinPassableNodes(state.currentNode);
-            state.currentWeight = settings.CalculateWeight(this);
+            currentNode = open.Pop();
+            currentNode.Type = ENodeType.Close;
+            GetAdjoinPassableNodes(currentNode);
+            currentWeight = settings.CalculateWeight(this);
 
             
-            foreach (PathNode node in state.adjoins_handled)
+            foreach (PathNode node in adjoins_handled)
             {
                 switch (node.Type)
                 {
                     case ENodeType.Blank:
                         node.CalculateHCost(To);
-                        node.Parent = state.currentNode;
+                        node.Parent = currentNode;
                         node.Type = ENodeType.Open;
-                        state.open.Push(node);
+                        open.Push(node);
                         break;
                     case ENodeType.Route:
-                        node.Parent = state.currentNode;
-                        state.nearest = node;
+                        node.Parent = currentNode;
+                        nearest = node;
                         Stop();
                         break;
                     case ENodeType.Open:
-                        if (node.GCost > state.currentNode.GCost + state.currentNode.CalculateDistance(node))
-                            node.Parent = state.currentNode;
+                        if (node.GCost > currentNode.GCost + currentNode.CalculateDistance(node))
+                            node.Parent = currentNode;
                         break;
                 }
-                if (node.HCost < state.nearest.HCost)
-                    state.nearest = node;
-                state.depth++;
+                if (node.HCost < nearest.HCost)
+                    nearest = node;
+                depth++;
             }
         }
         public void LastStep()
@@ -144,7 +171,7 @@ namespace AStar
         public void Stop()
         {
             isRunning = false;
-            state.nearest.Recall(output);
+            nearest.Recall(output);
         }
         private bool CheckNextStep()
         {
@@ -153,13 +180,13 @@ namespace AStar
                 Debug.LogWarning("寻路未开始");
                 return false;
             }
-            if (state.depth > settings.maxDepth)
+            if (depth > settings.maxDepth)
             {
                 Debug.LogWarning("超出步数限制");
                 Stop();
                 return false;
             }
-            if (state.open.IsEmpty)
+            if (open.IsEmpty)
             {
                 Debug.LogWarning("找不到路径");
                 Stop();
@@ -172,7 +199,6 @@ namespace AStar
         public PathFindingProcess(PathFindingSettings settings)
         {
             this.settings = settings;
-            state = new PathFindingState();
         }
     }
 }

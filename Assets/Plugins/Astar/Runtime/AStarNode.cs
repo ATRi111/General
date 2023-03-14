@@ -32,7 +32,7 @@ namespace AStar
         /// <summary>
         /// 经过该点时，起点到终点的距离（假设该点到终点无障碍）
         /// </summary>
-        public float FCost => process.State.CurrentWeight * HCost + GCost;
+        public float FCost => process.CurrentWeight * HCost + GCost;
 
         private PathNode _Parent;
         //上一个方块

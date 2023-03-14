@@ -16,7 +16,7 @@ public class PathFindingSample : MonoBehaviour
         {
             CalculateWeight = (x) =>
             {
-                return x.State.CurrentNode.FCost / x.From.FCost;
+                return Mathf.Max(1f, x.CurrentNode.FCost / x.From.FCost);
             },
             DefineNodeType = DefineNodeType
         };
