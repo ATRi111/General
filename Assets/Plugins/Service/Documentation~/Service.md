@@ -25,7 +25,7 @@
 
 ## 编辑器模式Service初始化
 
-**编辑器模式Service初始化指的是，在运行前创建好带有各种Service脚本，以及启动游戏所需的脚本**
+**编辑器模式Service初始化指的是，在运行前创建好所需的各种Service脚本，以及启动游戏所需的脚本**
 
 <img src="Image/image-20230228214033173.png" alt="image-20230228214033173" style="zoom:50%;" />
 
