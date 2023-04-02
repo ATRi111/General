@@ -16,6 +16,8 @@ namespace MyEditor
         protected Ray mouseRay;
         protected Vector2 mousePosition;
         protected bool foldout_debug;
+        protected Object monoScript;
+        protected System.Type targetType;
 
         /// <summary>
         /// Scene窗口中，屏幕坐标下，给定世界坐标点到鼠标射线的距离
@@ -40,7 +42,9 @@ namespace MyEditor
         {
             if (target != null)
                 AutoPropertyAttribute.Apply(this, serializedObject);
-            foldout_debug = false;
+            foldout_debug = false; 
+            targetType = target.GetType();
+            monoScript = MyEditorUtility.FindMonoScrpit(targetType);
         }
 
         /// <summary>
@@ -50,15 +54,12 @@ namespace MyEditor
         {
             serializedObject.Update();
             EditorGUILayout.BeginVertical();
-            System.Type targetType = target.GetType();
-            Object obj = MyEditorUtility.FindMonoScrpit(targetType);
-            if (obj != null)
+            if (monoScript != null)
             {
                 EditorGUI.BeginDisabledGroup(true);
-                EditorGUILayout.ObjectField("Script", obj, targetType, false);
+                EditorGUILayout.ObjectField("Script", monoScript, targetType, false);
                 EditorGUI.EndDisabledGroup();
             }
-
             MyOnInspectorGUI();
             EditorGUILayout.EndVertical();
             serializedObject.ApplyModifiedProperties();

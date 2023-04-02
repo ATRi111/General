@@ -6,6 +6,6 @@ namespace MyTimer
     /// </summary>
     public class LinearTransformation : Timer<float, FloatLerp>
     {
-
+        
     }
 }

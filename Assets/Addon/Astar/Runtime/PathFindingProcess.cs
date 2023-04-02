@@ -105,6 +105,12 @@ namespace AStar
         #endregion
 
         #region 运行过程
+        /// <summary>
+        /// 开始寻路
+        /// </summary>
+        /// <param name="fromPos">起点</param>
+        /// <param name="toPos">终点</param>
+        /// <param name="ret">接收结果</param>
         public void Start(Vector2Int fromPos, Vector2Int toPos, List<PathNode> ret = null)
         {
             isRunning = true;
@@ -114,7 +120,7 @@ namespace AStar
             discoveredNodes.Clear();
             open = new Heap<PathNode>(settings.capacity, new Comparer_Cost());
             output = ret;
-            
+
             To = GetNode(toPos);
             To.Type = ENodeType.Route;
 
@@ -125,19 +131,41 @@ namespace AStar
 
             open.Push(From);
             nearest = From;
-        }
 
-        public void NextStep()
+            if (fromPos == toPos)
+            {
+                Stop();
+                Debug.LogWarning("起点与终点相同");
+            }
+        }
+        /// <summary>
+        /// 立刻完成寻路
+        /// </summary>
+        public void Compelete()
+        {
+            for(; ; )
+            {
+                if (!NextStep())
+                    return;
+            }
+        }
+        /// <summary>
+        /// 进行一步寻路
+        /// </summary>
+        public bool NextStep()
         {
             if (!CheckNextStep())
-                return;
+            {
+                if(isRunning)
+                    Stop();
+                return false;
+            }
 
             currentNode = open.Pop();
             currentNode.Type = ENodeType.Close;
             GetAdjoinPassableNodes(currentNode);
             currentWeight = settings.CalculateWeight(this);
 
-            
             foreach (PathNode node in adjoins_handled)
             {
                 switch (node.Type)
@@ -152,7 +180,7 @@ namespace AStar
                         node.Parent = currentNode;
                         nearest = node;
                         Stop();
-                        break;
+                        return false;
                     case ENodeType.Open:
                         if (node.GCost > currentNode.GCost + currentNode.CalculateDistance(node))
                             node.Parent = currentNode;
@@ -162,17 +190,17 @@ namespace AStar
                     nearest = node;
                 depth++;
             }
+            return true;
         }
-        public void LastStep()
-        {
-            if (settings.debugMode == false)
-                return;
-        }
+        /// <summary>
+        /// 停止寻路并返回结果
+        /// </summary>
         public void Stop()
         {
             isRunning = false;
             nearest.Recall(output);
         }
+
         private bool CheckNextStep()
         {
             if (!isRunning)
@@ -183,13 +211,11 @@ namespace AStar
             if (depth > settings.maxDepth)
             {
                 Debug.LogWarning("超出步数限制");
-                Stop();
                 return false;
             }
             if (open.IsEmpty)
             {
                 Debug.LogWarning("找不到路径");
-                Stop();
                 return false;
             }
             return true;

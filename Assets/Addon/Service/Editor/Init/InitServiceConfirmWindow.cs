@@ -18,12 +18,12 @@ namespace Services
         {
             EditorGUILayout.LabelField("将在当前场景进行Service初始化，这一操作无法撤销");
             EditorGUILayout.BeginHorizontal();
-            if(GUILayout.Button("确认"))
+            if (GUILayout.Button("确认"))
             {
                 callBack?.Invoke();
                 Close();
             }
-            if(GUILayout.Button("取消"))
+            if (GUILayout.Button("取消"))
             {
                 Close();
             }

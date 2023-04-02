@@ -12,7 +12,7 @@ namespace Services
         [MenuItem("Tools/Service/InitializeService")]
         public static void ComfirmInit()
         {
-            InitServiceConfirmWindow window = EditorWindow.GetWindow<InitServiceConfirmWindow>("Confirm"); 
+            InitServiceConfirmWindow window = EditorWindow.GetWindow<InitServiceConfirmWindow>("Confirm");
             window.callBack += Init;
             window.Show();
         }
@@ -30,7 +30,7 @@ namespace Services
         public static void InitBaseObject()
         {
             GameObject obj = GameObject.Find(nameof(ServiceLocator));
-            if(obj == null)
+            if (obj == null)
             {
                 obj = new GameObject(nameof(ServiceLocator));
                 obj.AddComponent<DontDestroy>();
@@ -52,7 +52,7 @@ namespace Services
                 sb.AppendLine($"游戏物体已存在:{nameof(GameLauncher)}");
             }
 
-            if(obj.GetComponent<GameLauncher>() == null)
+            if (obj.GetComponent<GameLauncher>() == null)
             {
                 obj.AddComponent<GameLauncher>();
                 sb.AppendLine($"添加组件:{nameof(GameLauncher)}");
@@ -77,7 +77,7 @@ namespace Services
                 string path = AssetDatabase.GUIDToAssetPath(guids[i]);
                 MonoScript mono = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
                 Type type = mono.GetClass();
-                if(type != null)
+                if (type != null)
                 {
                     Type target = IService.GetSubInterfaceOfIService(type);
                     if (target != null)
@@ -101,7 +101,7 @@ namespace Services
             string original = target.ToString();
             string name = original[(original.LastIndexOf('.') + 2)..];
             GameObject obj = GameObject.Find(name);
-            if(obj == null)
+            if (obj == null)
             {
                 obj = new GameObject(name);
                 InitService init = obj.AddComponent<InitService>();

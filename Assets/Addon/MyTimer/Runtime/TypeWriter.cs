@@ -19,7 +19,7 @@ namespace MyTimer
     /// </summary>
     public class TypeWriterExtend
     {
-        public const string SentenceSeparator = "?!¡££¡£¿¡­";
+        public const string SentenceSeparator = "?!.¡££¡£¿¡­";
 
         private TypeWriter typeWriter;
         private string separator;
@@ -60,7 +60,7 @@ namespace MyTimer
         public TypeWriterExtend()
         {
             timer = new TimerOnly();
-            timer.Complete += AfterDelay;
+            timer.AfterCompelete += AfterDelay;
         }
 
         /// <param name="typeWriter">Òª¿ØÖÆµÄTypeWriter</param>
@@ -72,8 +72,8 @@ namespace MyTimer
             this.typeWriter = typeWriter;
             this.separator = separator ?? SentenceSeparator;
             this.interval = interval;
-            this.typeWriter.Tick += OnTick;
-            this.typeWriter.Resume += OnResume;
+            this.typeWriter.OnTick += OnTick;
+            this.typeWriter.BeforeResume += OnResume;
         }
 
         private void OnResume(string _)
@@ -91,7 +91,7 @@ namespace MyTimer
             if (typeWriter != null)
             {
                 typeWriter.Paused = true;
-                typeWriter.Tick -= OnTick;
+                typeWriter.OnTick -= OnTick;
             }
         }
 

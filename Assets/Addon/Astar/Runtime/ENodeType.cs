@@ -21,6 +21,6 @@ namespace AStar
         /// <summary>
         /// 无法通行节点
         /// </summary>
-        Block,
+        Obstacle,
     }
 }

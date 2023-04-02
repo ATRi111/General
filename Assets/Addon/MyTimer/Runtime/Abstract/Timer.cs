@@ -13,7 +13,7 @@ namespace MyTimer
     [System.Serializable]
     public class Timer<TValue, TLerp> where TLerp : ILerp<TValue>, new()
     {
-        private readonly GameCycle gameCycle;
+        private GameCycle gameCycle;
 
         [SerializeField]
         protected bool paused;
@@ -31,12 +31,12 @@ namespace MyTimer
                     paused = value;
                     if (value)
                     {
-                        Pause?.Invoke(Current);
+                        BeforePause?.Invoke(Current);
                         gameCycle.RemoveFromGameCycle(EInvokeMode.Update, Update);
                     }
                     else
                     {
-                        Resume?.Invoke(Current);
+                        BeforeResume?.Invoke(Current);
                         gameCycle.AttachToGameCycle(EInvokeMode.Update, Update);
                     }
                 }
@@ -58,7 +58,7 @@ namespace MyTimer
                     completed = value;
                     if (value)
                     {
-                        Complete?.Invoke(Current);
+                        AfterCompelete?.Invoke(Current);
                     }
                 }
             }
@@ -94,24 +94,23 @@ namespace MyTimer
         /// <summary>
         /// 暂停时触发
         /// </summary>
-        public event UnityAction<TValue> Pause;
+        public event UnityAction<TValue> BeforePause;
         /// <summary>
         /// 启动/解除暂停时触发
         /// </summary>
-        public event UnityAction<TValue> Resume;
+        public event UnityAction<TValue> BeforeResume;
         /// <summary>
         /// 到时间时触发
         /// </summary>
-        public event UnityAction<TValue> Complete;
+        public event UnityAction<TValue> AfterCompelete;
         /// <summary>
         /// 未暂停时每帧触发
         /// </summary>
-        public event UnityAction<TValue> Tick;
+        public event UnityAction<TValue> OnTick;
 
         public Timer()
         {
             Lerp = new TLerp();
-            gameCycle = GameCycle.Instance;
             paused = true;
         }
 
@@ -120,6 +119,7 @@ namespace MyTimer
         /// </summary>
         public virtual void Initialize(TValue origin, TValue target, float duration, bool start = true)
         {
+            gameCycle = GameCycle.Instance;
             Duration = duration;
             Origin = origin;
             Target = target;
@@ -130,7 +130,7 @@ namespace MyTimer
         protected void Update()
         {
             Time += UnityEngine.Time.deltaTime;
-            Tick?.Invoke(Current);
+            OnTick?.Invoke(Current);
             if (Time >= Duration)
             {
                 Paused = true;
@@ -155,7 +155,7 @@ namespace MyTimer
         public void ForceComplete()
         {
             Time = Duration;
-            Tick?.Invoke(Current);
+            OnTick?.Invoke(Current);
             Paused = true;
             Completed = true;
         }

@@ -6,11 +6,31 @@ namespace MyEditor
 {
     public abstract class AutoPropertyDrawer : PropertyDrawer
     {
+        public Rect[] DevideRectVertical(Rect rect,int count)
+        {
+            Rect[] rects = new Rect[count];
+            float height = rect.height / count;
+            float delta = 0;
+            for (int i = 0; i < count; i++)
+            {
+                rects[i] = new Rect(rect.x, rect.y + delta, rect.width, height);
+                delta += height;
+            }
+            return rects;
+        }
+
+        /// <summary>
+        /// 通常来说，不应该重写此方法，而应该重写MyOnGUI
+        /// </summary>
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            base.OnGUI(position, property, label);
+            EditorGUI.BeginProperty(position, label, property);
             Initialize(property);
+            MyOnGUI(position,property,label);
+            EditorGUI.EndProperty();
         }
+
+        protected abstract void MyOnGUI(Rect position, SerializedProperty property, GUIContent label);
 
         public virtual void Initialize(SerializedProperty property)
         {

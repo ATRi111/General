@@ -2,7 +2,7 @@ namespace Services.Save
 {
     /// <summary>
     /// 可以控制单个游戏对象的数据的存取;
-    /// 要使用此类，首先为要控制的游戏对象定义对应的存档数据类，然后运行时创建一个此类的示例
+    /// 要使用此类，首先为要控制的游戏对象定义对应的存档数据类，然后运行时创建一个此类的实例
     /// </summary>
     /// <typeparam name="Tdata">游戏对象对应的存档数据类</typeparam>
     /// <typeparam name="TObject">游戏对象类</typeparam>
@@ -11,6 +11,8 @@ namespace Services.Save
         protected ISaveManager saveManager;
 
         protected TObject obj;
+
+        public bool NeedLoad => saveManager.NeedLoad;
 
         private bool active;
         /// <summary>
@@ -29,7 +31,7 @@ namespace Services.Save
                     {
                         saveManager.LoadRequest.AddListener(OnLoad);
                         saveManager.SaveRequest.AddListener(OnSave);
-                        if (saveManager.NeedLoad)
+                        if (NeedLoad)
                             OnLoad();
                     }
                     else
@@ -76,12 +78,12 @@ namespace Services.Save
         protected abstract Tdata FindSelf(WholeSaveData whole);
 
         /// <summary>
-        /// 在此方法中定义存档数据如何转化为游戏对象的数据
+        /// 在此方法中定义存档数据如何作用于游戏对象
         /// </summary>
         public abstract void FromData(Tdata data);
 
         /// <summary>
-        /// 在此方法中定义游戏对象的数据如何转化为存档数据
+        /// 在此方法中定义如何由游戏对象转化为存档数据
         /// </summary>
         public abstract void ToData(Tdata data);
     }

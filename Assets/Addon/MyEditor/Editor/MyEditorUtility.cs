@@ -9,6 +9,16 @@ namespace MyEditor
     public static class MyEditorUtility
     {
         /// <summary>
+        /// 获取资产所在文件夹的路径(末尾含'/')
+        /// </summary>
+        public static string GetAssetFolder(UnityEngine.Object asset)
+        {
+            string ret = AssetDatabase.GetAssetPath(asset);
+            int i = ret.LastIndexOf('/');
+            ret = ret[..(i + 1)];
+            return ret;
+        }
+        /// <summary>
         /// 查找某个类的脚本文件（需要确保类名和脚本文件名一致）
         /// </summary>
         public static UnityEngine.Object FindMonoScrpit(Type type)

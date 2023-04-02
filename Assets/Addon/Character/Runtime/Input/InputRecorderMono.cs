@@ -28,7 +28,7 @@ namespace Character
 
         private IEnumerator AfterFixedUpdate()
         {
-            for(; ; )
+            for (; ; )
             {
                 InputRecorder.AfterFixedUpdate();
                 yield return new WaitForFixedUpdate();

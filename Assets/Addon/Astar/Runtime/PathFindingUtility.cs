@@ -21,9 +21,9 @@ namespace AStar
         /// <summary>
         /// 默认的用于计算两节点间能否移动的方法（不考虑是否相邻）
         /// </summary>
-        public static bool CheckPassable_Default(PathNode _,PathNode to)
+        public static bool CheckPassable_Default(PathNode _, PathNode to)
         {
-            return to.Type != ENodeType.Block;
+            return to.Type != ENodeType.Obstacle;
         }
         /// <summary>
         /// 默认的用于确定节点类型的方法

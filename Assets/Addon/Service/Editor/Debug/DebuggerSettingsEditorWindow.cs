@@ -38,6 +38,7 @@ namespace Services
                 }
                 EditorGUI.indentLevel--;
             }
+            EditorUtility.SetDirty(settings);
         }
 
         private void Fix()

@@ -25,11 +25,11 @@ namespace Character
     /// <summary>
     /// 保存的过去的输入,包括无法直接获取的输入
     /// </summary>
-    public static class InputRecorder 
+    public static class InputRecorder
     {
         private readonly static Dictionary<string, RecordItem> items;
 
-        public static bool GetButtonUp(string axisName,EInputDuration duration)
+        public static bool GetButtonUp(string axisName, EInputDuration duration)
         {
             if (!items.ContainsKey(axisName))
                 AddItem(axisName);
@@ -43,7 +43,7 @@ namespace Character
             };
         }
 
-        public static bool GetButtonDown(string axisName,EInputDuration duration)
+        public static bool GetButtonDown(string axisName, EInputDuration duration)
         {
             if (!items.ContainsKey(axisName))
                 AddItem(axisName);

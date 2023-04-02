@@ -1,5 +1,6 @@
 namespace MyTimer
 {
+    [System.Serializable]
     /// <summary>
     /// 基本的往复变化
     /// </summary>
@@ -7,7 +8,7 @@ namespace MyTimer
     {
         public Circulation()
         {
-            Complete += MyOnComplete;
+            AfterCompelete += MyOnComplete;
         }
 
         private void MyOnComplete(TValue _)
@@ -17,6 +18,7 @@ namespace MyTimer
         }
     }
 
+    [System.Serializable]
     /// <summary>
     /// 基本的反复变化
     /// </summary>
@@ -24,7 +26,7 @@ namespace MyTimer
     {
         public Repeataion()
         {
-            Complete += MyOnComplete;
+            AfterCompelete += MyOnComplete;
         }
 
         private void MyOnComplete(TValue _)
@@ -33,6 +35,7 @@ namespace MyTimer
         }
     }
 
+    [System.Serializable]
     /// <summary>
     /// 不使用值，仅周期性调用方法
     /// </summary>
@@ -44,6 +47,7 @@ namespace MyTimer
         }
     }
 
+    [System.Serializable]
     /// <summary>
     /// 仅计时
     /// </summary>

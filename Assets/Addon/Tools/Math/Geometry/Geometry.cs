@@ -20,6 +20,17 @@ namespace Tools
             return angle;
         }
 
+        /// <summary>
+        /// 使角度落在[0°,180°]内
+        /// </summary>
+        public static float ClampIncludedAngle(float angle)
+        {
+            angle = ClampAngle(angle);
+            if (angle > 180f)
+                angle = 360f - angle;
+            return angle;
+        }
+
         public static Vector3 CalculateCenter(params Vector3[] points)
         {
             Vector3 ret = Vector3.zero;

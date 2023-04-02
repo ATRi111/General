@@ -24,7 +24,7 @@ namespace AStar
                 throw new IndexOutOfRangeException();
             }
             datas = new T[capacity];
-            this.comparer = comparer?? Comparer<T>.Default;
+            this.comparer = comparer ?? Comparer<T>.Default;
         }
 
         public bool Push(T value)

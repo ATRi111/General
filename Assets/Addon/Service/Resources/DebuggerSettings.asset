@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28329d868b630914ca1a70e323f2336a, type: 3}
   m_Name: DebuggerSettings
   m_EditorClassIdentifier: 
-  flags: 0101010101
+  flags: 0100010101

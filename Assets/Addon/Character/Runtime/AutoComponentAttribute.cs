@@ -6,7 +6,7 @@ namespace Character
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     /// <summary>
-    /// 用于在Awake中自动获取Component
+    /// 用于自动获取Component(无法确保对private字段或属性生效)
     /// </summary>
     public class AutoComponentAttribute : Attribute
     {
@@ -17,14 +17,18 @@ namespace Character
             {
                 AutoComponentAttribute attribute = info.GetCustomAttribute<AutoComponentAttribute>();
                 if (attribute != null)
+                {
                     info.SetValue(mono, attribute.GetComponent(mono, info.FieldType));
+                }
             }
             PropertyInfo[] propertyInfos = mono.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             foreach (PropertyInfo info in propertyInfos)
             {
                 AutoComponentAttribute attribute = info.GetCustomAttribute<AutoComponentAttribute>();
                 if (attribute != null)
+                {
                     info.SetValue(mono, attribute.GetComponent(mono, info.PropertyType));
+                }
             }
         }
 
@@ -58,8 +62,6 @@ namespace Character
                         ret = mono.GetComponentInParent(type);
                     break;
             }
-            if (ret == null)
-                Debug.LogWarning($"未获取到组件，游戏物体为{mono.name}，组件类型为{type}");
             return ret;
         }
     }

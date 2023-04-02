@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 namespace Services
 {
-    //此类禁止使用ServiceLocator类
+    //此类禁止访问ServiceLocator类
     [DefaultExecutionOrder(-1000)]
     internal class GameLaunchHelper : MonoBehaviour
     {

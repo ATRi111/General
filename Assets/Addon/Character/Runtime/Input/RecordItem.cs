@@ -25,7 +25,7 @@ namespace Character
             down_update = Input.GetButtonDown(axisName);
             if (up_update)
                 up_fixedUpdate = true;
-            if(up_fixedUpdate)
+            if (up_fixedUpdate)
                 down_fixedUpdate = true;
         }
 
