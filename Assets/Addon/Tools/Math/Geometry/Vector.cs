@@ -69,17 +69,17 @@ namespace Tools
         /// </summary>
         public class Comparer_Vector2_Nearer : IComparer<Vector2>, IComparer<Vector2Int>
         {
-            public float angle;
+            public Vector2 direciton;
 
             public Comparer_Vector2_Nearer(Vector2 direciton)
             {
-                angle = direciton.ToAngle();
+                this.direciton = direciton;
             }
 
             public int Compare(Vector2 x, Vector2 y)
             {
-                float angleX = Mathf.DeltaAngle(x.ToAngle(), angle);
-                float angleY = Mathf.DeltaAngle(y.ToAngle(), angle);
+                float angleX = Vector2.Angle(direciton, x);
+                float angleY = Vector2.Angle(direciton, y);
                 return angleX.CompareTo(angleY);
             }
 
