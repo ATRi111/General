@@ -10,7 +10,7 @@ namespace Services
     [Serializable]
     public class Service : MonoBehaviour
     {
-        public Type RegisterType => IService.GetSubInterfaceOfIService(GetType());
+        public virtual Type RegisterType => IService.GetSubInterfaceOfIService(GetType());
         protected virtual EConflictSolution Solution => EConflictSolution.DestroyNew;
 
         public string Informantion { get; protected set; }

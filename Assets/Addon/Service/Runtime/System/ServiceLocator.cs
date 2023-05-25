@@ -39,18 +39,12 @@ namespace Services
         /// <summary>
         /// 获取一个类型的服务
         /// </summary>
-        /// <typeparam name="T">此参数必须是继承了IService的接口类型，此接口代表了有同样功能的一类服务</typeparam>
+        /// <typeparam name="T">此参数对应Service类的RegisterType</typeparam>
         public static T Get<T>() where T : class, IService
             => Get(typeof(T)) as T;
 
         public static Service Get(Type type)
         {
-            if (!IService.ExtendsIService(type))
-            {
-                Debugger.LogWarning("应当使用直接继承IService的接口类型为参数", EMessageType.System);
-                return null;
-            }
-
             if (TryGet(type, out Service ret))
                 return ret;
             return ret;
