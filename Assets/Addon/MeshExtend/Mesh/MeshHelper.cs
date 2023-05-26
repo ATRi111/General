@@ -52,19 +52,27 @@ namespace MeshExtend
             triangles.AddRange(mesh.triangles);
         }
 
-        public Mesh ToMesh(Mesh mesh)
+        public void ToMesh(Mesh mesh)
         {
-            mesh.vertices = new Vector3[vertices.Count];
+            mesh.Clear();
+            Vector3[] v = new Vector3[vertices.Count];
             for (int i = 0; i < vertices.Count; i++)
             {
-                mesh.vertices[i] = vertices[i].position;
+                v[i] = vertices[i].position;
             }
-            mesh.triangles = new int[triangles.Count];
+            mesh.vertices = v;
+            int[] t = new int[triangles.Count];
             for (int i = 0; i < triangles.Count; i++)
             {
-                mesh.triangles[i] = triangles[i];
+                t[i] = triangles[i];
             }
-            return mesh;
+            mesh.triangles = t;
+            Vector2[] uv = new Vector2[vertices.Count];
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                uv[i] = vertices[i].uv;
+            }
+            mesh.uv = uv;
         }
 
         /// <summary>

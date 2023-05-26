@@ -17,20 +17,12 @@ namespace Services.Audio
             core = new AudioPlayerCore();
         }
 
-        /// <summary>
-        /// 通过prefab创建音源
-        /// </summary>
-        /// <param name="identifier">用于确定prefab的标识符</param>
-        /// <param name="position">播放音频的位置</param>
-        /// <param name="parent">将音频设为谁的子物体</param>
-        /// <param name="option">自毁选项</param>
-        /// <param name="time">此参数的含义取决于option。设为0表示和音频长度一致</param>
-        public AudioSource CreateAudioByPrefab(string identifier, Vector3 position, Transform parent = null, EControlOption option = EControlOption.SelfDestructive, float time = 0f)
+        public AudioSource CreateAudioByPrefab(string identifier, Vector3 position, Transform parent = null, EControlOption option = EControlOption.SelfDestructive, float lifeSpan = 0f)
         {
             if (parent == null)
                 parent = transform;
             GameObject asset = assetLoader.Load<GameObject>(identifier);
-            AudioSource audioSource = core.CreateAudioByPrefab(asset, position, parent, option, time);
+            AudioSource audioSource = core.CreateAudioByPrefab(asset, position, parent, option, lifeSpan);
             if (audioSource != null)
                 audioSource.Play();
             else
@@ -38,15 +30,7 @@ namespace Services.Audio
             return audioSource;
         }
 
-        /// <summary>
-        /// 通过AudioClip创建音源
-        /// </summary>
-        /// <param name="identifier">用于确定AudioClip的标识符</param>
-        /// <param name="position">播放音频的位置</param>
-        /// <param name="parent">将音频设为谁的子物体</param>
-        /// <param name="option">自毁选项</param>
-        /// <param name="time">此参数的含义取决于option。设为0表示和音频长度一致</param>
-        public AudioSource CreateAudioByClip(string identifier, Vector3 position, Transform parent = null, EControlOption option = EControlOption.SelfDestructive, float lifeSpan = 0)
+        public AudioSource CreateAudioByClip(string identifier, Vector3 position, Transform parent = null, EControlOption option = EControlOption.SelfDestructive, float lifeSpan = 0f)
         {
             if (parent == null)
                 parent = transform;

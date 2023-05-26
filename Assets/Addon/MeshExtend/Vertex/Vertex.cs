@@ -70,6 +70,7 @@ namespace MeshExtend
         public Vertex(Vector3 position, Func<Vector3, Vector2> GetUV) : this(position)
         {
             this.GetUV = GetUV;
+            uv = GetUV(position);
         }
         public Vertex(UIVertex vertex)
         {
