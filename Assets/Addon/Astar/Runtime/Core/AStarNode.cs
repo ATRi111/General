@@ -5,7 +5,7 @@ namespace AStar
 {
     public class PathNode
     {
-        private PathFindingProcess process;
+        private readonly PathFindingProcess process;
 
         public Vector2Int Position { get; private set; }
 
@@ -42,7 +42,7 @@ namespace AStar
             set
             {
                 _Parent = value;
-                GCost = value == null ? 0 : Parent.GCost + CalculateDistance(value);
+                GCost = value == null ? 0 : Parent.GCost + CalculateGCost(value);
             }
         }
 
@@ -53,15 +53,16 @@ namespace AStar
             Type = ENodeType.Blank;
         }
 
-        public void CalculateHCost(PathNode end)
+        public void UpdateHCost(PathNode to)
         {
-            HCost = CalculateDistance(end);
+            HCost = CalculateHCost(to);
         }
 
-        public float CalculateDistance(PathNode other)
-        {
-            return process.Settings.CalculateDistance(Position, other.Position);
-        }
+        public float CalculateHCost(PathNode other)
+            => process.Settings.CalculateHCost(Position, other.Position);
+
+        public float CalculateGCost(PathNode other)
+            => process.Settings.CalculateGCost(Position, other.Position);
 
         /// <summary>
         /// »ØËÝÂ·¾¶

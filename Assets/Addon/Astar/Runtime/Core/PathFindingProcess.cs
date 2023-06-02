@@ -18,7 +18,10 @@ namespace AStar
         private List<PathNode> output;
 
         #region 基础方法
-        //节点在被访问时才会被创建
+        
+        /// <summary>
+        /// 获取地图上某个位置的节点，并自动确定其节点类型
+        /// </summary>
         internal PathNode GetNode(Vector2Int pos)
         {
             if (discoveredNodes.ContainsKey(pos))
@@ -28,6 +31,7 @@ namespace AStar
                 Type = settings.DefineNodeType(pos)
             };
             discoveredNodes.Add(pos, node);
+            countOfQuery++;
             return node;
         }
 
@@ -41,7 +45,7 @@ namespace AStar
             settings.GetAdjoinNodes.Invoke(this, from, adjoins_original);
             foreach (PathNode to in adjoins_original)
             {
-                if (to.Type != ENodeType.Close && settings.CheckPassable(from, to))
+                if (to.Type != ENodeType.Close && settings.MoveCheck(from, to))
                     adjoins_handled.Add(to);
             }
         }
@@ -68,19 +72,23 @@ namespace AStar
         /// 终点
         /// </summary>
         public PathNode To { get; private set; }
-
+        /// <summary>
+        /// 所有已发现节点
+        /// </summary>
         internal readonly Dictionary<Vector2, PathNode> discoveredNodes = new Dictionary<Vector2, PathNode>();
 
-        internal readonly List<PathNode> adjoins_original = new List<PathNode>();
-        internal readonly List<PathNode> adjoins_handled = new List<PathNode>();
-
+        private readonly List<PathNode> adjoins_original = new List<PathNode>();
+        private readonly List<PathNode> adjoins_handled = new List<PathNode>();
+        /// <summary>
+        /// 待访问节点表
+        /// </summary>
         internal Heap<PathNode> open;
 
-        [SerializeField]
-        internal PathNode currentNode;
         /// <summary>
         /// 当前访问的点
         /// </summary>
+        [SerializeField]
+        internal PathNode currentNode;
         public PathNode CurrentNode => currentNode;
 
         internal PathNode nearest;
@@ -89,11 +97,18 @@ namespace AStar
         /// </summary>
         public PathNode Nearest => nearest;
         [SerializeField]
-        internal int depth;
+        internal int countOfTestedNode;
         /// <summary>
-        /// 搜索步数
+        /// 测试过的节点数
         /// </summary>
-        public int Depth => depth;
+        public int CountOfTestedNode => countOfTestedNode;
+
+        [SerializeField]
+        internal int countOfQuery;
+        /// <summary>
+        /// 查询节点次数
+        /// </summary>
+        public int CountOfQuery => countOfQuery;
 
         [SerializeField]
         internal float currentWeight;
@@ -113,8 +128,15 @@ namespace AStar
         /// <param name="ret">接收结果</param>
         public void Start(Vector2Int fromPos, Vector2Int toPos, List<PathNode> ret = null)
         {
+            if (fromPos == toPos)
+            {
+                Debug.LogWarning("起点与终点相同");
+                return;
+            }
+
             isRunning = true;
-            depth = 0;
+            countOfQuery = 0;
+            countOfTestedNode = 0;
             currentWeight = 1f;
 
             discoveredNodes.Clear();
@@ -127,16 +149,10 @@ namespace AStar
             From = GetNode(fromPos);
             From.Type = ENodeType.Route;
             From.Parent = null;
-            From.CalculateHCost(To);
+            From.UpdateHCost(To);
 
             open.Push(From);
             nearest = From;
-
-            if (fromPos == toPos)
-            {
-                Stop();
-                Debug.LogWarning("起点与终点相同");
-            }
         }
         /// <summary>
         /// 立刻完成寻路
@@ -171,7 +187,7 @@ namespace AStar
                 switch (node.Type)
                 {
                     case ENodeType.Blank:
-                        node.CalculateHCost(To);
+                        node.UpdateHCost(To);
                         node.Parent = currentNode;
                         node.Type = ENodeType.Open;
                         open.Push(node);
@@ -182,13 +198,13 @@ namespace AStar
                         Stop();
                         return false;
                     case ENodeType.Open:
-                        if (node.GCost > currentNode.GCost + currentNode.CalculateDistance(node))
+                        if (node.GCost > currentNode.GCost + currentNode.CalculateGCost(node))
                             node.Parent = currentNode;
                         break;
                 }
                 if (node.HCost < nearest.HCost)
                     nearest = node;
-                depth++;
+                countOfTestedNode++;
             }
             return true;
         }
@@ -208,7 +224,7 @@ namespace AStar
                 Debug.LogWarning("寻路未开始");
                 return false;
             }
-            if (depth > settings.maxDepth)
+            if (countOfTestedNode > settings.maxDepth)
             {
                 Debug.LogWarning("超出步数限制");
                 return false;

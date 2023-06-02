@@ -338,3 +338,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7df378afe9b8967459945adede2f4cb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  color_open: {r: 0.0641191, g: 1, b: 0, a: 1}
+  color_close: {r: 1, g: 0, b: 0, a: 1}
+  color_obstacle: {r: 0, g: 0, b: 0, a: 0}
+  color_route: {r: 0, g: 0.9999995, b: 1, a: 1}
+  color_blank: {r: 1, g: 1, b: 1, a: 1}
