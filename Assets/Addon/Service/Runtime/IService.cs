@@ -3,7 +3,7 @@ using System;
 using System.Reflection;
 
 /// <summary>
-/// 所有服务继承的接口
+/// 继承此接口表示，能够从ServiceLocator获取
 /// </summary>
 public interface IService
 {
@@ -39,7 +39,7 @@ public interface IService
                 return interfaces[i];
             }
         }
-        Debugger.LogError($"{type}类没有实现直接继承IService的接口", EMessageType.System);
+        Debugger.LogError($"{type}类没有实现直接继承IService的接口", EMessageType.Service);
         return null;
     }
 }

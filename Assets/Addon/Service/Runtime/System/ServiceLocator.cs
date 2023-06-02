@@ -77,6 +77,14 @@ namespace Services
         {
             if (!serviceDict.ContainsKey(type))
             {
+                Type i = IService.GetSubInterfaceOfIService(type);
+                if (i != null)
+                {
+                    Debugger.LogWarning($"不存在登记类型为{type}的服务,转而尝试获取登记类型为{i}的服务", EMessageType.Service);
+                    return TryGet(i, out ret);
+                }
+
+                Debugger.LogWarning($"不存在登记类型为{type}的服务", EMessageType.Service);
                 ret = null;
                 return false;
             }
@@ -95,7 +103,7 @@ namespace Services
                 return false;
 
             bool ret = false;
-            Debugger.LogWarning($"服务发生冲突,旧服务{oldService.Informantion};\n新服务{newService.Informantion};解决方式为{solution}", EMessageType.System);
+            Debugger.LogWarning($"服务发生冲突,旧服务{oldService.Informantion};\n新服务{newService.Informantion};解决方式为{solution}", EMessageType.Service);
             switch (solution)
             {
                 case EConflictSolution.DestroyOld:
