@@ -67,7 +67,7 @@ namespace Services
         public static void InitAllService()
         {
             HashSet<Type> targets = new HashSet<Type>();
-            string[] guids = AssetDatabase.FindAssets("t:MonoScript", new[] { "Assets/Plugins/Service" });
+            string[] guids = AssetDatabase.FindAssets("t:MonoScript", new[] { "Assets/Addon/Service" });
 
             Debugger.settings.Copy();
             Debugger.settings.SetAllowLog(EMessageType.System, false);
