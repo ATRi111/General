@@ -53,7 +53,15 @@ namespace Services
         internal static void Register(Service service, EConflictSolution solution = EConflictSolution.DestroyNew)
         {
             Type type = service.RegisterType;
-            if (TryGet(type, out Service oldService))
+
+            Debugger.settings.Copy();
+            Debugger.settings.SetAllowLog(EMessageType.Service, false);
+
+            bool contain = TryGet(type, out Service oldService);
+
+            Debugger.settings.Paste();
+
+            if (contain)
             {
                 if (SolveConflict(oldService, service, solution))
                     serviceDict.Add(type, service);
@@ -77,11 +85,14 @@ namespace Services
         {
             if (!serviceDict.ContainsKey(type))
             {
-                Type i = IService.GetSubInterfaceOfIService(type);
-                if (i != null)
+                if (!IService.ExtendsIService(type))
                 {
-                    Debugger.LogWarning($"不存在登记类型为{type}的服务,转而尝试获取登记类型为{i}的服务", EMessageType.Service);
-                    return TryGet(i, out ret);
+                    Type i = IService.GetSubInterfaceOfIService(type);
+                    if (i != null)
+                    {
+                        Debugger.LogWarning($"不存在登记类型为{type}的服务,转而尝试获取登记类型为{i}的服务", EMessageType.Service);
+                        return TryGet(i, out ret);
+                    }
                 }
 
                 Debugger.LogWarning($"不存在登记类型为{type}的服务", EMessageType.Service);
