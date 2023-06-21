@@ -65,11 +65,11 @@ namespace Services
                 {
                     Debugger.settings.Copy();
                     Debugger.settings.SetAllowLog(EMessageType.System, false);
-                    Type interfaceType = IService.GetSubInterfaceOfIService(type);
+
+                    info.SetValue(obj, ServiceLocator.Get(type));
+
                     Debugger.settings.Paste();
 
-                    if (interfaceType != null)
-                        info.SetValue(obj, ServiceLocator.Get(interfaceType));
                 }
             }
         }

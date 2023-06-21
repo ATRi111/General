@@ -46,7 +46,7 @@ namespace Services.ObjectPools
             for (int i = 0; i < count; i++)
             {
                 IMyObject newObject = ObjectPoolUtility.Clone(prefab, true, this);
-                newObject.Transform.parent = transform;
+                newObject.Transform.SetParent(transform);
                 myObjects.Enqueue(newObject);
             }
         }
