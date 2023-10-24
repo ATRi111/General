@@ -138,7 +138,7 @@ public sealed class Player : Monobehavior
 
 - 为了正确的初始化，游戏运行前还需要进行以下设置：
 
-<img src="Image/image-20230228215406136.png" alt="image-20230228215406136" style="zoom: 67%;" /><img src="Image/image-20230228215338302.png" alt="image-20230228215338302" style="zoom: 67%;" />
+![image-20231024185931930](Image/image-20231024185931930.png)<img src="Image/image-20230228215338302.png" alt="image-20230228215338302" style="zoom: 67%;" />
 
 在文件夹中找到上图所示的`ScriptableObject`（如果没有，就创建一份，命名不能修改），设置好其中的属性。`StartGameIndex`指的是，运行时Service初始化完成后，**要加载的场景的序号**
 
