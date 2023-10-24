@@ -2,13 +2,10 @@ using Services;
 using System;
 using System.Reflection;
 
-/// <summary>
-/// ¼Ì³Ğ´Ë½Ó¿Ú±íÊ¾£¬ÄÜ¹»´ÓServiceLocator»ñÈ¡
-/// </summary>
 public interface IService
 {
     /// <summary>
-    /// ÅĞ¶ÏÄ³¸ö½Ó¿ÚÊÇ·ñÖ±½Ó¼Ì³ĞIService
+    /// åˆ¤æ–­æŸä¸ªæ¥å£æ˜¯å¦ç›´æ¥ç»§æ‰¿IService
     /// </summary>
     public static bool ExtendsIService(Type type)
     {
@@ -24,7 +21,7 @@ public interface IService
     }
 
     /// <summary>
-    /// »ñÈ¡Ò»¸öÀàµÄÖ±½Ó¼Ì³ĞIServiceµÄ½Ó¿Ú
+    /// è·å–ä¸€ä¸ªç±»çš„ç›´æ¥ç»§æ‰¿IServiceçš„æ¥å£
     /// </summary>
     public static Type GetSubInterfaceOfIService(Type type)
     {
@@ -39,7 +36,7 @@ public interface IService
                 return interfaces[i];
             }
         }
-        Debugger.LogError($"{type}ÀàÃ»ÓĞÊµÏÖÖ±½Ó¼Ì³ĞIServiceµÄ½Ó¿Ú", EMessageType.Service);
+        Debugger.LogError($"{type}ç±»æ²¡æœ‰å®ç°ç›´æ¥ç»§æ‰¿IServiceçš„æ¥å£", EMessageType.Service);
         return null;
     }
 }
