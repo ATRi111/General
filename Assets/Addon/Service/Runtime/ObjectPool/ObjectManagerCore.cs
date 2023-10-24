@@ -7,7 +7,7 @@ namespace Services.ObjectPools
     {
         internal Dictionary<string, ObjectPool> objectPools;
         private readonly MonoBehaviour mono;
-        private readonly ObjectLocatorBase locator;
+        private readonly IObjectLocator locator;
 
         public ObjectManagerCore(MonoBehaviour mono, ObjectLocatorBase locator)
         {

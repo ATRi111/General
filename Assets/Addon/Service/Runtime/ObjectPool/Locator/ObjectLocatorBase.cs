@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Services
 {
-    public class ObjectLocatorBase
+    public class ObjectLocatorBase : IObjectLocator
     {
         protected IAssetLoader assetLoader;
 

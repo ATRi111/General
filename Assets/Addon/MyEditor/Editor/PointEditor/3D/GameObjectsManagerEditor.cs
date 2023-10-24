@@ -66,7 +66,7 @@ namespace MyEditor.PointEditor
             {
                 CreateObject(false);
             }
-            if (GUILayout.Button("重命名子物体"))
+            if (GUILayout.Button("自动重命名子物体"))
             {
                 RenameAllObjects();
             }

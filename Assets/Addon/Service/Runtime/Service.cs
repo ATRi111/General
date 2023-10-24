@@ -11,7 +11,7 @@ namespace Services
     public class Service : MonoBehaviour
     {
         /// <summary>
-        /// <para>登记时使用的类型，具有同一登记类型的实例应对只存在一个</para>
+        /// <para>登记时使用的类型，具有同一登记类型的实例应当只存在一个</para>
         /// <para>默认情况下，登记类型应该是一个接口类型；某个类继承Service，又实现该接口类型，该接口类型再继承IService；
         /// 其他脚本要获取一个服务时，也定义并获取接口类型的字段，这体现了依赖注入</para>
         /// <para>但是，如果是项目中临时增加的服务类，可能不希望为其定义一个接口；这种情况下，该类继承Service，并直接实现IService，登记类型直接使用该类本身</para>
