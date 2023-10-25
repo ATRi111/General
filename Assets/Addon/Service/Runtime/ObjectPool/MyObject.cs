@@ -4,7 +4,7 @@ using UnityEngine.Events;
 namespace Services.ObjectPools
 {
     /// <summary>
-    /// Ê¹ÓÃÊ±£¬Ö±½ÓÌí¼Ó´Ë×é¼ş£¨¶ø²»ÊÇ¼Ì³Ğ£©
+    /// ä½¿ç”¨æ—¶ï¼Œç›´æ¥æ·»åŠ æ­¤ç»„ä»¶ï¼ˆè€Œä¸æ˜¯ç»§æ‰¿ï¼‰
     /// </summary>
     public sealed class MyObject : MonoBehaviour, IMyObject
     {
@@ -31,7 +31,7 @@ namespace Services.ObjectPools
         }
 
         /// <summary>
-        /// ¼¤»îÎïÌå
+        /// æ¿€æ´»ç‰©ä½“
         /// </summary>
         public void Activate(Vector3 pos, Vector3 eulerAngles, Transform parent = null)
         {
@@ -43,7 +43,7 @@ namespace Services.ObjectPools
             OnActivate?.Invoke();
         }
         /// <summary>
-        /// »ØÊÕÎïÌå£¬Èç¹û²»ÊÇÓÉ¶ÔÏó³Ø´´½¨£¬¸ÄÎªÏú»ÙÎïÌå
+        /// å›æ”¶ç‰©ä½“ï¼Œå¦‚æœä¸æ˜¯ç”±å¯¹è±¡æ± åˆ›å»ºï¼Œæ”¹ä¸ºé”€æ¯ç‰©ä½“
         /// </summary>
         public void Recycle()
         {

@@ -8,7 +8,7 @@ namespace Services.SceneManagement
     public class SceneControllerCore
     {
         /// <summary>
-        /// ¿ªÊ¼Òì²½¼ÓÔØ³¡¾°Ê±£¬·¢ËÍÒì²½²Ù×÷
+        /// å¼€å§‹å¼‚æ­¥åŠ è½½åœºæ™¯æ—¶ï¼Œå‘é€å¼‚æ­¥æ“ä½œ
         /// </summary>
         public readonly UnityEvent<AsyncOperation> AsyncLoadScene = new UnityEvent<AsyncOperation>();
 
@@ -41,7 +41,6 @@ namespace Services.SceneManagement
 #endif
         }
 
-        /// <param name="confirm">¼ÓÔØµ½90%Ê±ÊÇ·ñĞèÒªÈ·ÈÏ</param>
         private IEnumerator LoadScene_(LoadSceneRequest request)
         {
             BeforeLoadScene?.Invoke(request.index);
