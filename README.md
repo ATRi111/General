@@ -2,7 +2,7 @@
 
 # 文件夹目录
 
-## Plugins
+## Addon
 
 ### Astar
 
