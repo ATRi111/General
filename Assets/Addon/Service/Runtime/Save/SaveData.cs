@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Services.Save
 {
     /// <summary>
-    /// 一种对象的数据集合
+    /// 涓�绉嶅璞＄殑鏁版嵁闆嗗悎
     /// </summary>
     [System.Serializable]
     public class SaveData<T> where T : SingleSaveData, new()

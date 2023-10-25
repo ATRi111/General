@@ -1,11 +1,11 @@
 namespace Services.Save
 {
     /// <summary>
-    /// ¿ÉÒÔ¿ØÖÆµ¥¸öÓÎÏ·¶ÔÏóµÄÊı¾İµÄ´æÈ¡;
-    /// ÒªÊ¹ÓÃ´ËÀà£¬Ê×ÏÈÎªÒª¿ØÖÆµÄÓÎÏ·¶ÔÏó¶¨Òå¶ÔÓ¦µÄ´æµµÊı¾İÀà£¬È»ºóÔËĞĞÊ±´´½¨Ò»¸ö´ËÀàµÄÊµÀı
+    /// å¯ä»¥æ§åˆ¶å•ä¸ªæ¸¸æˆå¯¹è±¡çš„æ•°æ®çš„å­˜å–;
+    /// è¦ä½¿ç”¨æ­¤ç±»ï¼Œé¦–å…ˆä¸ºè¦æ§åˆ¶çš„æ¸¸æˆå¯¹è±¡å®šä¹‰å¯¹åº”çš„å­˜æ¡£æ•°æ®ç±»ï¼Œç„¶åè¿è¡Œæ—¶åˆ›å»ºä¸€ä¸ªæ­¤ç±»çš„å®ä¾‹
     /// </summary>
-    /// <typeparam name="Tdata">ÓÎÏ·¶ÔÏó¶ÔÓ¦µÄ´æµµÊı¾İÀà</typeparam>
-    /// <typeparam name="TObject">ÓÎÏ·¶ÔÏóÀà</typeparam>
+    /// <typeparam name="Tdata">æ¸¸æˆå¯¹è±¡å¯¹åº”çš„å­˜æ¡£æ•°æ®ç±»</typeparam>
+    /// <typeparam name="TObject">æ¸¸æˆå¯¹è±¡ç±»</typeparam>
     public abstract class SaveController<Tdata, TObject> where Tdata : SingleSaveData
     {
         protected ISaveManager saveManager;
@@ -16,8 +16,8 @@ namespace Services.Save
 
         private bool active;
         /// <summary>
-        /// ÊÇ·ñÆôÓÃ´æµµ/¶Áµµ¡£
-        /// Í¨³££¬ÎïÌå±»½ûÓÃ»òÏú»ÙÇ°Ó¦µ±½ûÓÃ
+        /// æ˜¯å¦å¯ç”¨å­˜æ¡£/è¯»æ¡£ã€‚
+        /// é€šå¸¸ï¼Œç‰©ä½“è¢«ç¦ç”¨æˆ–é”€æ¯å‰åº”å½“ç¦ç”¨
         /// </summary>
         public bool Active
         {
@@ -29,22 +29,22 @@ namespace Services.Save
                     active = value;
                     if (value)
                     {
-                        saveManager.LoadRequest.AddListener(OnLoad);
-                        saveManager.SaveRequest.AddListener(OnSave);
+                        saveManager.AfterLoadRequest.AddListener(OnLoad);
+                        saveManager.AfterSaveRequest.AddListener(OnSave);
                         if (NeedLoad)
                             OnLoad();
                     }
                     else
                     {
-                        saveManager.LoadRequest.RemoveListener(OnLoad);
-                        saveManager.SaveRequest.RemoveListener(OnSave);
+                        saveManager.AfterLoadRequest.RemoveListener(OnLoad);
+                        saveManager.AfterSaveRequest.RemoveListener(OnSave);
                     }
                 }
             }
         }
 
         /// <summary>
-        /// ±êÊ¶·û£¬´ËÊôĞÔÔÚ¹¹Ôìº¯ÊıÖĞ¾Í»á±»µ÷ÓÃ£¬ËùÒÔ²»ÄÜÒÀÀµobjÒÔÍâµÄ¶ÔÏó
+        /// æ ‡è¯†ç¬¦ï¼Œæ­¤å±æ€§åœ¨æ„é€ å‡½æ•°ä¸­å°±ä¼šè¢«è°ƒç”¨ï¼Œæ‰€ä»¥ä¸èƒ½ä¾èµ–objä»¥å¤–çš„å¯¹è±¡
         /// </summary>
         public abstract string Identifier { get; }
 
@@ -57,7 +57,7 @@ namespace Services.Save
         }
 
         /// <summary>
-        /// ¶ÁµµÊ±µÄĞĞÎª
+        /// è¯»æ¡£æ—¶çš„è¡Œä¸º
         /// </summary>
         protected virtual void OnLoad()
         {
@@ -65,7 +65,7 @@ namespace Services.Save
         }
 
         /// <summary>
-        /// ´æµµÊ±µÄĞĞÎª
+        /// å­˜æ¡£æ—¶çš„è¡Œä¸º
         /// </summary>
         protected virtual void OnSave()
         {
@@ -73,17 +73,17 @@ namespace Services.Save
         }
 
         /// <summary>
-        /// ÔÚ´Ë·½·¨ÖĞ¹æ¶¨ÈçºÎ´ÓÕû¸ö´æµµÊı¾İÖĞÕÒµ½×ÔÉíµÄÊı¾İ
+        /// åœ¨æ­¤æ–¹æ³•ä¸­è§„å®šå¦‚ä½•ä»æ•´ä¸ªå­˜æ¡£æ•°æ®ä¸­æ‰¾åˆ°è‡ªèº«çš„æ•°æ®
         /// </summary>
         protected abstract Tdata FindSelf(WholeSaveData whole);
 
         /// <summary>
-        /// ÔÚ´Ë·½·¨ÖĞ¶¨Òå´æµµÊı¾İÈçºÎ×÷ÓÃÓÚÓÎÏ·¶ÔÏó
+        /// åœ¨æ­¤æ–¹æ³•ä¸­å®šä¹‰å­˜æ¡£æ•°æ®å¦‚ä½•ä½œç”¨äºæ¸¸æˆå¯¹è±¡
         /// </summary>
         public abstract void FromData(Tdata data);
 
         /// <summary>
-        /// ÔÚ´Ë·½·¨ÖĞ¶¨ÒåÈçºÎÓÉÓÎÏ·¶ÔÏó×ª»¯Îª´æµµÊı¾İ
+        /// åœ¨æ­¤æ–¹æ³•ä¸­å®šä¹‰å¦‚ä½•ç”±æ¸¸æˆå¯¹è±¡è½¬åŒ–ä¸ºå­˜æ¡£æ•°æ®
         /// </summary>
         public abstract void ToData(Tdata data);
     }

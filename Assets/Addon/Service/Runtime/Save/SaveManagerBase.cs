@@ -17,14 +17,14 @@ namespace Services.Save
             {
                 needLoad = value;
                 if (value)
-                    LoadRequest?.Invoke();
+                    AfterLoadRequest?.Invoke();
             }
         }
-        public UnityEvent LoadRequest => _LoadRequest;
-        public UnityEvent SaveRequest => _SaveRequest;
+        public UnityEvent AfterLoadRequest => _Load;
+        public UnityEvent AfterSaveRequest => _Save;
 
-        private UnityEvent _LoadRequest = new UnityEvent();
-        private UnityEvent _SaveRequest = new UnityEvent();
+        private UnityEvent _Load = new UnityEvent();
+        private UnityEvent _Save = new UnityEvent();
 
 
         public WholeSaveData RuntimeData => core.RuntimeData;
@@ -41,7 +41,7 @@ namespace Services.Save
             catch (Exception e)
             {
                 Debugger.LogWarning(e.ToString(), EMessageType.System);
-                Debugger.LogWarning("无法读取存档，创建新存档", EMessageType.System);
+                Debugger.LogWarning("鏃犳硶璇诲彇瀛樻。锛屽垱寤烘柊瀛樻。", EMessageType.System);
             }
         }
 
@@ -54,7 +54,7 @@ namespace Services.Save
             catch (Exception e)
             {
                 Debugger.LogWarning(e.ToString(), EMessageType.System);
-                Debugger.LogWarning("无法写入存档", EMessageType.System);
+                Debugger.LogWarning("鏃犳硶鍐欏叆瀛樻。", EMessageType.System);
             }
         }
     }

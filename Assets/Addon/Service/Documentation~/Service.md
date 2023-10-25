@@ -75,7 +75,7 @@ public class SceneController :SceneControllerBase
 }
 public sealed class EventSystem : Service,IService
 {
-    public SceneControllerBase sceneController;
+    public ISceneController sceneController;
     
     protected internal override void Init()
     {
