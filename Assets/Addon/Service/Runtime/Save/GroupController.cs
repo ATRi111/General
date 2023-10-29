@@ -32,6 +32,7 @@ namespace Services.Save
         public void Load()
         {
             Read();
+            group.AfterRead();
             needLoad = true;
         }
 
