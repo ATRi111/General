@@ -1,41 +1,43 @@
-using System.Collections.Generic;
-using UnityEngine;
+using System;
+using UnityEngine.SceneManagement;
 
 namespace Services.Save
 {
     /// <summary>
-    /// 一种对象的数据集合
+    /// <para>规定了一个对象的存档数据，以及读档存档时存档数据与对象的关系</para>
+    /// <para>子类不需要添加[Serializable]，但其字段必须正确使用public和[SerializedField]</para>
     /// </summary>
-    [System.Serializable]
-    public class SaveData<T> where T : SingleSaveData, new()
+    [Serializable]
+    public abstract class SaveData
     {
-        protected Dictionary<string, T> searcher;
-
-        [SerializeField]
-        protected List<T> datas;
-
-        public SaveData()
+        /// <summary>
+        /// 默认的用于确定标识符的方法，即对象名+场景名
+        /// </summary>
+        public static string DefineIdentifier_Default(UnityEngine.Object obj)
         {
-            datas = new List<T>();
-            searcher = new Dictionary<string, T>();
+            return obj.name + SceneManager.GetActiveScene().name;
         }
 
-        public T Get(string identifier)
-        {
-            if (searcher.ContainsKey(identifier))
-                return searcher[identifier];
-            else
-            {
-                T data = new T();
-                searcher.Add(identifier, data);
-                return data;
-            }
-        }
+        /// <summary>
+        /// 规定此存档数据属于哪一组
+        /// </summary>
+        protected abstract GroupController Controller { get; }
 
-        public void Add(T data)
-        {
-            datas.Add(data);
-            searcher.Add(data.identifier, data);
-        }
+        public abstract string Identifier { get; }
+
+        /// <summary>
+        /// 与此存档数据绑定的对象
+        /// </summary>
+        internal UnityEngine.Object obj;
+
+        /// <summary>
+        /// 读档时,通过存档数据修改游戏物体的数据
+        /// </summary>
+        internal abstract void OnLoad();
+
+        /// <summary>
+        /// 存档时,通过游戏物体的数据生成存档数据
+        /// </summary>
+        internal abstract void OnSave();
     }
 }
