@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace Services.Save
 {
     public class SaveData_Sample : SaveData
@@ -25,6 +27,16 @@ namespace Services.Save
             data1 = Sample.data1;
             data2 = Sample.data2;
             data3 = Sample.data3;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < data1.Length; i++)
+            {
+                sb.AppendLine(data1[i].ToString());
+            }
+            return sb.ToString();
         }
     }
 }

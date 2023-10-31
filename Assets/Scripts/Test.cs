@@ -7,9 +7,9 @@ public class Test : MonoBehaviour
     private void Awake()
     {
         TD td = new TD();
-        ITD itd = new ITD();
+        ITDS itds = new ITDS();
         Debug.Log(JsonConvert.SerializeObject(td, Formatting.Indented));
-        Debug.Log(JsonConvert.SerializeObject(itd, Formatting.Indented));
+        Debug.Log(JsonConvert.SerializeObject(itds, Formatting.Indented));
     }
 
     [System.Serializable]
@@ -26,10 +26,14 @@ public class Test : MonoBehaviour
     class ITD
     {
         public TD td;
-        public List<TD> list;
+    }
+
+    class ITDS : ITD
+    {
+        internal List<TD> list;
         public Dictionary<int, TD> dic;
 
-        public ITD()
+        public ITDS()
         {
             td = new TD();
             list = new List<TD>();

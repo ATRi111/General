@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace Services.Save
     public sealed class SaveDataGroup
     {
         internal Dictionary<string, SaveData> runtimeDatas;
-        [SerializeField]
+        [JsonProperty]
         internal List<SaveData> datas;
 
         internal SaveDataGroup()

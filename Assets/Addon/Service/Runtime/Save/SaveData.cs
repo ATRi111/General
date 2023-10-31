@@ -7,7 +7,7 @@ namespace Services.Save
 {
     /// <summary>
     /// <para>规定了一个对象的存档数据，以及读档存档时存档数据与对象的关系</para>
-    /// <para>子类不需要添加[Serializable]，但其字段必须正确使用public和[SerializedField]</para>
+    /// <para>子类不需要添加[Serializable]，但其字段必须正确使用public和[JsonProperty]</para>
     /// </summary>
     [System.Serializable]
     public abstract class SaveData
@@ -34,7 +34,7 @@ namespace Services.Save
         /// 不要在构造函数以外的上下文中使用此属性
         /// </summary>
         protected abstract string Identifier { get; }
-        [SerializeField]
+        [JsonProperty]
         internal string identifier;
 
         /// <summary>
