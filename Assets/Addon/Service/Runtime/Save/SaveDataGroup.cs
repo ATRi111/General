@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 namespace Services.Save
@@ -7,7 +8,7 @@ namespace Services.Save
     /// <para>一组SaveData，具有相同的存档和读档时机的SaveData应当划分到一组中</para>
     /// </summary>
     [System.Serializable]
-    public class SaveDataGroup
+    public sealed class SaveDataGroup
     {
         internal Dictionary<string, SaveData> runtimeDatas;
         [SerializeField]
@@ -24,27 +25,45 @@ namespace Services.Save
             if(!runtimeDatas.ContainsKey(identifier))
             {
                 T t = new();
+                t.Initialize(obj);
                 runtimeDatas.Add(identifier, t);
                 datas.Add(t);
             }
-            runtimeDatas[identifier].obj = obj;
             return runtimeDatas[identifier] as T;
         }
 
-        internal void AfterRead()
+        internal void Initialize()
         {
             for (int i = 0; i < datas.Count; i++)
             {
-                runtimeDatas.Add(datas[i].Identifier, datas[i]);
+                runtimeDatas.Add(datas[i].identifier, datas[i]);
             }
         }
 
-        internal void OnSave() 
+        internal void Load()
         {
             foreach (SaveData data in runtimeDatas.Values)
             {
-                data.OnSave();
+                data.LoadIfExist();
             }
+        }
+
+        internal void Save() 
+        {
+            foreach (SaveData data in runtimeDatas.Values)
+            {
+                data.SaveIfExist();
+            }
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0;i < datas.Count;i++)
+            {
+                sb.AppendLine(datas[i].ToString());
+            }
+            return sb.ToString();
         }
     }
 }

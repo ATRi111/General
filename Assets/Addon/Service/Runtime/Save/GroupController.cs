@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Services.Save
@@ -8,69 +7,58 @@ namespace Services.Save
     /// </summary>
     public class GroupController : MonoBehaviour
     {
-        [SerializeField]
+        [SerializeField,HideInInspector]
         internal SaveDataGroup group;
 
         internal bool needLoad;
+        [SerializeField]
+        protected bool readOnAwake = true;
 
         [SerializeField]
-        internal string savePath;
+        internal string fileName;
+        protected string savePath;
         [SerializeField]
         internal int groupId;
+
+        protected virtual void Awake()
+        {
+            savePath = SaveUtility.GenerateSavePath(fileName);
+            if (readOnAwake)
+                Read();
+        }
 
         /// <summary>
         /// <para>获取指定标识符、指定类型的存档数据，如果没有，则创建一份；然后将其与指定对象绑定，并试图读档</para>
         /// </summary>
-        public T Bind<T>(string identifier, UnityEngine.Object obj) where T : SaveData, new()
+        public T Bind<T>(string identifier, Object obj) where T : SaveData, new()
         {
             T ret = group.Bind<T>(identifier, obj);
             if (ret != null && needLoad)
-                ret.OnLoad();
+                ret.Load();
             return ret;
         }
 
         public void Load()
         {
-            Read();
-            group.AfterRead();
+            group.Load();
             needLoad = true;
-        }
-
-        public void ResetLoad()
-        {
-            needLoad = false;
         }
 
         public void Save()
         {
-            group.OnSave();
+            group.Save();
             Write();
         }
 
         public void Read()
         {
-            try
-            {
-                group = SaveUtility.Read(savePath);
-            }
-            catch (Exception e)
-            {
-                Debugger.LogWarning(e.ToString(), EMessageType.System);
-                Debugger.LogWarning("无法读取存档，创建新存档", EMessageType.System);
-            }
+            group = SaveUtility.Read(savePath);
+            group.Initialize();
         }
 
         public void Write()
         {
-            try
-            {
-                SaveUtility.Write(savePath, group);
-            }
-            catch (Exception e)
-            {
-                Debugger.LogWarning(e.ToString(), EMessageType.System);
-                Debugger.LogWarning("无法写入存档", EMessageType.System);
-            }
+            SaveUtility.Write(savePath, group);
         }
     }
 }

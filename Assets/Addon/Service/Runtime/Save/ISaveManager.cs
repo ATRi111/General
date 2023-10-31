@@ -1,7 +1,10 @@
 ﻿namespace Services.Save
 {
-    public interface ISaveManager
+    public interface ISaveManager : IService
     {
-        GroupController Get(int groupId);
+        /// <summary>
+        /// 获取指定GroupController
+        /// </summary>
+        GroupController GetGroup(int groupId);
     }
 }

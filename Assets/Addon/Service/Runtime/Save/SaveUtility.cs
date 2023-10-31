@@ -1,31 +1,31 @@
-using System;
-
 namespace Services.Save
 {
     public static class SaveUtility
     {
-        internal static void Write(string savePath, SaveDataGroup collection)
+        /// <summary>
+        /// 生成存档路径
+        /// </summary>
+        /// <param name="fileName">文件名，必须包含后缀</param>
+        public static string GenerateSavePath(string fileName)
         {
-            try
-            {
-                JsonTool.SaveAsJson(collection, savePath);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            return FileTool.CombinePath(UnityEngine.Application.persistentDataPath, fileName);
+        }
+
+        internal static void Write(string savePath, SaveDataGroup group)
+        {
+            Debugger.Log(group.ToString());
+            JsonTool.SaveAsJson(group, savePath);
         }
 
         internal static SaveDataGroup Read(string savePath)
         {
-            try
+            SaveDataGroup ret = JsonTool.LoadFromJson<SaveDataGroup>(savePath);
+            if(ret == null)
             {
-                return JsonTool.LoadFromJson<SaveDataGroup>(savePath) ?? new SaveDataGroup();
+                Debugger.LogWarning("无法读取存档，创建新存档", EMessageType.Save);
+                ret = new SaveDataGroup();
             }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            return ret;
         }
     }
 }

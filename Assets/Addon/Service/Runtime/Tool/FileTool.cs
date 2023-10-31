@@ -23,10 +23,10 @@ namespace Services
                 current = processed[i];
                 next = processed[i + 1];
                 sb.Append(current);
-                if (!current[current.Length - 1].IsPathSeparater() && !next[0].IsPathSeparater())
+                if (!current[^1].IsPathSeparater() && !next[0].IsPathSeparater())
                     sb.Append('/');
             }
-            sb.Append(processed[processed.Count - 1]);
+            sb.Append(processed[^1]);
             return sb.ToString().Replace('\\', '/');
         }
 
@@ -56,10 +56,10 @@ namespace Services
         }
 
         /// <summary>
-        /// »ñÈ¡ÎÄ¼şĞÅÏ¢
+        /// è·å–æ–‡ä»¶ä¿¡æ¯
         /// </summary>
-        /// <param name="path">Â·¾¶£¬Òª°üº¬ÍØÕ¹Ãû</param>
-        /// <param name="create">ÎÄ¼ş²»´æÔÚÊ±£¬ÊÇ·ñĞÂ´´½¨ÎÄ¼ş</param>
+        /// <param name="path">è·¯å¾„ï¼Œè¦åŒ…å«æ‹“å±•å</param>
+        /// <param name="create">æ–‡ä»¶ä¸å­˜åœ¨æ—¶ï¼Œæ˜¯å¦æ–°åˆ›å»ºæ–‡ä»¶</param>
         public static FileInfo GetFileInfo(string path, bool create = false)
         {
             FileInfo fileInfo = new FileInfo(path);
@@ -68,7 +68,7 @@ namespace Services
                 if (create)
                     fileInfo.Create().Dispose();
                 else
-                    Debugger.LogWarning($"{path}ÎÄ¼ş²»´æÔÚ", EMessageType.System);
+                    Debugger.LogWarning($"{path}æ–‡ä»¶ä¸å­˜åœ¨", EMessageType.System);
             }
             return fileInfo;
         }

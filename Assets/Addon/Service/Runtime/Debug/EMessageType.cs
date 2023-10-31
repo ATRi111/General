@@ -9,5 +9,6 @@ namespace Services
         Physics,
         Audio,
         System,
+        Save,
     }
 }
