@@ -28,7 +28,7 @@ namespace Services.Save
         /// 规定此存档数据属于哪一组，编号从自然数开始，负数用于调试
         /// </summary>
         protected abstract int GroupId { get; }
-        protected GroupController groupController;
+        protected SaveGroupController groupController;
 
         /// <summary>
         /// 不要在构造函数以外的上下文中使用此属性

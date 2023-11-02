@@ -7,9 +7,9 @@ namespace Services.Save
     /// </summary>
     public class SaveManagerBase : Service, ISaveManager
     {
-        protected Dictionary<int, GroupController> groups = new Dictionary<int, GroupController>();
+        protected Dictionary<int, SaveGroupController> groups = new Dictionary<int, SaveGroupController>();
 
-        public GroupController GetGroup(int groupId)
+        public SaveGroupController GetGroup(int groupId)
         {
             if (groups.ContainsKey(groupId))
                 return groups[groupId];
@@ -20,7 +20,7 @@ namespace Services.Save
         protected internal override void Init()
         {
             base.Init();
-            GroupController[] temp = GetComponentsInChildren<GroupController>();
+            SaveGroupController[] temp = GetComponentsInChildren<SaveGroupController>();
             for (int i = 0; i < temp.Length; i++)
             {
                 groups.Add(temp[i].groupId, temp[i]);

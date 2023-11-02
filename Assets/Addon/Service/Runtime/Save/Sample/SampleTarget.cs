@@ -4,7 +4,7 @@ namespace Services.Save
 {
     public class SampleTarget : MonoBehaviour
     {
-        private GroupController controller;
+        private SaveGroupController controller;
         public int[] data1;
         public float data2;
         public string data3;

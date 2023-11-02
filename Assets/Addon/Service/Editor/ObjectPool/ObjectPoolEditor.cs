@@ -1,36 +1,29 @@
+using EditorExtend;
 using UnityEditor;
 using UnityEngine;
 
 namespace Services.ObjectPools
 {
     [CustomEditor(typeof(ObjectPool))]
-    public class ObjectPoolEditor : Editor
+    public class ObjectPoolEditor : AutoEditor
     {
-        public ObjectPool objectPool;
+        private ObjectPool ObjectPool => target as ObjectPool;
+        [AutoProperty]
         public SerializedProperty prefab, accumulateCount;
 
-        private void OnEnable()
+        protected override void MyOnInspectorGUI()
         {
-            objectPool = target as ObjectPool;
-            prefab = serializedObject.FindProperty(nameof(prefab));
-            accumulateCount = serializedObject.FindProperty(nameof(accumulateCount));
-        }
 
-        public override void OnInspectorGUI()
-        {
             if (!Application.isPlaying)
             {
                 base.OnInspectorGUI();
                 return;
             }
-
-            serializedObject.Update();
             EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.PropertyField(prefab, new GUIContent("Ô¤ÖÆÌå"));
-            EditorGUILayout.IntField("ÀÛ»ı´´½¨ÎïÌåÊı", accumulateCount.intValue);
-            EditorGUILayout.IntField("µ±Ç°¿ÉÓÃÎïÌåÊı", objectPool.Count);
+            prefab.PropertyField("é¢„åˆ¶ä½“");
+            EditorGUILayout.IntField("ç´¯ç§¯åˆ›å»ºç‰©ä½“æ•°", accumulateCount.intValue);
+            EditorGUILayout.IntField("å½“å‰å¯ç”¨ç‰©ä½“æ•°", ObjectPool.Count);
             EditorGUI.EndDisabledGroup();
-            serializedObject.ApplyModifiedProperties();
         }
     }
 }

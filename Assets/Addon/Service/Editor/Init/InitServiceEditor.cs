@@ -1,3 +1,4 @@
+using EditorExtend;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
@@ -6,13 +7,14 @@ using UnityEngine;
 namespace Services
 {
     [CustomEditor(typeof(InitService))]
-    public class InitServiceEditor : Editor
+    public class InitServiceEditor : AutoEditor
     {
         public SerializedProperty search;
         private List<Type> searchResult;
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             searchResult = new List<Type>();
             search = serializedObject.FindProperty(nameof(search));
             string[] temp = AssetDatabase.FindAssets($"t:MonoScript");
@@ -28,9 +30,8 @@ namespace Services
             }
         }
 
-        public override void OnInspectorGUI()
+        protected override void MyOnInspectorGUI()
         {
-            base.OnInspectorGUI();
             for (int i = 0; i < searchResult.Count; i++)
             {
                 Type type = searchResult[i];

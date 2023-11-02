@@ -1,26 +1,29 @@
+using EditorExtend;
 using System;
 using UnityEditor;
 
 namespace Services
 {
     [CustomEditor(typeof(DebuggerSettings))]
-    public class DebuggerSettingsEditor : Editor
+    public class DebuggerSettingsEditor : AutoEditor
     {
+        [AutoProperty]
         public SerializedProperty flags;
 
         private bool foldout;
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
-            flags = serializedObject.FindProperty(nameof(flags));
+            base.OnEnable();
+            Fix();
             foldout = true;
         }
 
-        public override void OnInspectorGUI()
+        protected override void MyOnInspectorGUI()
         {
-            serializedObject.Update();
+
             Fix();
-            foldout = EditorGUILayout.BeginFoldoutHeaderGroup(foldout, "‘ –Ìµƒœ˚œ¢¿‡–Õ");
+            foldout = EditorGUILayout.BeginFoldoutHeaderGroup(foldout, "ÂÖÅËÆ∏ÁöÑÊ∂àÊÅØÁ±ªÂûã");
             EditorGUILayout.EndFoldoutHeaderGroup();
             if (foldout)
             {
@@ -32,7 +35,6 @@ namespace Services
                 }
                 EditorGUI.indentLevel--;
             }
-            serializedObject.ApplyModifiedProperties();
         }
 
         private void Fix()
@@ -54,5 +56,6 @@ namespace Services
                 }
             }
         }
+
     }
 }
