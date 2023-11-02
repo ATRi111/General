@@ -36,6 +36,10 @@ namespace EditorExtend
             => EditorGUI.PropertyField(rect.Layout(), property, new GUIContent(label));
         public static void PropertyField(this SerializedProperty property, string label)
             => EditorGUILayout.PropertyField(property, new GUIContent(label));
+        public static void IntPopUp(this SerializedProperty property, string label, string[] displayOptions, int[] optionValues)
+            => property.intValue = EditorGUILayout.IntPopup(label, property.intValue, displayOptions, optionValues);
+        public static void IntPopField(this SerializedProperty property, string label, string[] displayOptions, int[] optionValues, Rect rect)
+           => property.intValue = EditorGUI.IntPopup(rect, label, property.intValue, displayOptions, optionValues);
         public static void EnumField<T>(this SerializedProperty property, string label, Rect rect) where T : Enum
             => property.enumValueIndex = EditorGUI.EnumPopup(rect.Layout(), label, property.enumValueIndex.ToEnum<T>()).ToInt();
         public static void EnumField<T>(this SerializedProperty property, string label) where T : Enum

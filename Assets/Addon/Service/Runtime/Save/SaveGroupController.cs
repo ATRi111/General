@@ -7,7 +7,6 @@ namespace Services.Save
     /// </summary>
     public class SaveGroupController : MonoBehaviour
     {
-        [SerializeField,HideInInspector]
         internal SaveDataGroup group;
 
         internal bool needLoad;
@@ -16,13 +15,13 @@ namespace Services.Save
 
         [SerializeField]
         internal string fileName;
-        protected string savePath;
+        protected string SavePath => SaveUtility.GenerateSavePath(fileName);
+
         [SerializeField]
         internal int groupId;
 
         protected virtual void Awake()
         {
-            savePath = SaveUtility.GenerateSavePath(fileName);
             if (readOnAwake)
                 Read();
         }
@@ -52,13 +51,13 @@ namespace Services.Save
 
         public void Read()
         {
-            group = SaveUtility.Read(savePath);
+            group = SaveUtility.Read(SavePath);
             group.Initialize();
         }
 
         public void Write()
         {
-            SaveUtility.Write(savePath, group);
+            SaveUtility.Write(SavePath, group);
         }
     }
 }

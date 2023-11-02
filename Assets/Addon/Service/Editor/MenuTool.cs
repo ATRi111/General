@@ -16,7 +16,7 @@ namespace Services
 
         private static readonly string Scene0Path = "Assets/Scenes/0.unity";
         [MenuItem("Tools/Scene/Scene0 _`")]
-        //ÓÃÓÚ±ã½İµØ·µ»Ø0³¡¾°
+        //ç”¨äºä¾¿æ·åœ°è¿”å›0åœºæ™¯
         public static void OpenScene0()
         {
             EditorSceneManager.OpenScene(Scene0Path);
@@ -25,7 +25,7 @@ namespace Services
         }
 
         [MenuItem("Tools/Service/Audio/CreateAudioSource #A")]
-        //ÓÃÓÚÅúÁ¿´´½¨´øÓĞAudioSourceµÄPrefab
+        //ç”¨äºæ‰¹é‡åˆ›å»ºå¸¦æœ‰AudioSourceçš„Prefab
         public static void CreateAudioPrefab()
         {
             string outputPath = settings.AudioAssetPath;
@@ -57,7 +57,8 @@ namespace Services
                     }
                 }
             }
-            Debug.Log($"ÒÑÍ¨¹ı{objects.Length}¸ö¶ÔÏóÖĞµÄ{count}¸ö´´½¨ÒôÆµÔ¤ÖÆÌå");
+            AssetDatabase.Refresh();
+            Debug.Log($"å·²é€šè¿‡{objects.Length}ä¸ªå¯¹è±¡ä¸­çš„{count}ä¸ªåˆ›å»ºéŸ³é¢‘é¢„åˆ¶ä½“");
         }
 
         [MenuItem("Tools/File/OpenPersistantDataPath")]

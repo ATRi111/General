@@ -24,7 +24,7 @@ namespace Services.Save
         /// <param name="fileName">文件名，必须包含后缀</param>
         public static string GenerateSavePath(string fileName)
         {
-            return FileTool.CombinePath(UnityEngine.Application.persistentDataPath, fileName);
+            return FileTool.CombinePath(Application.persistentDataPath, fileName);
         }
 
         internal static void Write(string savePath, SaveDataGroup group)

@@ -15,7 +15,7 @@ namespace Services
             try
             {
                 FileInfo info = FileTool.GetFileInfo(path, true);
-                using StreamWriter writer = new StreamWriter(path, append, FileTool.DefaultEncoding);
+                using StreamWriter writer = info.AppendText();
                 string str = JsonConvert.SerializeObject(t, Formatting.Indented);
                 Debugger.Log(str);
                 writer.WriteLine(str);

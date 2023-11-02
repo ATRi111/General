@@ -9,15 +9,21 @@ namespace EditorExtend
     public static class EditorExtendUtility
     {
         /// <summary>
-        /// 获取资产所在文件夹的路径(末尾含'/')
+        /// 拆分资产的路径
         /// </summary>
-        public static string GetAssetFolder(UnityEngine.Object asset)
+        /// <param name="path">完整路径</param>
+        /// <param name="folder">到所在文件夹为止的路径(末尾含'/')</param>
+        /// <param name="file">文件名(不含拓展名)</param>
+        /// <param name="extend">拓展名(含点号)</param>
+        public static void DevideAssetPath(in string path, out string folder, out string file, out string extend)
         {
-            string ret = AssetDatabase.GetAssetPath(asset);
-            int i = ret.LastIndexOf('/');
-            ret = ret[..(i + 1)];
-            return ret;
+            int i = path.LastIndexOf('/');
+            int j = path.LastIndexOf('.');
+            folder = path[..(i + 1)];
+            file = path[(i + 1)..j];
+            extend = path[j..];
         }
+
         /// <summary>
         /// 查找某个类的脚本文件（需要确保类名和脚本文件名一致）
         /// </summary>
