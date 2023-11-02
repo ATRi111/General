@@ -7,34 +7,29 @@ namespace Services.Save
     [CustomEditor(typeof(SaveGroupController))]
     public class SaveGroupControllerEditor : AutoEditor
     {
-        private static string[] _GroupNames;
-        public static string[] GroupNames
+        private static SaveGroupSetting setting;
+        public static SaveGroupSetting Setting
         {
             get
             {
-                if( _GroupNames == null)
-                {
-                    SaveGroupSetting setting = Resources.Load<SaveGroupSetting>("SaveGroupSetting");
-                    _GroupNames = setting.groupNames;
-                }
-                return _GroupNames;
+                if(setting == null)
+                    setting = Resources.Load<SaveGroupSetting>("SaveGroupSetting");
+                return setting;
             }
         }
 
-        private static int[] _OptionValues;
+        public static string[] GroupNames => Setting.groupNames;
+
         public static int[] OptionValues
         {
             get
             {
-                if( _OptionValues == null )
+                int[] ret = new int[Setting.groupNames.Length];
+                for (int i = 0; i < ret.Length; i++)
                 {
-                    _OptionValues = new int[GroupNames.Length];
-                    for (int i = 0; i < OptionValues.Length; i++)
-                    {
-                        OptionValues[i] = i;
-                    }
+                    ret[i] = i;
                 }
-                return _OptionValues;
+                return ret;
             }
         }
 

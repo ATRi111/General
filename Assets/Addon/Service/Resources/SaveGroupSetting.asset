@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: SaveGroupSetting
   m_EditorClassIdentifier: 
   groupNames:
+  - Debug
   - Default
+  - Achievement

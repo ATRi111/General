@@ -353,7 +353,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   readOnAwake: 1
-  fileName: 
+  fileName: _sample.json
   groupId: 0
 --- !u!1 &1144257033
 GameObject:

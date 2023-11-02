@@ -169,6 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   groupId: 0
+  obj: {fileID: 150653991}
   eIdentifier: 0
   customizedIdentifier: 
 --- !u!114 &150653991
@@ -217,6 +218,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   groupId: 0
+  obj: {fileID: 197054855}
   eIdentifier: 0
   customizedIdentifier: 
 --- !u!114 &197054855
@@ -231,7 +233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4602c2d7ebcbfb54797e7f1da7c9fa86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data1: 000000000000000002000000
+  data1: 010000000000000002000000
   data2: 0.5245
   data3: cvvbc
 --- !u!4 &197054856
@@ -458,6 +460,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   groupId: 0
+  obj: {fileID: 1304134614}
   eIdentifier: 0
   customizedIdentifier: 
 --- !u!114 &1304134614
@@ -474,7 +477,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data1: 000000000000000002000000
   data2: 0.5245
-  data3: cvvbc
+  data3: cvvbcasda
 --- !u!4 &1304134615
 Transform:
   m_ObjectHideFlags: 0

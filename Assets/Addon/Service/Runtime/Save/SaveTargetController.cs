@@ -7,11 +7,12 @@ namespace Services.Save
     /// </summary>
     public class SaveTargetController : MonoBehaviour
     {
-        protected SaveGroupController controller;
+        public SaveGroupController Group { get; protected set; }
         [SerializeField]
         protected int groupId;
 
-        protected virtual Object Obj => gameObject;
+        [SerializeField]
+        protected Object obj;
 
         [SerializeField]
         protected EIdentifier eIdentifier;
@@ -23,17 +24,17 @@ namespace Services.Save
             {
                 return eIdentifier switch
                 {
-                    EIdentifier.SceneAndName => SaveUtility.DefineIdentifier_SceneAndName(Obj),
-                    EIdentifier.NameOnly => Obj.name,
+                    EIdentifier.SceneAndName => SaveUtility.DefineIdentifier_SceneAndName(obj),
+                    EIdentifier.NameOnly => obj.name,
                     _ => customizedIdentifier,
                 };
             }
         }
 
-        protected void Awake()
+        protected virtual void Awake()
         {
-            controller = ServiceLocator.Get<ISaveManager>().GetGroup(groupId);
-            controller.Bind<SaveData_Sample>(Identifier, this);
+            Group = ServiceLocator.Get<ISaveManager>().GetGroup(groupId);
+            Group.Bind<SaveData_Sample>(Identifier, obj);
         }
     }
 
