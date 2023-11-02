@@ -4,11 +4,6 @@ namespace Services.Save
 {
     public class SaveData_Sample : SaveData
     {
-        public static int Id = -114514;
-        protected override string Identifier => DefineIdentifier_Default(obj);
-
-        protected override int GroupId => Id;
-
         private SampleTarget Sample => obj as SampleTarget;
 
         public int[] data1;

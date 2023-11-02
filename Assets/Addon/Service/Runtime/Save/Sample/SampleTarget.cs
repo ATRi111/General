@@ -9,12 +9,6 @@ namespace Services.Save
         public float data2;
         public string data3;
 
-        private void Awake()
-        {
-            controller = ServiceLocator.Get<ISaveManager>().GetGroup(SaveData_Sample.Id);
-            controller.Bind<SaveData_Sample>(SaveData.DefineIdentifier_Default(gameObject), this);
-        }
-
         private void Update()
         {
             if(Input.GetKeyUp(KeyCode.S))

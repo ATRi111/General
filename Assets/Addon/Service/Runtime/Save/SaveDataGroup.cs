@@ -26,7 +26,7 @@ namespace Services.Save
             if(!runtimeDatas.ContainsKey(identifier))
             {
                 T t = new();
-                t.Initialize(obj);
+                t.Initialize(identifier, obj);
                 runtimeDatas.Add(identifier, t);
                 datas.Add(t);
             }

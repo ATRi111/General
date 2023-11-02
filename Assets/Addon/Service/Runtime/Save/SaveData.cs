@@ -1,7 +1,5 @@
 using Newtonsoft.Json;
-using System.Text;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Services.Save
 {
@@ -12,28 +10,6 @@ namespace Services.Save
     [System.Serializable]
     public abstract class SaveData
     {
-        /// <summary>
-        /// 默认的用于确定标识符的方法，即对象名+场景名
-        /// </summary>
-        public static string DefineIdentifier_Default(Object obj)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(SceneManager.GetActiveScene().name);
-            sb.Append("-");
-            sb.Append(obj.name);
-            return sb.ToString();
-        }
-
-        /// <summary>
-        /// 规定此存档数据属于哪一组，编号从自然数开始，负数用于调试
-        /// </summary>
-        protected abstract int GroupId { get; }
-        protected SaveGroupController groupController;
-
-        /// <summary>
-        /// 不要在构造函数以外的上下文中使用此属性
-        /// </summary>
-        protected abstract string Identifier { get; }
         [JsonProperty]
         internal string identifier;
 
@@ -43,11 +19,10 @@ namespace Services.Save
         /// </summary>
         protected Object obj;
 
-        public void Initialize(Object obj)
+        public void Initialize(string identifier, Object obj)
         {
             this.obj = obj;
-            groupController = ServiceLocator.Get<ISaveManager>().GetGroup(GroupId);
-            identifier = Identifier;
+            this.identifier = identifier;
         }
 
         /// <summary>
