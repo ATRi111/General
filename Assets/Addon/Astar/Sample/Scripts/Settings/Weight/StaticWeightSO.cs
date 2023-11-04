@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace AStar
 {
     public class StaticWeightSO : CalculateWeightSO

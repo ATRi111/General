@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AStar
 {
-    [CreateAssetMenu(fileName ="Ìøµã")]
+    [CreateAssetMenu(fileName = "è·³ç‚¹")]
     public class GetJumpPointSO : GetAdjoinedNodesSO
     {
         public int depthOnDirection;
@@ -40,8 +40,8 @@ namespace AStar
                 TryAdd(process.GetNode(node.Position + directions[6]));
                 return;
             }
-           
-            if (v.x == 0 || v.y == 0 )
+
+            if (v.x == 0 || v.y == 0)
             {
                 TryAdd(FindJumpPointOnDirection(process, node.Position, directions[0]));
                 if (MatchType(directions[3], ENodeType.Obstacle))
@@ -75,19 +75,19 @@ namespace AStar
                     return node;
             }
             node = process.GetNode(current);
-            if(node.Type == ENodeType.Blank)
+            if (node.Type == ENodeType.Blank)
                 return node;
             return null;
         }
 
-        public bool IsJumpPoint(PathFindingProcess process, PathNode node,Vector2Int direction)
+        public bool IsJumpPoint(PathFindingProcess process, PathNode node, Vector2Int direction)
         {
             bool MatchType(Vector2Int direction, ENodeType type)
             {
                 return process.GetNode(node.Position + direction).Type == type;
             }
 
-            switch(node.Type)
+            switch (node.Type)
             {
                 case ENodeType.Route:
                     return true;

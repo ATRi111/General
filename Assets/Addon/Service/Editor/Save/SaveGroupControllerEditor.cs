@@ -12,7 +12,7 @@ namespace Services.Save
         {
             get
             {
-                if(setting == null)
+                if (setting == null)
                     setting = Resources.Load<SaveGroupSetting>("SaveGroupSetting");
                 return setting;
             }

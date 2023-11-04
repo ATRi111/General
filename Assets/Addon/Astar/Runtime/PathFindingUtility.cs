@@ -6,44 +6,44 @@ namespace AStar
 {
     public static class PathFindingUtility
     {
-        //±ß³¤
+        //è¾¹é•¿
         public static float Side = 10f;
-        //¶Ô½ÇÏß³¤
+        //å¯¹è§’çº¿é•¿
         public static float Diagnol = 14f;
 
         /// <summary>
-        /// Ä¬ÈÏµÄ¼ÆËãÈ¨ÖØµÄ·½·¨
+        /// é»˜è®¤çš„è®¡ç®—æƒé‡çš„æ–¹æ³•
         /// </summary>
         public static float CalculateWeight_Default(PathFindingProcess _)
         {
             return 1f;
         }
         /// <summary>
-        /// Ä¬ÈÏµÄÅĞ¶ÏÄÜ·ñÒÆ¶¯µÄ·½·¨
+        /// é»˜è®¤çš„åˆ¤æ–­èƒ½å¦ç§»åŠ¨çš„æ–¹æ³•
         /// </summary>
         public static bool CheckPassable_Default(PathNode _, PathNode to)
         {
             return to.Type != ENodeType.Obstacle;
         }
         /// <summary>
-        /// Ä¬ÈÏµÄÓÃÓÚÈ·¶¨½ÚµãÀàĞÍµÄ·½·¨
+        /// é»˜è®¤çš„ç”¨äºç¡®å®šèŠ‚ç‚¹ç±»å‹çš„æ–¹æ³•
         /// </summary>
         public static ENodeType DefineNodeType_Default(Vector2Int _)
         {
             return ENodeType.Blank;
         }
 
-        #region ËÄÏòÑ°Â·
+        #region å››å‘å¯»è·¯
 
         public static readonly ReadOnlyCollection<Vector2Int> fourDirections;
         /// <summary>
-        /// ÇóÂü¹ş¶Ù¾àÀë
+        /// æ±‚æ›¼å“ˆé¡¿è·ç¦»
         /// </summary>
         public static float ManhattanDistance(Vector2Int a, Vector2Int b)
             => Mathf.Abs(a.x - b.x) * Side + Mathf.Abs(a.y - b.y) * Side;
 
         /// <summary>
-        /// »ñÈ¡Ä³½ÚµãÖÜÎ§µÄËÄ¸ö½Úµã
+        /// è·å–æŸèŠ‚ç‚¹å‘¨å›´çš„å››ä¸ªèŠ‚ç‚¹
         /// </summary>
         public static void GetAdjoinNodes_Four(PathFindingProcess process, PathNode node, List<PathNode> ret)
         {
@@ -56,11 +56,11 @@ namespace AStar
 
         #endregion
 
-        #region °ËÏòÑ°Â·
+        #region å…«å‘å¯»è·¯
 
         public static readonly ReadOnlyCollection<Vector2Int> eightDirections;
         /// <summary>
-        /// ÇóÇĞ±ÈÑ©·ò¾àÀë
+        /// æ±‚åˆ‡æ¯”é›ªå¤«è·ç¦»
         /// </summary>
         public static float ChebyshevDistance(Vector2Int a, Vector2Int b)
         {
@@ -71,7 +71,7 @@ namespace AStar
             return min * Diagnol + (max - min) * Side;
         }
         /// <summary>
-        /// »ñÈ¡Ä³½ÚµãÖÜÎ§µÄ°Ë¸ö½Úµã
+        /// è·å–æŸèŠ‚ç‚¹å‘¨å›´çš„å…«ä¸ªèŠ‚ç‚¹
         /// </summary>
         public static void GetAdjoinNodes_Eight(PathFindingProcess process, PathNode node, List<PathNode> ret)
         {
@@ -84,8 +84,8 @@ namespace AStar
         #endregion
 
         /// <summary>
-        /// ¶ÔÏòÁ¿°´ÓëÄ³¸öÏòÁ¿µÄ¼Ğ½Ç´óĞ¡ÅÅĞò;
-        /// ´ËÅÅĞòÄÜ±£Ö¤ÔÚËù¸øÏòÁ¿µÄÁ½²à¶Ô³ÆµØ´æÔÚ×Å¶à¶ÔÏòÁ¿Ê±£¬×ÜÊÇÏÈ·µ»ØÒ»²àµÄÏòÁ¿
+        /// å¯¹å‘é‡æŒ‰ä¸æŸä¸ªå‘é‡çš„å¤¹è§’å¤§å°æ’åº;
+        /// æ­¤æ’åºèƒ½ä¿è¯åœ¨æ‰€ç»™å‘é‡çš„ä¸¤ä¾§å¯¹ç§°åœ°å­˜åœ¨ç€å¤šå¯¹å‘é‡æ—¶ï¼Œæ€»æ˜¯å…ˆè¿”å›ä¸€ä¾§çš„å‘é‡
         /// </summary>
         public class Comparer_Vector2_Nearer : IComparer<Vector2>, IComparer<Vector2Int>
         {
@@ -93,7 +93,7 @@ namespace AStar
 
             public Comparer_Vector2_Nearer(Vector2 direciton)
             {
-               this.direciton = direciton;
+                this.direciton = direciton;
             }
 
             public int Compare(Vector2 x, Vector2 y)

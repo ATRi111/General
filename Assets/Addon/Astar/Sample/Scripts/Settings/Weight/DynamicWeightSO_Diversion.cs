@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace AStar
 {
     public class DynamicWeightSO_Diversion : CalculateWeightSO

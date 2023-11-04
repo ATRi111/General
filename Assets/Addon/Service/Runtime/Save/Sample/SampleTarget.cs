@@ -16,11 +16,11 @@ namespace Services.Save
 
         private void Update()
         {
-            if(Input.GetKeyUp(KeyCode.S))
+            if (Input.GetKeyUp(KeyCode.S))
             {
                 controller.Group.Save();
             }
-            if(Input.GetKeyUp(KeyCode.L))
+            if (Input.GetKeyUp(KeyCode.L))
             {
                 controller.Group.Load();
             }

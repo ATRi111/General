@@ -6,7 +6,7 @@ namespace EditorExtend
 {
     public abstract class AutoPropertyDrawer : PropertyDrawer
     {
-        public Rect[] DevideRectVertical(Rect rect,int count)
+        public Rect[] DevideRectVertical(Rect rect, int count)
         {
             Rect[] rects = new Rect[count];
             float height = rect.height / count;
@@ -26,7 +26,7 @@ namespace EditorExtend
         {
             EditorGUI.BeginProperty(position, label, property);
             Initialize(property);
-            MyOnGUI(position,property,label);
+            MyOnGUI(position, property, label);
             EditorGUI.EndProperty();
         }
 

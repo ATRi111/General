@@ -8,6 +8,7 @@ namespace Services.Save
     /// <para>子类不需要添加[Serializable]，但其字段必须正确使用public和[JsonProperty]</para>
     /// </summary>
     [System.Serializable]
+    [JsonConverter(typeof(PolyConverter<SaveData>))]
     public abstract class SaveData
     {
         [JsonProperty]

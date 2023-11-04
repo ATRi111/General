@@ -29,14 +29,13 @@ namespace Services.Save
 
         internal static void Write(string savePath, SaveDataGroup group)
         {
-            Debugger.Log(group.ToString());
             JsonTool.SaveAsJson(group, savePath);
         }
 
         internal static SaveDataGroup Read(string savePath)
         {
             SaveDataGroup ret = JsonTool.LoadFromJson<SaveDataGroup>(savePath);
-            if(ret == null)
+            if (ret == null)
             {
                 Debugger.LogWarning("无法读取存档，创建新存档", EMessageType.Save);
                 ret = new SaveDataGroup();

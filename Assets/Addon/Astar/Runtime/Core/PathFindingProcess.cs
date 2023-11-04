@@ -6,7 +6,7 @@ using UnityEngine;
 namespace AStar
 {
     /// <summary>
-    /// Ò»´ÎÑ°Â·¹ı³Ì
+    /// ä¸€æ¬¡å¯»è·¯è¿‡ç¨‹
     /// </summary>
     [Serializable]
     public class PathFindingProcess
@@ -17,10 +17,10 @@ namespace AStar
 
         private List<PathNode> output;
 
-        #region »ù´¡·½·¨
-        
+        #region åŸºç¡€æ–¹æ³•
+
         /// <summary>
-        /// »ñÈ¡µØÍ¼ÉÏÄ³¸öÎ»ÖÃµÄ½Úµã£¬²¢×Ô¶¯È·¶¨Æä½ÚµãÀàĞÍ
+        /// è·å–åœ°å›¾ä¸ŠæŸä¸ªä½ç½®çš„èŠ‚ç‚¹ï¼Œå¹¶è‡ªåŠ¨ç¡®å®šå…¶èŠ‚ç‚¹ç±»å‹
         /// </summary>
         internal PathNode GetNode(Vector2Int pos)
         {
@@ -36,7 +36,7 @@ namespace AStar
         }
 
         /// <summary>
-        /// »ñÈ¡ÓëÒ»¸ö½ÚµãÏàÁÚÇÒ¿ÉÍ¨ĞĞÇÒ²»ÎªCloseµÄ½Úµã
+        /// è·å–ä¸ä¸€ä¸ªèŠ‚ç‚¹ç›¸é‚»ä¸”å¯é€šè¡Œä¸”ä¸ä¸ºCloseçš„èŠ‚ç‚¹
         /// </summary>
         internal void GetAdjoinPassableNodes(PathNode from)
         {
@@ -56,36 +56,36 @@ namespace AStar
         }
         #endregion
 
-        #region ×´Ì¬Á¿
+        #region çŠ¶æ€é‡
         [SerializeField]
         private bool isRunning;
         /// <summary>
-        /// ÊÇ·ñÕıÔÚ½øĞĞÑ°Â·
+        /// æ˜¯å¦æ­£åœ¨è¿›è¡Œå¯»è·¯
         /// </summary>
         public bool IsRunning => isRunning;
 
         /// <summary>
-        /// Æğµã
+        /// èµ·ç‚¹
         /// </summary>
         public PathNode From { get; private set; }
         /// <summary>
-        /// ÖÕµã
+        /// ç»ˆç‚¹
         /// </summary>
         public PathNode To { get; private set; }
         /// <summary>
-        /// ËùÓĞÒÑ·¢ÏÖ½Úµã
+        /// æ‰€æœ‰å·²å‘ç°èŠ‚ç‚¹
         /// </summary>
         internal readonly Dictionary<Vector2, PathNode> discoveredNodes = new Dictionary<Vector2, PathNode>();
 
         private readonly List<PathNode> adjoins_original = new List<PathNode>();
         private readonly List<PathNode> adjoins_handled = new List<PathNode>();
         /// <summary>
-        /// ´ı·ÃÎÊ½Úµã±í
+        /// å¾…è®¿é—®èŠ‚ç‚¹è¡¨
         /// </summary>
         internal Heap<PathNode> open;
 
         /// <summary>
-        /// µ±Ç°·ÃÎÊµÄµã
+        /// å½“å‰è®¿é—®çš„ç‚¹
         /// </summary>
         [SerializeField]
         internal PathNode currentNode;
@@ -93,44 +93,44 @@ namespace AStar
 
         internal PathNode nearest;
         /// <summary>
-        /// µ±Ç°ÒÑ·ÃÎÊµÄÀëÖÕµã×î½üµÄµã
+        /// å½“å‰å·²è®¿é—®çš„ç¦»ç»ˆç‚¹æœ€è¿‘çš„ç‚¹
         /// </summary>
         public PathNode Nearest => nearest;
         [SerializeField]
         internal int countOfTestedNode;
         /// <summary>
-        /// ²âÊÔ¹ıµÄ½ÚµãÊı
+        /// æµ‹è¯•è¿‡çš„èŠ‚ç‚¹æ•°
         /// </summary>
         public int CountOfTestedNode => countOfTestedNode;
 
         [SerializeField]
         internal int countOfQuery;
         /// <summary>
-        /// ²éÑ¯½Úµã´ÎÊı
+        /// æŸ¥è¯¢èŠ‚ç‚¹æ¬¡æ•°
         /// </summary>
         public int CountOfQuery => countOfQuery;
 
         [SerializeField]
         internal float currentWeight;
         /// <summary>
-        /// Ñ°Â·µÄµ±Ç°Ò»²½ÖĞ,HCostµÄÈ¨ÖØ
+        /// å¯»è·¯çš„å½“å‰ä¸€æ­¥ä¸­,HCostçš„æƒé‡
         /// </summary>
         public float CurrentWeight => currentWeight;
 
         #endregion
 
-        #region ÔËĞĞ¹ı³Ì
+        #region è¿è¡Œè¿‡ç¨‹
         /// <summary>
-        /// ¿ªÊ¼Ñ°Â·
+        /// å¼€å§‹å¯»è·¯
         /// </summary>
-        /// <param name="fromPos">Æğµã</param>
-        /// <param name="toPos">ÖÕµã</param>
-        /// <param name="ret">½ÓÊÕ½á¹û</param>
+        /// <param name="fromPos">èµ·ç‚¹</param>
+        /// <param name="toPos">ç»ˆç‚¹</param>
+        /// <param name="ret">æ¥æ”¶ç»“æœ</param>
         public void Start(Vector2Int fromPos, Vector2Int toPos, List<PathNode> ret = null)
         {
             if (fromPos == toPos)
             {
-                Debug.LogWarning("ÆğµãÓëÖÕµãÏàÍ¬");
+                Debug.LogWarning("èµ·ç‚¹ä¸ç»ˆç‚¹ç›¸åŒ");
                 return;
             }
 
@@ -155,24 +155,24 @@ namespace AStar
             nearest = From;
         }
         /// <summary>
-        /// Á¢¿ÌÍê³ÉÑ°Â·
+        /// ç«‹åˆ»å®Œæˆå¯»è·¯
         /// </summary>
         public void Compelete()
         {
-            for(; ; )
+            for (; ; )
             {
                 if (!NextStep())
                     return;
             }
         }
         /// <summary>
-        /// ½øĞĞÒ»²½Ñ°Â·
+        /// è¿›è¡Œä¸€æ­¥å¯»è·¯
         /// </summary>
         public bool NextStep()
         {
             if (!CheckNextStep())
             {
-                if(isRunning)
+                if (isRunning)
                     Stop();
                 return false;
             }
@@ -209,7 +209,7 @@ namespace AStar
             return true;
         }
         /// <summary>
-        /// Í£Ö¹Ñ°Â·²¢·µ»Ø½á¹û
+        /// åœæ­¢å¯»è·¯å¹¶è¿”å›ç»“æœ
         /// </summary>
         public void Stop()
         {
@@ -221,17 +221,17 @@ namespace AStar
         {
             if (!isRunning)
             {
-                Debug.LogWarning("Ñ°Â·Î´¿ªÊ¼");
+                Debug.LogWarning("å¯»è·¯æœªå¼€å§‹");
                 return false;
             }
             if (countOfTestedNode > settings.maxDepth)
             {
-                Debug.LogWarning("³¬³ö²½ÊıÏŞÖÆ");
+                Debug.LogWarning("è¶…å‡ºæ­¥æ•°é™åˆ¶");
                 return false;
             }
             if (open.IsEmpty)
             {
-                Debug.LogWarning("ÕÒ²»µ½Â·¾¶");
+                Debug.LogWarning("æ‰¾ä¸åˆ°è·¯å¾„");
                 return false;
             }
             return true;

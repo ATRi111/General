@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AStar
 {
-    [CreateAssetMenu(fileName ="ÓëÇ°½ø·½Ïò¸ü½Ó½üµÄÈô¸É½Úµã")]
+    [CreateAssetMenu(fileName = "ä¸å‰è¿›æ–¹å‘æ›´æ¥è¿‘çš„è‹¥å¹²èŠ‚ç‚¹")]
     public class GetNodesSO_AccordingToParent : GetAdjoinedNodesSO
     {
         public int count;

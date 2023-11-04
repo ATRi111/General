@@ -31,6 +31,8 @@ namespace Services.Save
             {
                 sb.AppendLine(data1[i].ToString());
             }
+            sb.AppendLine(data2.ToString());
+            sb.AppendLine(data3.ToString());
             return sb.ToString();
         }
     }

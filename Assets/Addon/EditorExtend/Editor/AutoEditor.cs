@@ -42,7 +42,7 @@ namespace EditorExtend
         {
             if (target != null)
                 AutoPropertyAttribute.Apply(this, serializedObject);
-            foldout_debug = false; 
+            foldout_debug = false;
             targetType = target.GetType();
             monoScript = EditorExtendUtility.FindMonoScrpit(targetType);
         }

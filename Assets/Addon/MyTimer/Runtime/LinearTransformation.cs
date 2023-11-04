@@ -2,10 +2,10 @@ namespace MyTimer
 {
 
     /// <summary>
-    /// ¸¡µãÊıÏßĞÔ±ä»¯
+    /// æµ®ç‚¹æ•°çº¿æ€§å˜åŒ–
     /// </summary>
     public class LinearTransformation : Timer<float, FloatLerp>
     {
-        
+
     }
 }

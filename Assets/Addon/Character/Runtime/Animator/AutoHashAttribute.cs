@@ -12,7 +12,7 @@ namespace Character
             FieldInfo[] fieldInfos = mono.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             foreach (FieldInfo info in fieldInfos)
             {
-                if(info.FieldType == typeof(int))
+                if (info.FieldType == typeof(int))
                 {
                     AutoHashAttribute attribute = info.GetCustomAttribute<AutoHashAttribute>();
                     if (attribute != null)

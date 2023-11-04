@@ -21,9 +21,9 @@ namespace Services.Save
             datas = new List<SaveData>();
         }
 
-        internal T Bind<T>(string identifier,Object obj) where T : SaveData,new()
+        internal T Bind<T>(string identifier, Object obj) where T : SaveData, new()
         {
-            if(!runtimeDatas.ContainsKey(identifier))
+            if (!runtimeDatas.ContainsKey(identifier))
             {
                 T t = new();
                 t.Initialize(identifier, obj);
@@ -35,6 +35,8 @@ namespace Services.Save
 
         internal void Initialize()
         {
+            datas ??= new List<SaveData>();
+            runtimeDatas ??= new Dictionary<string, SaveData>();
             for (int i = 0; i < datas.Count; i++)
             {
                 runtimeDatas.Add(datas[i].identifier, datas[i]);
@@ -49,7 +51,7 @@ namespace Services.Save
             }
         }
 
-        internal void Save() 
+        internal void Save()
         {
             foreach (SaveData data in runtimeDatas.Values)
             {
@@ -60,7 +62,7 @@ namespace Services.Save
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            for (int i = 0;i < datas.Count;i++)
+            for (int i = 0; i < datas.Count; i++)
             {
                 sb.AppendLine(datas[i].ToString());
             }
