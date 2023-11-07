@@ -185,7 +185,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data1: 000000000000000002000000
-  data2: 0.5245
+  data2: 0
   data3: cvvbc
 --- !u!1 &197054853
 GameObject:

@@ -26,10 +26,10 @@ namespace Services.Save
             if (!runtimeDatas.ContainsKey(identifier))
             {
                 T t = new();
-                t.Initialize(identifier, obj);
                 runtimeDatas.Add(identifier, t);
                 datas.Add(t);
             }
+            runtimeDatas[identifier].Initialize(identifier, obj);
             return runtimeDatas[identifier] as T;
         }
 

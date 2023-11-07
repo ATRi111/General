@@ -31,6 +31,11 @@ namespace Services.Save
         /// </summary>
         public T Bind<T>(string identifier, Object obj) where T : SaveData, new()
         {
+            if(obj == null)
+            {
+                Debugger.LogWarning($"试图将空对象与存档数据绑定,对象名为{obj.name}", EMessageType.Save);
+                return null;
+            }
             T ret = group.Bind<T>(identifier, obj);
             if (ret != null && needLoad)
                 ret.Load();
