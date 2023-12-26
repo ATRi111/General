@@ -14,8 +14,8 @@ namespace Services.Save
         protected bool readOnAwake = true;
 
         [SerializeField]
-        internal string fileName;
-        protected string SavePath => SaveUtility.GenerateSavePath(fileName);
+        protected internal string fileName;
+        protected virtual string SavePath => SaveUtility.GenerateSavePath(fileName);
 
         [SerializeField]
         internal int groupId;

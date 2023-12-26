@@ -13,7 +13,7 @@ namespace Services
             DefaultSettings = new JsonSerializerSettings()
             {
                 TypeNameHandling = TypeNameHandling.Objects,
-                TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full
+                TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple
             };
         }
 
