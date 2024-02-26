@@ -29,12 +29,12 @@ namespace Services.Save
 
         internal static void Write(string savePath, SaveDataGroup group)
         {
-            JsonTool.SaveAsJson(group, savePath);
+            JsonTool.SaveAsJson(group, savePath, JsonTool.PolyMorphicSettings);
         }
 
         internal static SaveDataGroup Read(string savePath)
         {
-            SaveDataGroup ret = JsonTool.LoadFromJson<SaveDataGroup>(savePath);
+            SaveDataGroup ret = JsonTool.LoadFromJson<SaveDataGroup>(savePath, JsonTool.PolyMorphicSettings);
             if (ret == null)
             {
                 Debugger.LogWarning("无法读取存档，创建新存档", EMessageType.Save);

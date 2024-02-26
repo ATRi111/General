@@ -6,14 +6,26 @@ namespace Services
 {
     public static class Debugger
     {
-        public static DebuggerSettings settings;
-
-        static Debugger()
+        public static DebuggerSettings Settings
         {
-            settings = Resources.Load<DebuggerSettings>(nameof(DebuggerSettings));
-            settings.Copy();
+            get
+            {
+                if(settings == null)
+                {
+                    try
+                    {
+                        settings = Resources.Load<DebuggerSettingSO>("DebuggerSettings").settings;
+                        Settings.Copy();
+                    }
+                    catch
+                    {
+                        return new DebuggerSettings();
+                    }
+                }
+                return settings;
+            }
         }
-
+        private static DebuggerSettings settings;
         public static void Log(object message, EMessageType type = EMessageType.Default)
         {
             Log(message, type, Debug.Log);
@@ -31,7 +43,7 @@ namespace Services
 
         private static void Log(object message, EMessageType type, UnityAction<object> method)
         {
-            if (settings.GetAllowLog(type))
+            if (Settings.GetAllowLog(type))
             {
                 message = FormatMessage(message, type);
                 method.Invoke(message);
@@ -45,7 +57,7 @@ namespace Services
 
         public static void LogException(Exception e, EMessageType type = EMessageType.Default)
         {
-            if (settings.GetAllowLog(type))
+            if (Settings.GetAllowLog(type))
             {
                 Debug.LogException(e);
             }

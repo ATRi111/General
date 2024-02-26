@@ -5,16 +5,16 @@ using UnityEngine;
 namespace Services
 {
     /// <summary>
-    /// ¼Ì³Ğ´ËÀà±íÊ¾£¬¾ßÓĞ·şÎñµÄµäĞÍĞĞÎª£¬°üÀ¨µÇ¼Ç¡¢È¡ÏûµÇ¼ÇµÈ
+    /// ç»§æ‰¿æ­¤ç±»è¡¨ç¤ºï¼Œå…·æœ‰æœåŠ¡çš„å…¸å‹è¡Œä¸ºï¼ŒåŒ…æ‹¬ç™»è®°ã€å–æ¶ˆç™»è®°ç­‰
     /// </summary>
     [Serializable]
     public class Service : MonoBehaviour
     {
         /// <summary>
-        /// <para>µÇ¼ÇÊ±Ê¹ÓÃµÄÀàĞÍ£¬¾ßÓĞÍ¬Ò»µÇ¼ÇÀàĞÍµÄÊµÀıÓ¦µ±Ö»´æÔÚÒ»¸ö</para>
-        /// <para>Ä¬ÈÏÇé¿öÏÂ£¬µÇ¼ÇÀàĞÍÓ¦¸ÃÊÇÒ»¸ö½Ó¿ÚÀàĞÍ£»Ä³¸öÀà¼Ì³ĞService£¬ÓÖÊµÏÖ¸Ã½Ó¿ÚÀàĞÍ£¬¸Ã½Ó¿ÚÀàĞÍÔÙ¼Ì³ĞIService£»
-        /// ÆäËû½Å±¾Òª»ñÈ¡Ò»¸ö·şÎñÊ±£¬Ò²¶¨Òå²¢»ñÈ¡½Ó¿ÚÀàĞÍµÄ×Ö¶Î£¬ÕâÌåÏÖÁËÒÀÀµ×¢Èë</para>
-        /// <para>µ«ÊÇ£¬Èç¹ûÊÇÏîÄ¿ÖĞÁÙÊ±Ôö¼ÓµÄ·şÎñÀà£¬¿ÉÄÜ²»Ï£ÍûÎªÆä¶¨ÒåÒ»¸ö½Ó¿Ú£»ÕâÖÖÇé¿öÏÂ£¬¸ÃÀà¼Ì³ĞService£¬²¢Ö±½ÓÊµÏÖIService£¬µÇ¼ÇÀàĞÍÖ±½ÓÊ¹ÓÃ¸ÃÀà±¾Éí</para>
+        /// <para>ç™»è®°æ—¶ä½¿ç”¨çš„ç±»å‹ï¼Œå…·æœ‰åŒä¸€ç™»è®°ç±»å‹çš„å®ä¾‹åº”å½“åªå­˜åœ¨ä¸€ä¸ª</para>
+        /// <para>é»˜è®¤æƒ…å†µä¸‹ï¼Œç™»è®°ç±»å‹åº”è¯¥æ˜¯ä¸€ä¸ªæ¥å£ç±»å‹ï¼›æŸä¸ªç±»ç»§æ‰¿Serviceï¼Œåˆå®ç°è¯¥æ¥å£ç±»å‹ï¼Œè¯¥æ¥å£ç±»å‹å†ç»§æ‰¿IServiceï¼›
+        /// å…¶ä»–è„šæœ¬è¦è·å–ä¸€ä¸ªæœåŠ¡æ—¶ï¼Œä¹Ÿå®šä¹‰å¹¶è·å–æ¥å£ç±»å‹çš„å­—æ®µï¼Œè¿™ä½“ç°äº†ä¾èµ–æ³¨å…¥</para>
+        /// <para>ä½†æ˜¯ï¼Œå¦‚æœæ˜¯é¡¹ç›®ä¸­ä¸´æ—¶å¢åŠ çš„æœåŠ¡ç±»ï¼Œå¯èƒ½ä¸å¸Œæœ›ä¸ºå…¶å®šä¹‰ä¸€ä¸ªæ¥å£ï¼›è¿™ç§æƒ…å†µä¸‹ï¼Œè¯¥ç±»ç»§æ‰¿Serviceï¼Œå¹¶ç›´æ¥å®ç°IServiceï¼Œç™»è®°ç±»å‹ç›´æ¥ä½¿ç”¨è¯¥ç±»æœ¬èº«</para>
         /// </summary>
         public virtual Type RegisterType => IService.GetSubInterfaceOfIService(GetType());
         protected virtual EConflictSolution Solution => EConflictSolution.DestroyNew;
@@ -23,7 +23,7 @@ namespace Services
 
         protected virtual void Awake()
         {
-            Informantion = $"·şÎñÀàĞÍ:{RegisterType},ËùÔÚÓÎÏ·ÎïÌå:{gameObject.name}";
+            Informantion = $"æœåŠ¡ç±»å‹:{RegisterType},æ‰€åœ¨æ¸¸æˆç‰©ä½“:{gameObject.name}";
             ServiceLocator.Register(this, Solution);
         }
 
@@ -49,7 +49,7 @@ namespace Services
     }
 
     /// <summary>
-    ///×Ô¶¯»ñÈ¡ÆäËû·şÎñ
+    ///è‡ªåŠ¨è·å–å…¶ä»–æœåŠ¡
     /// </summary>
     [AttributeUsage(AttributeTargets.Field)]
     internal class AutoServiceAttribute : Attribute
@@ -63,12 +63,12 @@ namespace Services
                 AutoServiceAttribute attribute = ServiceUtility.GetAttribute<AutoServiceAttribute>(info, true);
                 if (attribute != null)
                 {
-                    Debugger.settings.Copy();
-                    Debugger.settings.SetAllowLog(EMessageType.System, false);
+                    Debugger.Settings.Copy();
+                    Debugger.Settings.SetAllowLog(EMessageType.System, false);
 
                     info.SetValue(obj, ServiceLocator.Get(type));
 
-                    Debugger.settings.Paste();
+                    Debugger.Settings.Paste();
 
                 }
             }

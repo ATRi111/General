@@ -13,12 +13,12 @@ namespace Services
             editorWindow.Show();
         }
 
-        private DebuggerSettings settings;
+        private DebuggerSettingSO so;
         private bool foldout;
 
         private void OnEnable()
         {
-            settings = Resources.Load<DebuggerSettings>(nameof(DebuggerSettings));
+            so = Resources.Load<DebuggerSettingSO>("DebuggerSettings");
             foldout = true;
             minSize = new Vector2(200, 200);
             maxSize = new Vector2(300, 500);
@@ -27,36 +27,36 @@ namespace Services
         private void OnGUI()
         {
             Fix();
-            foldout = EditorGUILayout.BeginFoldoutHeaderGroup(foldout, "‘ –Ìµƒœ˚œ¢¿‡–Õ");
+            foldout = EditorGUILayout.BeginFoldoutHeaderGroup(foldout, "ÂÖÅËÆ∏ÁöÑÊ∂àÊÅØÁ±ªÂûã");
             EditorGUILayout.EndFoldoutHeaderGroup();
             if (foldout)
             {
                 EditorGUI.indentLevel++;
-                for (int i = 0; i < settings.flags.Count; i++)
+                for (int i = 0; i < so.settings.flags.Count; i++)
                 {
-                    settings.flags[i] = EditorGUILayout.Toggle(((EMessageType)i).ToString(), settings.flags[i]);
+                    so.settings.flags[i] = EditorGUILayout.Toggle(((EMessageType)i).ToString(), so.settings.flags[i]);
                 }
                 EditorGUI.indentLevel--;
             }
-            EditorUtility.SetDirty(settings);
+            EditorUtility.SetDirty(so);
         }
 
         private void Fix()
         {
             int length = Enum.GetValues(typeof(EMessageType)).Length;
-            int current = settings.flags.Count;
+            int current = so.settings.flags.Count;
             if (length > current)
             {
                 for (int i = current; i < length; i++)
                 {
-                    settings.flags.Add(false);
+                    so.settings.flags.Add(false);
                 }
             }
             else
             {
                 for (int i = current - 1; i > length - 1; i--)
                 {
-                    settings.flags.RemoveAt(i);
+                    so.settings.flags.RemoveAt(i);
                 }
             }
         }

@@ -5,24 +5,24 @@ using UnityEngine.Events;
 namespace Services
 {
     /// <summary>
-    /// Í¬Ê±´æÔÚ¶à¸öÍ¬ÀàĞÍ·şÎñÊ±£¬´¦Àí³åÍ»µÄ²ßÂÔ
+    /// åŒæ—¶å­˜åœ¨å¤šä¸ªåŒç±»å‹æœåŠ¡æ—¶ï¼Œå¤„ç†å†²çªçš„ç­–ç•¥
     /// </summary>
     public enum EConflictSolution
     {
         /// <summary>
-        /// Ïú»Ù¾É·şÎñ
+        /// é”€æ¯æ—§æœåŠ¡
         /// </summary>
         DestroyOld,
         /// <summary>
-        /// Ïú»ÙĞÂ·şÎñ
+        /// é”€æ¯æ–°æœåŠ¡
         /// </summary>
         DestroyNew,
         /// <summary>
-        /// È¡Ïû¾É·şÎñµÄ×¢²á£¬µ«²»Ïú»Ù¾É·şÎñ
+        /// å–æ¶ˆæ—§æœåŠ¡çš„æ³¨å†Œï¼Œä½†ä¸é”€æ¯æ—§æœåŠ¡
         /// </summary>
         UnregisterOld,
         /// <summary>
-        /// È¡ÏûĞÂ·şÎñµÄ×¢²á£¬µ«²»Ïú»ÙĞÂ·şÎñ
+        /// å–æ¶ˆæ–°æœåŠ¡çš„æ³¨å†Œï¼Œä½†ä¸é”€æ¯æ–°æœåŠ¡
         /// </summary>
         UnregisterNew,
     }
@@ -30,16 +30,16 @@ namespace Services
     public static class ServiceLocator
     {
         /// <summary>
-        /// ·şÎñ³õÊ¼»¯£¬²ÎÊı£º¸Õ³õÊ¼»¯ºÃµÄ·şÎñ
+        /// æœåŠ¡åˆå§‹åŒ–ï¼Œå‚æ•°ï¼šåˆšåˆå§‹åŒ–å¥½çš„æœåŠ¡
         /// </summary>
         public static UnityAction<Service> ServiceInit;
 
         internal static readonly Dictionary<Type, Service> serviceDict = new Dictionary<Type, Service>();
 
         /// <summary>
-        /// »ñÈ¡Ò»¸öÀàĞÍµÄ·şÎñ
+        /// è·å–ä¸€ä¸ªç±»å‹çš„æœåŠ¡
         /// </summary>
-        /// <typeparam name="T">´Ë²ÎÊı¶ÔÓ¦ServiceÀàµÄRegisterType</typeparam>
+        /// <typeparam name="T">æ­¤å‚æ•°å¯¹åº”Serviceç±»çš„RegisterType</typeparam>
         public static T Get<T>() where T : class, IService
             => Get(typeof(T)) as T;
 
@@ -54,12 +54,12 @@ namespace Services
         {
             Type type = service.RegisterType;
 
-            Debugger.settings.Copy();
-            Debugger.settings.SetAllowLog(EMessageType.Service, false);
+            Debugger.Settings.Copy();
+            Debugger.Settings.SetAllowLog(EMessageType.Service, false);
 
             bool contain = TryGet(type, out Service oldService);
 
-            Debugger.settings.Paste();
+            Debugger.Settings.Paste();
 
             if (contain)
             {
@@ -90,12 +90,12 @@ namespace Services
                     Type i = IService.GetSubInterfaceOfIService(type);
                     if (i != null)
                     {
-                        Debugger.LogWarning($"²»´æÔÚµÇ¼ÇÀàĞÍÎª{type}µÄ·şÎñ,×ª¶ø³¢ÊÔ»ñÈ¡µÇ¼ÇÀàĞÍÎª{i}µÄ·şÎñ", EMessageType.Service);
+                        Debugger.LogWarning($"ä¸å­˜åœ¨ç™»è®°ç±»å‹ä¸º{type}çš„æœåŠ¡,è½¬è€Œå°è¯•è·å–ç™»è®°ç±»å‹ä¸º{i}çš„æœåŠ¡", EMessageType.Service);
                         return TryGet(i, out ret);
                     }
                 }
 
-                Debugger.LogWarning($"²»´æÔÚµÇ¼ÇÀàĞÍÎª{type}µÄ·şÎñ", EMessageType.Service);
+                Debugger.LogWarning($"ä¸å­˜åœ¨ç™»è®°ç±»å‹ä¸º{type}çš„æœåŠ¡", EMessageType.Service);
                 ret = null;
                 return false;
             }
@@ -105,16 +105,16 @@ namespace Services
         }
 
         /// <summary>
-        /// ½â¾ö·şÎñ³åÍ»
+        /// è§£å†³æœåŠ¡å†²çª
         /// </summary>
-        /// <returns>ÊÇ·ñÒª½«ĞÂ·şÎñ¼ÓÈë×Öµä</returns>
+        /// <returns>æ˜¯å¦è¦å°†æ–°æœåŠ¡åŠ å…¥å­—å…¸</returns>
         private static bool SolveConflict(Service oldService, Service newService, EConflictSolution solution)
         {
             if (oldService == newService)
                 return false;
 
             bool ret = false;
-            Debugger.LogWarning($"·şÎñ·¢Éú³åÍ»,¾É·şÎñ{oldService.Informantion};\nĞÂ·şÎñ{newService.Informantion};½â¾ö·½Ê½Îª{solution}", EMessageType.Service);
+            Debugger.LogWarning($"æœåŠ¡å‘ç”Ÿå†²çª,æ—§æœåŠ¡{oldService.Informantion};\næ–°æœåŠ¡{newService.Informantion};è§£å†³æ–¹å¼ä¸º{solution}", EMessageType.Service);
             switch (solution)
             {
                 case EConflictSolution.DestroyOld:

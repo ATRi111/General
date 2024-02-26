@@ -3,7 +3,7 @@ using UnityEditor;
 
 namespace Services.Save
 {
-    [CustomEditor(typeof(SaveTargetController))]
+    [CustomEditor(typeof(SaveTargetController),true)]
     public class SaveTargetControllerEditor : AutoEditor
     {
         [AutoProperty]

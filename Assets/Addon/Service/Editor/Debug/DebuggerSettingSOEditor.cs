@@ -4,10 +4,11 @@ using UnityEditor;
 
 namespace Services
 {
-    [CustomEditor(typeof(DebuggerSettings))]
-    public class DebuggerSettingsEditor : AutoEditor
+    [CustomEditor(typeof(DebuggerSettingSO))]
+    public class DebuggerSettingSOEditor : AutoEditor
     {
         [AutoProperty]
+        public SerializedProperty settings;
         public SerializedProperty flags;
 
         private bool foldout;
@@ -15,13 +16,13 @@ namespace Services
         protected override void OnEnable()
         {
             base.OnEnable();
-            Fix();
             foldout = true;
+            flags = settings.FindPropertyRelative(nameof(flags));
+            Fix();
         }
 
         protected override void MyOnInspectorGUI()
         {
-
             Fix();
             foldout = EditorGUILayout.BeginFoldoutHeaderGroup(foldout, "允许的消息类型");
             EditorGUILayout.EndFoldoutHeaderGroup();

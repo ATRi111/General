@@ -34,12 +34,13 @@ namespace Services.Save
         }
 
         [AutoProperty]
-        public SerializedProperty readOnAwake, fileName, groupId;
+        public SerializedProperty readOnAwake, fileName, index, groupId;
 
         protected override void MyOnInspectorGUI()
         {
             readOnAwake.BoolField("Awake时便读存档文件");
-            fileName.TextField("存档文件名");
+            fileName.TextField("默认存档文件名");
+            index.TextField("存档槽位");
             groupId.IntPopUp("存档组", GroupNames, OptionValues);
         }
     }

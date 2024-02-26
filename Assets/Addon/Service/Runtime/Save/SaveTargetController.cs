@@ -5,7 +5,7 @@ namespace Services.Save
     /// <summary>
     /// 控制特定对象正确地与SaveData绑定
     /// </summary>
-    public class SaveTargetController : MonoBehaviour
+    public abstract class SaveTargetController : MonoBehaviour
     {
         public SaveGroupController Group { get; protected set; }
         [SerializeField]
@@ -34,8 +34,10 @@ namespace Services.Save
         protected virtual void Awake()
         {
             Group = ServiceLocator.Get<ISaveManager>().GetGroup(groupId);
-            Group.Bind<SaveData_Sample>(Identifier, obj);
+            Bind(Identifier, obj);
         }
+
+        protected abstract void Bind(string identifier, Object obj);
     }
 
     public enum EIdentifier

@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 namespace Services
 {
-    //´ËÀà½ûÖ¹·ÃÎÊServiceLocatorÀà
+    //æ­¤ç±»ç¦æ­¢è®¿é—®ServiceLocatorç±»
     [DefaultExecutionOrder(-1000)]
     internal class GameLaunchHelper : MonoBehaviour
     {
@@ -20,6 +20,8 @@ namespace Services
 
         private static void Restart()
         {
+            Debugger.Settings.Copy();
+            Debugger.Settings.SetAllowLog(EMessageType.Service, false); 
             for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
             {
                 string name = SceneControllerUtility.GetSceneName(SceneUtility.GetScenePathByBuildIndex(i));
@@ -30,6 +32,7 @@ namespace Services
                     return;
                 }
             }
+            Debugger.Settings.Paste();
         }
 #endif
     }

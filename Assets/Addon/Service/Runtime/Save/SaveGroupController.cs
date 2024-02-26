@@ -14,7 +14,7 @@ namespace Services.Save
         protected bool readOnAwake = true;
 
         [SerializeField]
-        protected internal string fileName;
+        protected internal string fileName, index;
         protected virtual string SavePath => SaveUtility.GenerateSavePath(fileName);
 
         [SerializeField]
@@ -40,6 +40,14 @@ namespace Services.Save
             if (ret != null && needLoad)
                 ret.Load();
             return ret;
+        }
+
+        /// <summary>
+        /// 设置接下来的存档槽位
+        /// </summary>
+        public void SetIndex(string index)
+        {
+            this.index = index;
         }
 
         public void Load()

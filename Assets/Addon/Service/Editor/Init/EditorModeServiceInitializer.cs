@@ -34,32 +34,32 @@ namespace Services
             {
                 obj = new GameObject(nameof(ServiceLocator));
                 obj.AddComponent<DontDestroy>();
-                sb.AppendLine($"Ìí¼ÓÓÎÏ·ÎïÌå:{nameof(ServiceLocator)}");
+                sb.AppendLine($"æ·»åŠ æ¸¸æˆç‰©ä½“:{nameof(ServiceLocator)}");
             }
             else
             {
-                sb.AppendLine($"ÓÎÏ·ÎïÌåÒÑ´æÔÚ:{nameof(ServiceLocator)}");
+                sb.AppendLine($"æ¸¸æˆç‰©ä½“å·²å­˜åœ¨:{nameof(ServiceLocator)}");
             }
 
             obj = GameObject.Find(nameof(GameLauncher));
             if (obj == null)
             {
                 obj = new GameObject(nameof(GameLauncher));
-                sb.AppendLine($"Ìí¼ÓÓÎÏ·ÎïÌå:{nameof(GameLauncher)}");
+                sb.AppendLine($"æ·»åŠ æ¸¸æˆç‰©ä½“:{nameof(GameLauncher)}");
             }
             else
             {
-                sb.AppendLine($"ÓÎÏ·ÎïÌåÒÑ´æÔÚ:{nameof(GameLauncher)}");
+                sb.AppendLine($"æ¸¸æˆç‰©ä½“å·²å­˜åœ¨:{nameof(GameLauncher)}");
             }
 
             if (obj.GetComponent<GameLauncher>() == null)
             {
                 obj.AddComponent<GameLauncher>();
-                sb.AppendLine($"Ìí¼Ó×é¼ş:{nameof(GameLauncher)}");
+                sb.AppendLine($"æ·»åŠ ç»„ä»¶:{nameof(GameLauncher)}");
             }
             else
             {
-                sb.AppendLine($"×é¼şÒÑ´æÔÚ:{nameof(GameLauncher)}");
+                sb.AppendLine($"ç»„ä»¶å·²å­˜åœ¨:{nameof(GameLauncher)}");
             }
             EditorSceneManager.MarkSceneDirty(UnityEngine.SceneManagement.SceneManager.GetActiveScene());
         }
@@ -69,8 +69,8 @@ namespace Services
             HashSet<Type> targets = new HashSet<Type>();
             string[] guids = AssetDatabase.FindAssets("t:MonoScript", new[] { "Assets/Addon/Service" });
 
-            Debugger.settings.Copy();
-            Debugger.settings.SetAllowLog(EMessageType.System, false);
+            Debugger.Settings.Copy();
+            Debugger.Settings.SetAllowLog(EMessageType.System, false);
 
             for (int i = 0; i < guids.Length; i++)
             {
@@ -86,9 +86,9 @@ namespace Services
             }
             Transform parent = GameObject.Find(nameof(ServiceLocator)).transform;
 
-            Debugger.settings.Paste();
+            Debugger.Settings.Paste();
 
-            sb.AppendLine("·¢ÏÖ²¢ĞÂÌí¼ÓµÄServiceÀàĞÍ:");
+            sb.AppendLine("å‘ç°å¹¶æ–°æ·»åŠ çš„Serviceç±»å‹:");
             foreach (Type type in targets)
             {
                 InitTargetdService(type, parent);

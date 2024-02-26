@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Services
 {
-    public class DebuggerSettings : ScriptableObject
+    [System.Serializable]
+    public class DebuggerSettings
     {
         public List<bool> flags;
         private readonly List<bool> copy = new List<bool>();
@@ -14,7 +14,7 @@ namespace Services
             int length = System.Enum.GetValues(typeof(EMessageType)).Length;
             for (int i = 0; i < length; i++)
             {
-                flags.Add(false);
+                flags.Add(true);
             }
         }
 
@@ -29,7 +29,7 @@ namespace Services
         }
 
         /// <summary>
-        /// Éú³ÉÒ»·İµ±Ç°ÉèÖÃµÄ¸±±¾£¨¸±±¾½öÓÃÓÚ±à¼­Æ÷Ä£Ê½ÔËĞĞÊ±£©
+        /// ç”Ÿæˆä¸€ä»½å½“å‰è®¾ç½®çš„å‰¯æœ¬ï¼ˆå‰¯æœ¬ä»…ç”¨äºç¼–è¾‘å™¨æ¨¡å¼è¿è¡Œæ—¶ï¼‰
         /// </summary>
         public void Copy()
         {
@@ -38,7 +38,7 @@ namespace Services
         }
 
         /// <summary>
-        /// ÓÃ¸±±¾¸²¸Çµ±Ç°ÉèÖÃ£¨¸±±¾½öÓÃÓÚ±à¼­Æ÷Ä£Ê½ÔËĞĞÊ±£©
+        /// ç”¨å‰¯æœ¬è¦†ç›–å½“å‰è®¾ç½®ï¼ˆå‰¯æœ¬ä»…ç”¨äºç¼–è¾‘å™¨æ¨¡å¼è¿è¡Œæ—¶ï¼‰
         /// </summary>
         public void Paste()
         {

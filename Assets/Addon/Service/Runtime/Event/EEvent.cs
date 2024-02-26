@@ -3,20 +3,14 @@ namespace Services
     public enum EEvent
     {
         /// <summary>
-        /// ╪стьЁ║╬╟г╟ё╛╡нйЩё╨╪╢╫╚╪сть╣дЁ║╬╟╨е
+        /// Е┼═Х╫╫Е°╨Ф≥╞Е┴█О╪▄Е▐┌Ф∙╟О╪ Е█ЁЕ╟├Е┼═Х╫╫Г └Е°╨Ф≥╞Е▐╥
         /// </summary>
         BeforeLoadScene,
         /// <summary>
-        /// ╪стьЁ║╬╟╨Сё╗жаиыр╩ж║рт╨Сё╘ё╛╡нйЩё╨╦у╪сть╨ц╣дЁ║╬╟╨е
+        /// Е┼═Х╫╫Е°╨Ф≥╞Е░▌О╪┬Х┤ЁЕ╟▒Д╦─Е╦╖Д╩╔Е░▌О╪┴О╪▄Е▐┌Ф∙╟О╪ Е┬ Е┼═Х╫╫Е╔╫Г └Е°╨Ф≥╞Е▐╥
         /// </summary>
         AfterLoadScene,
-        /// <summary>
-        /// фТ╤╞╤т╩╟ё╛╡нйЩё╨╤т╩╟ап╠М
-        /// </summary>
-        StartDialog,
-        /// <summary>
-        /// фТ╤╞йю╫Г©у╪Д╤т╩╟ё╛╡нйЩё╨╤т╩╟ап╠М
-        /// </summary>
-        StartWorldSpaceDialog,
+        PlayerHPChange,
+        PlayerEnergyChange,
     }
 }
