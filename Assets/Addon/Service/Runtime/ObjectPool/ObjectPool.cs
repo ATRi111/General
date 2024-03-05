@@ -7,16 +7,14 @@ namespace Services.ObjectPools
     {
         [SerializeField]
         private GameObject prefab;
-        private Queue<IMyObject> myObjects;  //¶ÔÏóÉÏµÄ½Å±¾
+        private Queue<IMyObject> myObjects;  //å¯¹è±¡ä¸Šçš„è„šæœ¬
         public int Count => myObjects.Count;
-        [SerializeField]
-        private int accumulateCount;
 
         internal void Initialize(GameObject prefab)
         {
             if (prefab.GetComponent<IMyObject>() == null)
             {
-                Debugger.LogError("¶ÔÏó³ØÖĞµÄÎïÌåÎ´ÊµÏÖIMyObject", EMessageType.System);
+                Debugger.LogError("å¯¹è±¡æ± ä¸­çš„ç‰©ä½“æœªå®ç°IMyObject", EMessageType.System);
                 return;
             }
             this.prefab = prefab;
@@ -38,11 +36,11 @@ namespace Services.ObjectPools
             myObjects.Enqueue(myObject);
         }
 
+        /// <summary>
+        /// é¢„ç”Ÿæˆ
+        /// </summary>
         internal void Create(int count = 1)
         {
-            accumulateCount += count;
-            if (count > 100)
-                Debugger.LogWarning("´óÁ¿µÄÔ¤Éú³ÉÓ¦·ÖÉ¢µ½¶àÖ¡Ö´ĞĞ", EMessageType.System);
             for (int i = 0; i < count; i++)
             {
                 IMyObject newObject = ObjectPoolUtility.Clone(prefab, true, this);
