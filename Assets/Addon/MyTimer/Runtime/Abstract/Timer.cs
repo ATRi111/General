@@ -3,15 +3,15 @@ using UnityEngine.Events;
 
 namespace MyTimer
 {
-    //TimerÀàÓÃÓÚ´úÌæ²¿·ÖĞ­³Ì£¬ÊÊºÏ´úÌæ¹æÂÉĞÔÇ¿µÄ¡¢ĞèÒª·´¸´·ÃÎÊµÄ»òĞèÒª·´¸´Æô¶¯¹Ø±ÕµÄĞ­³Ì
+    //Timerç±»ç”¨äºä»£æ›¿éƒ¨åˆ†åç¨‹ï¼Œé€‚åˆä»£æ›¿è§„å¾‹æ€§å¼ºçš„ã€éœ€è¦åå¤è®¿é—®çš„æˆ–éœ€è¦åå¤å¯åŠ¨å…³é—­çš„åç¨‹
 
     /// <summary>
-    /// ÃèÊöÒ»¶ÎËæÊ±¼äµÄ±ä»¯
+    /// æè¿°ä¸€æ®µéšæ—¶é—´çš„å˜åŒ–
     /// </summary>
-    /// <typeparam name="TValue">±ä»¯¹ı³ÌÖĞµÄ·µ»ØÖµÀàĞÍ</typeparam>
-    /// <typeparam name="TLerp">¼ÆËã·µ»ØÖµµÄ·½·¨</typeparam>
+    /// <typeparam name="TValue">å˜åŒ–è¿‡ç¨‹ä¸­çš„è¿”å›å€¼ç±»å‹</typeparam>
+    /// <typeparam name="TLerp">è®¡ç®—è¿”å›å€¼çš„æ–¹æ³•</typeparam>
     [System.Serializable]
-    public class Timer<TValue, TLerp> where TLerp : ILerp<TValue>, new()
+    public class Timer<TValue, TLerp> : ITimer where TLerp : ILerp<TValue>, new()
     {
         private GameCycle gameCycle;
 
@@ -19,7 +19,7 @@ namespace MyTimer
         protected bool paused;
 
         /// <summary>
-        /// ÊÇ·ñÔİÍ££¬ÆúÓÃTimerÇ°£¬Ò»¶¨ÒªÈ·±£ÆäPaused==true
+        /// æ˜¯å¦æš‚åœï¼Œå¼ƒç”¨Timerå‰ï¼Œä¸€å®šè¦ç¡®ä¿å…¶Paused==true
         /// </summary>
         public bool Paused
         {
@@ -46,7 +46,7 @@ namespace MyTimer
         [SerializeField]
         protected bool completed;
         /// <summary>
-        /// ÊÇ·ñÍê³É
+        /// æ˜¯å¦å®Œæˆ
         /// </summary>
         public bool Completed
         {
@@ -65,46 +65,46 @@ namespace MyTimer
         }
 
         /// <summary>
-        /// ¾­¹ıµÄÊ±¼ä
+        /// ç»è¿‡çš„æ—¶é—´
         /// </summary>
         public float Time { get; protected set; }
         /// <summary>
-        /// µ½´ïµÄ°Ù·Ö±È£¨0¡«1)
+        /// åˆ°è¾¾çš„ç™¾åˆ†æ¯”ï¼ˆ0ï½1)
         /// </summary>
         public float Percent => Mathf.Clamp01(Time / Duration);
         /// <summary>
-        /// ×ÜÊ±¼ä
+        /// æ€»æ—¶é—´
         /// </summary>
         public float Duration { get; protected set; }
         /// <summary>
-        /// ³õÖµ
+        /// åˆå€¼
         /// </summary>
         public TValue Origin { get; protected set; }
         /// <summary>
-        /// ÖÕÖµ
+        /// ç»ˆå€¼
         /// </summary>
         public TValue Target { get; protected set; }
 
         public ILerp<TValue> Lerp { get; protected set; }
         /// <summary>
-        /// µ±Ç°Öµ
+        /// å½“å‰å€¼
         /// </summary>
         public TValue Current => Lerp.Value(Origin, Target, Percent, Time, Duration);
 
         /// <summary>
-        /// ÔİÍ£Ê±´¥·¢
+        /// æš‚åœæ—¶è§¦å‘
         /// </summary>
         public event UnityAction<TValue> BeforePause;
         /// <summary>
-        /// Æô¶¯/½â³ıÔİÍ£Ê±´¥·¢
+        /// å¯åŠ¨/è§£é™¤æš‚åœæ—¶è§¦å‘
         /// </summary>
         public event UnityAction<TValue> BeforeResume;
         /// <summary>
-        /// µ½Ê±¼äÊ±´¥·¢
+        /// åˆ°æ—¶é—´æ—¶è§¦å‘
         /// </summary>
         public event UnityAction<TValue> AfterCompelete;
         /// <summary>
-        /// Î´ÔİÍ£Ê±Ã¿Ö¡´¥·¢
+        /// æœªæš‚åœæ—¶æ¯å¸§è§¦å‘
         /// </summary>
         public event UnityAction<TValue> OnTick;
 
@@ -115,7 +115,7 @@ namespace MyTimer
         }
 
         /// <summary>
-        /// ÎªMyTimerÉèÖÃ³õÊ¼ÊôĞÔ¼°ÊÇ·ñÁ¢¿ÌÆô¶¯
+        /// ä¸ºMyTimerè®¾ç½®åˆå§‹å±æ€§åŠæ˜¯å¦ç«‹åˆ»å¯åŠ¨
         /// </summary>
         public virtual void Initialize(TValue origin, TValue target, float duration, bool start = true)
         {
@@ -138,7 +138,7 @@ namespace MyTimer
             }
         }
 
-        /// <param name="fixedTime">ÉèÎªtrue¿É±ÜÃâÀÛ»ıÎó²î</param>
+        /// <param name="fixedTime">è®¾ä¸ºtrueå¯é¿å…ç´¯ç§¯è¯¯å·®</param>
         public void Restart(bool fixedTime = false)
         {
             if (fixedTime)
@@ -150,7 +150,7 @@ namespace MyTimer
         }
 
         /// <summary>
-        /// Ê¹¼ÆÊ±Æ÷Á¢¿Ìµ½Ê±¼ä
+        /// ä½¿è®¡æ—¶å™¨ç«‹åˆ»åˆ°æ—¶é—´
         /// </summary>
         public void ForceComplete()
         {

@@ -8,8 +8,14 @@ namespace EditorExtend
 {
     public static class ScriptCreator
     {
-        [MenuItem("Tools/EditorExtend/CreateEditorScript ^E")]
-        public static void CreateEditorScript()
+        [MenuItem("Tools/EditorExtend/CreateAutoEditorScript")]
+        public static void CreateAutoEditorScript()
+            => CreateEditorScript('a');
+        [MenuItem("Tools/EditorExtend/CreateIndirectEditorScript")]
+        public static void CreateIndirectEditorScript()
+            => CreateEditorScript('i');
+
+        public static void CreateEditorScript(char type)
         {
             Object[] objects = Selection.GetFiltered(typeof(Object), SelectionMode.Assets);
 
@@ -18,9 +24,18 @@ namespace EditorExtend
             {
                 if (objects[i] is MonoScript)
                 {
-                    EditorExtendUtility.DevideAssetPath(AssetDatabase.GetAssetPath(objects[0]), out string folder, out string file, out string extend);
-                    string path = folder + file + "Editor" + extend;
-                    string code = GenerateCode(file);
+                    EditorExtendUtility.DevideAssetPath(AssetDatabase.GetAssetPath(objects[i]), out string folder, out string file, out string extend);
+                    string path = type switch
+                    {
+                        'i' => "IndirectEditor",
+                        _ => "Editor",
+                    };
+                    path = folder + file + path + extend;
+                    string code = type switch
+                    {
+                        'i' => GenerateIndirectEditorCode(file),
+                        _ => GenerateAutoEditorCode(file),
+                    };
                     try
                     {
                         FileInfo info = FileTool.GetFileInfo(path, true);
@@ -38,7 +53,7 @@ namespace EditorExtend
             Debug.Log($"已通过{objects.Length}个对象中的{count}个创建Editor脚本");
         }
 
-        public static string GenerateCode(string className)
+        internal static string GenerateAutoEditorCode(string className)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("using EditorExtend;\n" +
@@ -46,9 +61,34 @@ namespace EditorExtend
                 "using UnityEngine;\n\n");
             sb.Append($"[CustomEditor(typeof({className}))]\n" +
                 $"public class {className}Editor : AutoEditor\n" +
-                "{\n" +
-                "   \n" +
-                "}\n");
+                "{\r\n    " +
+                "[AutoProperty]\r\n" +
+                "    public SerializedProperty data;\r\n\r\n" +
+                "    protected override void MyOnInspectorGUI()\r\n" +
+                "    {\r\n" +
+                "        \r\n" +
+                "    }\r\n" +
+                "}");
+            return sb.ToString();
+        }
+
+        internal static string GenerateIndirectEditorCode(string className)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("using EditorExtend;\n" +
+                "using UnityEditor;\n" +
+                "using UnityEngine;\n\n");
+            sb.Append($"[CustomEditor(typeof({className}))]\n" +
+                $"public class {className}IndirectEditor : IndirectEditor\n" +
+                "{\r\n" +
+                "    protected override string DefaultLabel => base.DefaultLabel;\r\n" +
+                "    [AutoProperty]\r\n" +
+                "    public SerializedProperty data;\r\n\r\n" +
+                "    protected override void MyOnInspectorGUI()\r\n" +
+                "    {\r\n" +
+                "        \r\n" +
+                "    }\r\n" +
+                "}");
             return sb.ToString();
         }
     }
