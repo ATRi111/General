@@ -2,16 +2,16 @@ namespace MyTimer
 {
     [System.Serializable]
     /// <summary>
-    /// »ù±¾µÄÍù¸´±ä»¯
+    /// åŸºæœ¬çš„å¾€å¤å˜åŒ–
     /// </summary>
     public class Circulation<TValue, TLerp> : Timer<TValue, TLerp> where TLerp : ILerp<TValue>, new()
     {
         public Circulation()
         {
-            AfterCompelete += MyOnComplete;
+            AfterCompelete += AfterComplete_;
         }
 
-        private void MyOnComplete(TValue _)
+        protected virtual void AfterComplete_(TValue _)
         {
             (Target, Origin) = (Origin, Target);
             Restart(true);
@@ -20,16 +20,16 @@ namespace MyTimer
 
     [System.Serializable]
     /// <summary>
-    /// »ù±¾µÄ·´¸´±ä»¯
+    /// åŸºæœ¬çš„åå¤å˜åŒ–
     /// </summary>
     public class Repeataion<TValue, TLerp> : Timer<TValue, TLerp> where TLerp : ILerp<TValue>, new()
     {
         public Repeataion()
         {
-            AfterCompelete += MyOnComplete;
+            AfterCompelete += AfterComplete_;
         }
 
-        private void MyOnComplete(TValue _)
+        protected virtual void AfterComplete_(TValue _)
         {
             Restart(true);
         }
@@ -37,7 +37,7 @@ namespace MyTimer
 
     [System.Serializable]
     /// <summary>
-    /// ²»Ê¹ÓÃÖµ£¬½öÖÜÆÚĞÔµ÷ÓÃ·½·¨
+    /// ä¸ä½¿ç”¨å€¼ï¼Œä»…å‘¨æœŸæ€§è°ƒç”¨æ–¹æ³•
     /// </summary>
     public class Metronome : Repeataion<float, DefaultValue<float>>
     {
@@ -49,7 +49,7 @@ namespace MyTimer
 
     [System.Serializable]
     /// <summary>
-    /// ½ö¼ÆÊ±
+    /// ä»…è®¡æ—¶
     /// </summary>
     public class TimerOnly : Timer<float, CurrentTime>
     {
