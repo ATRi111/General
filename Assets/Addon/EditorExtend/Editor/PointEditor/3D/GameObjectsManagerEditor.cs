@@ -51,6 +51,7 @@ namespace EditorExtend.PointEditor
 
         protected override void MyOnInspectorGUI()
         {
+            manager.RefreshGameObjects();
             string s = isEditting ? "整体移动" : "结束整体移动";
             if (GUILayout.Button(s))
             {
