@@ -26,14 +26,15 @@ namespace Services.ObjectPools
         }
 
         /// <summary>
-        /// 回收一个游戏物体所有子物体中的MyObject组件
+        /// 回收一个游戏物体所有子物体中的MyObject组件（不会回收自身）
         /// </summary>
         public static void RecycleMyObjects(GameObject gameObject)
         {
             MyObject[] myObjects = gameObject.GetComponentsInChildren<MyObject>();
             foreach (MyObject obj in myObjects)
             {
-                obj.Recycle();
+                if (obj.gameObject != gameObject)
+                    obj.Recycle();
             }
         }
     }
