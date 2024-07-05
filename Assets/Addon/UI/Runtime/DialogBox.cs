@@ -3,10 +3,8 @@ using TMPro;
 using UnityEngine;
 
 [RequireComponent(typeof(TextMeshProUGUI))]
-public class DialogBox : MonoBehaviour
+public class DialogBox : TextBase
 {
-    private TextMeshProUGUI tmp;
-
     [SerializeField]
     private int letterPerSceond = 15;
     [SerializeField]
@@ -15,9 +13,9 @@ public class DialogBox : MonoBehaviour
     public TypeWriter TypeWriter { get; private set; }
     public TypeWriterExtend TypeWriterExtend { get; private set; }
 
-    protected virtual void Awake()
+    protected override void Awake()
     {
-        tmp = GetComponentInChildren<TextMeshProUGUI>();
+        base.Awake();
         TypeWriter = new TypeWriter();
         TypeWriter.OnTick += OnUpdate;
         TypeWriter.AfterCompelete += OnUpdate;
@@ -28,7 +26,7 @@ public class DialogBox : MonoBehaviour
     public void ShowText(string text, bool immediate = false)
     {
         if (string.IsNullOrEmpty(text))
-            tmp.text = string.Empty;
+            TextUI.text = string.Empty;
         TypeWriter.Initialize(text, letterPerSceond);
         if (immediate)
             TypeWriter.ForceComplete();
@@ -36,6 +34,6 @@ public class DialogBox : MonoBehaviour
 
     private void OnUpdate(string value)
     {
-        tmp.text = value;
+        TextUI.text = value;
     }
 }
