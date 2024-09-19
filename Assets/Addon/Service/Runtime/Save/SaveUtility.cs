@@ -37,7 +37,7 @@ namespace Services.Save
             SaveDataGroup ret = JsonTool.LoadFromJson<SaveDataGroup>(savePath, JsonTool.PolyMorphicSettings);
             if (ret == null)
             {
-                Debugger.LogWarning("无法读取存档，创建新存档", EMessageType.Save);
+                Debugger.LogWarning("无法读取存档，创建运行时存档数据", EMessageType.Save);
                 ret = new SaveDataGroup();
             }
             return ret;
