@@ -85,7 +85,7 @@ namespace AStar
 
         /// <summary>
         /// 对向量按与某个向量的夹角大小排序;
-        /// 此排序能保证在所给向量的两侧对称地存在着多对向量时，总是先返回一侧的向量
+        /// 两侧存在到当前向量夹角大小相等的一对向量时，能确保总是返回某一侧的向量
         /// </summary>
         public class Comparer_Vector2_Nearer : IComparer<Vector2>, IComparer<Vector2Int>
         {

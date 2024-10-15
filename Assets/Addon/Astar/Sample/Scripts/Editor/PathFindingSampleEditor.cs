@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace AStar
+namespace AStar.Sample
 {
     [CustomEditor(typeof(PathFindingSample))]
     public class PathFindingSampleEditor : Editor

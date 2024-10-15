@@ -3,19 +3,19 @@ namespace AStar
     public enum ENodeType
     {
         /// <summary>
-        /// 未访问过的方块
+        /// 未访问过的节点
         /// </summary>
         Blank,
         /// <summary>
-        /// 路径确定过至少一次的方块
+        /// 路径确定过至少一次的节点
         /// </summary>
         Close,
         /// <summary>
-        /// 路径待确定的方块
+        /// 路径待确定的节点
         /// </summary>
         Open,
         /// <summary>
-        /// 最终路径中的点
+        /// 最终路径中的节点
         /// </summary>
         Route,
         /// <summary>

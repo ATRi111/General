@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace AStar
+namespace AStar.Sample
 {
     public class ChebyshevDistanceSO : CalculateCostSO
     {

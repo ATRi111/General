@@ -1,4 +1,4 @@
-namespace AStar
+namespace AStar.Sample
 {
     public class StaticWeightSO : CalculateWeightSO
     {

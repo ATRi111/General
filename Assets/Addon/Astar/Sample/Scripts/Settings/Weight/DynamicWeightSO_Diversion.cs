@@ -1,4 +1,4 @@
-namespace AStar
+namespace AStar.Sample
 {
     public class DynamicWeightSO_Diversion : CalculateWeightSO
     {

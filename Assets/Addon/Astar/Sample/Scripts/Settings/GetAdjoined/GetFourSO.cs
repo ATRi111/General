@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace AStar
+namespace AStar.Sample
 {
     public class GetFourSO : GetAdjoinedNodesSO
     {

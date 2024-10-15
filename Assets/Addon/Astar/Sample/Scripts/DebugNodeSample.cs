@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace AStar
+namespace AStar.Sample
 {
     public class DebugNodeSample : MonoBehaviour
     {

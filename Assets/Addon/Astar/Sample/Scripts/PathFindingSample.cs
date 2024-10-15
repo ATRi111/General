@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace AStar
+namespace AStar.Sample
 {
     public class PathFindingSample : MonoBehaviour
     {

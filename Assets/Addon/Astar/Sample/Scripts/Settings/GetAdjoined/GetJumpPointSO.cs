@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace AStar
+namespace AStar.Sample
 {
     [CreateAssetMenu(fileName = "跳点")]
     public class GetJumpPointSO : GetAdjoinedNodesSO

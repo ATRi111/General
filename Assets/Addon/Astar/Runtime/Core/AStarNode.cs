@@ -35,7 +35,6 @@ namespace AStar
         public float FCost => process.CurrentWeight * HCost + GCost;
 
         private PathNode _Parent;
-        //上一个方块
         public PathNode Parent
         {
             get => _Parent;
