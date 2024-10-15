@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace Tools
+namespace MyTool
 {
     public static partial class Tool2D
     {

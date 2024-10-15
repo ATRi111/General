@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Tools
+namespace MyTool
 {
     public static partial class GeometryTool
     {

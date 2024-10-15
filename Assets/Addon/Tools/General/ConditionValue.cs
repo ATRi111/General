@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Tools
+namespace MyTool
 {
     /// <summary>
     /// 条件量；某个事件需要同时满足多个条件才能执行时，可以使用此类

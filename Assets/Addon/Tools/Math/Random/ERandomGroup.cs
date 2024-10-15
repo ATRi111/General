@@ -1,4 +1,4 @@
-namespace Tools
+namespace MyTool
 {
     public enum ERandomGrounp
     {

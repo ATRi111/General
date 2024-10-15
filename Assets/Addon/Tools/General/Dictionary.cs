@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Tools
+namespace MyTool
 {
     public static partial class GeneralTool
     {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Tools
+namespace MyTool
 {
     public enum EDirection
     {

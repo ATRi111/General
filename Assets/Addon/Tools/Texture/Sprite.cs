@@ -1,7 +1,7 @@
 using UnityEngine;
-using static Tools.SpriteScaleMode;
+using static MyTool.SpriteScaleMode;
 
-namespace Tools
+namespace MyTool
 {
     public enum SpriteScaleMode
     {

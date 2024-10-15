@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace Tools
+namespace MyTool
 {
     public static partial class GeneralTool
     {
