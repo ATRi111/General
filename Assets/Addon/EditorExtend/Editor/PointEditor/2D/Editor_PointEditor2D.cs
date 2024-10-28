@@ -17,11 +17,32 @@ namespace EditorExtend.PointEditor
             }
         }
 
+        protected override void MyOnSceneGUI()
+        {
+            Select();
+            base.MyOnSceneGUI();
+        }
+
         protected abstract void MatchSprite(Sprite sprite);
 
-        protected override void OnLeftMouseUp()
+        protected override void OnMouseDrag(int button)
         {
-            selectedIndex = -1;
+            base.OnMouseDrag(button);
+            switch(button)
+            {
+                case 0:
+                    Drag();
+                    break;
+            }
         }
+
+        protected override void OnMouseUp(int button)
+        {
+            base.OnMouseUp(button);
+            selectedIndex = -1;
+            currentEvent.Use();
+        }
+
+        protected virtual void Drag() { }
     }
 }

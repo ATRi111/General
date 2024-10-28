@@ -31,7 +31,7 @@ namespace MyTool
         /// 角度转二维矢量
         /// </summary>
         public static Vector2 ToDirection(this float angle)
-            => new Vector2(-Mathf.Sin(angle * Mathf.Deg2Rad), Mathf.Cos(angle * Mathf.Deg2Rad));
+            => new(-Mathf.Sin(angle * Mathf.Deg2Rad), Mathf.Cos(angle * Mathf.Deg2Rad));
         /// <summary>
         /// 二维矢量转角度[0°,360°)
         /// </summary>

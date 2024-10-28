@@ -12,6 +12,7 @@ namespace EditorExtend.PointEditor
         protected SerializedProperty gameObjects, prefab;
         protected GameObjectsManager manager;
         protected GameObject[] GameObjects => manager.gameObjects;
+        protected bool isEditing;
 
         protected GameObject SelectedGameObject
         {
@@ -45,18 +46,18 @@ namespace EditorExtend.PointEditor
             base.OnEnable();
             manager = target as GameObjectsManager;
             helpInfo = "右击删除一个子物体";
-            isEditting = true;
-            UnityEditor.Tools.current = Tool.None;
+            isEditing = true;
+            Tools.current = Tool.None;
         }
 
         protected override void MyOnInspectorGUI()
         {
             manager.RefreshGameObjects();
-            string s = isEditting ? "整体移动" : "结束整体移动";
+            string s = isEditing ? "整体移动" : "结束整体移动";
             if (GUILayout.Button(s))
             {
-                isEditting = !isEditting;
-                UnityEditor.Tools.current = isEditting ? Tool.None : Tool.Move;
+                isEditing = !isEditing;
+                Tools.current = isEditing ? Tool.None : Tool.Move;
                 SceneView.RepaintAll();
             }
             if (GUILayout.Button("在开头添加子物体"))
@@ -71,7 +72,7 @@ namespace EditorExtend.PointEditor
             {
                 RenameAllObjects();
             }
-            if (isEditting && !string.IsNullOrEmpty(helpInfo))
+            if (isEditing && !string.IsNullOrEmpty(helpInfo))
                 EditorGUILayout.HelpBox(helpInfo, MessageType.Info);
             prefab.PropertyField("Prefab");
             gameObjects.ListField("Children");
@@ -81,7 +82,7 @@ namespace EditorExtend.PointEditor
         {
             base.MyOnSceneGUI();
             manager.RefreshGameObjects();
-            if (isEditting)
+            if (isEditing)
             {
                 if (!isDragging)
                     selectedIndex = GetIndex(); //避免拖动时经过其他点时选中点改变
@@ -94,20 +95,30 @@ namespace EditorExtend.PointEditor
             }
         }
 
-        protected override void OnLeftMouseDown()
+        protected override void OnMouseDown(int button)
         {
-            isDragging = true;
+            base.OnMouseDown(button);
+            switch(button)
+            {
+                case 0:
+                    isDragging = true;
+                    break;
+                case 1:
+                    if (IsSelecting)
+                        DeleteObject(SelectedGameObject);
+                    break;
+            }
         }
 
-        protected override void OnLeftMouseUp()
+        protected override void OnMouseUp(int button)
         {
-            isDragging = false;
-        }
-
-        protected override void OnRightMouseDown()
-        {
-            if (IsSelecting)
-                DeleteObject(SelectedGameObject);
+            base.OnMouseUp(button);
+            switch (button)
+            {
+                case 0:
+                    isDragging = false;
+                    break;
+            }
         }
 
         protected virtual bool MoveObject()

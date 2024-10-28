@@ -3,20 +3,20 @@ using UnityEngine;
 
 namespace AStar
 {
-    public class PathNode
+    [System.Serializable]
+    public class AStarNode
     {
-        private readonly PathFindingProcess process;
+        protected internal readonly PathFindingProcess process;
+        [SerializeField]
+        protected Vector2Int position;
+        public Vector2Int Position => position;
 
-        public Vector2Int Position { get; private set; }
+        [SerializeField]
+        public ENodeState state;
 
-        private ENodeType type;
-        public ENodeType Type
+        public virtual bool IsObstacle
         {
-            get => type;
-            set
-            {
-                type = value;
-            }
+            get => false;
         }
 
         /// <summary>
@@ -29,50 +29,53 @@ namespace AStar
         /// </summary>
         public float HCost;
 
-        /// <summary>
-        /// 经过该点时，起点到终点的距离（假设该点到终点无障碍）
-        /// </summary>
-        public float FCost => process.CurrentWeight * HCost + GCost;
+        public float WeightedFCost => process.HCostWeight * HCost + GCost;
+        public float FCost => HCost + GCost;
 
-        private PathNode _Parent;
-        public PathNode Parent
+        private AStarNode parent;
+        public AStarNode Parent
         {
-            get => _Parent;
+            get => parent;
             set
             {
-                _Parent = value;
-                GCost = value == null ? 0 : Parent.GCost + CalculateGCost(value);
+                parent = value;
+                GCost = value == null ? 0 : Parent.GCost + value.CostTo(this);
             }
         }
 
-        internal PathNode(PathFindingProcess process, Vector2Int position)
+        public AStarNode(PathFindingProcess process, Vector2Int position)
         {
             this.process = process;
-            Position = position;
-            Type = ENodeType.Blank;
+            this.position = position;
+            state = ENodeState.Blank;
         }
 
-        public void UpdateHCost(PathNode to)
+
+        public float CostTo(AStarNode to)
         {
-            HCost = CalculateHCost(to);
+            float primitiveCost = PrimitiveCostTo(to);
+            return process.mover.CalculateCost(this, to, primitiveCost);
         }
-
-        public float CalculateHCost(PathNode other)
-            => process.Settings.CalculateHCost(Position, other.Position);
-
-        public float CalculateGCost(PathNode other)
-            => process.Settings.CalculateGCost(Position, other.Position);
+        protected internal virtual float PrimitiveCostTo(AStarNode to)
+        {
+            float distance = process.Settings.CalculateDistance(Position, to.Position);
+            return distance;
+        }
+        public void UpdateParent(AStarNode node)
+        {
+            float g = node.GCost + node.CostTo(this);
+            if (GCost > g)
+                Parent = node;
+        }
 
         /// <summary>
         /// 回溯路径
         /// </summary>
-        public void Recall(List<PathNode> ret = null)
+        public void Recall(List<AStarNode> ret = null)
         {
-            Type = ENodeType.Route;
-            if (Parent != null)
-                Parent.Recall(ret);
-            if (ret != null)
-                ret.Add(this);
+            Parent?.Recall(ret);
+            if (process.mover.MoveAbilityCheck(this) && process.mover.StayCheck(this))
+                ret?.Add(this);
         }
 
         public override string ToString()
@@ -81,11 +84,11 @@ namespace AStar
         }
     }
 
-    public class Comparer_Cost : IComparer<PathNode>
+    public class Comparer_Cost : IComparer<AStarNode>
     {
-        public int Compare(PathNode x, PathNode y)
+        public int Compare(AStarNode x, AStarNode y)
         {
-            return (int)Mathf.Sign(x.FCost - y.FCost);
+            return (int)Mathf.Sign(x.WeightedFCost - y.WeightedFCost);
         }
     }
 }

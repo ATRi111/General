@@ -19,7 +19,6 @@ namespace MyTool
 
     public static class EDirectionTool
     {
-
         private static readonly Vector2Int[] Vectors = new Vector2Int[]
         {
         Vector2Int.up,
@@ -33,8 +32,8 @@ namespace MyTool
         Vector2Int.zero,
         };
 
-        private static readonly Dictionary<EDirection, Vector2Int> Dict_Direction = new Dictionary<EDirection, Vector2Int>();
-        private static readonly Dictionary<Vector2Int, EDirection> Dict_EDirection = new Dictionary<Vector2Int, EDirection>();
+        private static readonly Dictionary<EDirection, Vector2Int> Dict_Direction = new();
+        private static readonly Dictionary<Vector2Int, EDirection> Dict_EDirection = new();
 
         static EDirectionTool()
         {
@@ -61,17 +60,11 @@ namespace MyTool
 
         public static bool IsOblique(this EDirection eDirection)
         {
-            switch (eDirection)
+            return eDirection switch
             {
-                case EDirection.Up:
-                case EDirection.Left:
-                case EDirection.Down:
-                case EDirection.Right:
-                case EDirection.None:
-                    return false;
-                default:
-                    return true;
-            }
+                EDirection.Up or EDirection.Left or EDirection.Down or EDirection.Right or EDirection.None => false,
+                _ => true,
+            };
         }
 
         /// <summary>
@@ -95,7 +88,7 @@ namespace MyTool
         {
             n = Mathf.Clamp(n, 0, 8);
             List<Vector2Int> ret = GetDirections();
-            GeometryTool.Comparer_Vector2_Nearer comparer = new GeometryTool.Comparer_Vector2_Nearer(direction);
+            GeometryTool.Comparer_Vector2_Nearer comparer = new(direction);
             ret.Sort(comparer);
             return ret.GetRange(0, n);
         }
@@ -180,7 +173,7 @@ namespace MyTool
             List<int> mix = MathTool.MixList(c1, c2);
             Vector2Int[] bases = new Vector2Int[] { base1, base2 };
             Vector2Int current = origin;
-            List<Vector2Int> ret = new List<Vector2Int> { origin };
+            List<Vector2Int> ret = new() { origin };
             for (int i = 0; i < count; i++)
             {
                 current += bases[mix[i]];
@@ -198,7 +191,7 @@ namespace MyTool
         /// <returns>直线直到停下之前的部分</returns>
         public static List<Vector2Int> StopLine(List<Vector2Int> line, Func<Vector2Int, Vector2Int, bool> CanMove, bool containStop = false, bool containStart = false)
         {
-            List<Vector2Int> ret = new List<Vector2Int> { line[0] };
+            List<Vector2Int> ret = new() { line[0] };
             for (int i = 0; i < line.Count - 1; i++)
             {
                 if (!CanMove(line[i], line[i + 1]))

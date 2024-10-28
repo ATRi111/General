@@ -44,25 +44,19 @@ namespace EditorExtend.PointEditor
             vertices[4] = rect.min;
             Handles.color = settings.LineColor;
             HandleUI.DrawLines(vertices, settings.DefaultLineThickness);
-            if (isEditting)
+
+            int index = GetIndex();
+            for (int i = 0; i < vertices.Length - 1; i++)
             {
-                int index = GetIndex();
-                for (int i = 0; i < vertices.Length - 1; i++)
-                {
-                    mids[i] = 0.5f * (vertices[i] + vertices[i + 1]);
-                    Handles.color = index == i ? settings.SelectedPointColor : settings.PointColor;
-                    HandleUI.DrawDot(mids[i], SceneViewUtility.ScreenToWorldSize(settings.DefaultDotSize));
-                }
+                mids[i] = 0.5f * (vertices[i] + vertices[i + 1]);
+                Handles.color = index == i ? settings.SelectedPointColor : settings.PointColor;
+                HandleUI.DrawDot(mids[i], SceneViewUtility.SceneToWorldSize(settings.DefaultDotSize));
             }
         }
 
-        protected override void OnLeftMouseDown()
+        protected override void Drag()
         {
-            selectedIndex = GetIndex();
-        }
-
-        protected override void OnLeftMouseDrag()
-        {
+            currentEvent.Use();
             if (IsSelecting)
             {
                 Vector2 newPoint = ExternalTool.GetPointOnRay(mouseRay, 0f);

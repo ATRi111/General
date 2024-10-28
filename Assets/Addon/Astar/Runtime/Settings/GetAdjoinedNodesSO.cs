@@ -5,6 +5,6 @@ namespace AStar
 {
     public abstract class GetAdjoinedNodesSO : ScriptableObject
     {
-        public abstract void GetAdjoinedNodes(PathFindingProcess process, PathNode node, List<PathNode> ret);
+        public abstract void GetAdjoinedNodes(PathFindingProcess process, AStarNode node, List<AStarNode> ret);
     }
 }

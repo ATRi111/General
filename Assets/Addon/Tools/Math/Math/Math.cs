@@ -9,11 +9,9 @@ namespace MyTool
         public const float DIAGNOL = 1.414214f;
 
         public static Vector3 ResetZ(this Vector3 v, float z = 0f)
-            => new Vector3(v.x, v.y, z);
-        public static Vector3 AddZ(this Vector2 v)
-            => (Vector3)v;
-        public static Vector2 RemoveZ(this Vector3 v)
-            => (Vector2)v;
+            => new(v.x, v.y, z);
+        public static Vector3 AddZ(this Vector2 v, float z = 0f)
+            => new(v.x, v.y, z);
 
         /// <summary>
         /// 求贝塞尔曲线上的一点

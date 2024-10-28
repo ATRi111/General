@@ -54,15 +54,7 @@ namespace AStar
                 datas[Count] = default;
                 BubbleDown();
             }
-            if (datas.Length > DefaultCapacity && Count < (datas.Length >> 1))
-                Shrink();
             return result;
-        }
-
-        private void Shrink()
-        {
-            int newSize = Math.Max(DefaultCapacity, (((Count / DefaultCapacity) + 1) * DefaultCapacity));
-            ResizeItemStore(newSize);
         }
 
         private void ResizeItemStore(int newSize)
@@ -78,7 +70,7 @@ namespace AStar
         public void Clear()
         {
             Count = 0;
-            datas = new T[DefaultCapacity];
+            datas = new T[Capacity];
         }
 
         private void BubbleDown()

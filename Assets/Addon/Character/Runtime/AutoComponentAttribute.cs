@@ -6,7 +6,7 @@ namespace Character
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     /// <summary>
-    /// 用于自动获取Component(无法确保对private字段或属性生效)
+    /// 用于自动获取Component
     /// </summary>
     public class AutoComponentAttribute : Attribute
     {

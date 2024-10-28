@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Character
 {
-    public class CharacterAnimatorBase : CharacterComponent
+    public class CharacterAnimatorBase : CharacterComponentBase
     {
         [AutoComponent(EComponentPosition.Indeterminate)]
         protected Animator animator;

@@ -7,8 +7,8 @@ namespace EditorExtend.PointEditor
         public Vector2 offset;
         public Vector2 size;
 
-        public Rect LocalRect => new Rect(offset - size / 2, size);
-        public Rect WorldRect => new Rect(offset - size / 2 + Position2D, size);
+        public Rect LocalRect => new(offset - size / 2, size);
+        public Rect WorldRect => new(offset - size / 2 + Position2D, size);
 
         public override Rect GetAABB()
         {

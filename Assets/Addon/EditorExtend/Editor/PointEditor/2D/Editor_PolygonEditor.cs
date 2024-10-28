@@ -45,30 +45,49 @@ namespace EditorExtend.PointEditor
                     break;
             }
 
-            if (isEditting)
+            Handles.color = settings.PointColor;
+            int index = GetIndex();
+            for (int i = 0; i < worldPoints.Count; i++)
             {
-                Handles.color = settings.PointColor;
-                int index = GetIndex();
-                for (int i = 0; i < worldPoints.Count; i++)
-                {
-                    Handles.color = index == i ? settings.SelectedPointColor : settings.PointColor;
-                    HandleUI.DrawDot(worldPoints[i], SceneViewUtility.ScreenToWorldSize(settings.DefaultDotSize));
-                }
+                Handles.color = index == i ? settings.SelectedPointColor : settings.PointColor;
+                HandleUI.DrawDot(worldPoints[i], SceneViewUtility.SceneToWorldSize(settings.DefaultDotSize));
+            }
 
-                if (index == -1)
-                {
-                    Handles.color = settings.NewPointColor;
-                    int insert = GetPointIndexOnLine(out Vector3 closest);
-                    if (insert != -1)
-                        HandleUI.DrawDot(closest, SceneViewUtility.ScreenToWorldSize(settings.DefaultDotSize));
-                }
+            if (index == -1)
+            {
+                Handles.color = settings.NewPointColor;
+                int insert = GetPointIndexOnLine(out Vector3 closest);
+                if (insert != -1)
+                    HandleUI.DrawDot(closest, SceneViewUtility.SceneToWorldSize(settings.DefaultDotSize));
             }
         }
 
-        protected override void OnLeftMouseDown()
+        protected override void OnMouseDown(int button)
         {
-            selectedIndex = GetIndex();
+            base.OnMouseDown(button);
+            switch(button)
+            {
+                case 0:
+                    Add();
+                    break;
+                case 1:
+                    Remove();
+                    break;
+            }
+        }
+        protected override void Drag()
+        {
+            currentEvent.Use();
+            if (IsSelecting)
+            {
+                localPoints.GetArrayElementAtIndex(selectedIndex).vector3Value =
+                    ExternalTool.GetPointOnRay(mouseRay, 0f) - polygonEditor.transform.position;
+            }
+        }
 
+        protected void Add()
+        {
+            currentEvent.Use();
             if (!IsSelecting)
             {
                 int insert = GetPointIndexOnLine(out Vector3 closest);
@@ -81,7 +100,7 @@ namespace EditorExtend.PointEditor
             }
         }
 
-        protected override void OnRightMouseDown()
+        protected void Remove()
         {
             if (localPoints.arraySize < 3)
             {
@@ -92,15 +111,6 @@ namespace EditorExtend.PointEditor
             int index = GetIndex();
             if (index != -1)
                 localPoints.DeleteArrayElementAtIndex(index);
-        }
-
-        protected override void OnLeftMouseDrag()
-        {
-            if (IsSelecting)
-            {
-                localPoints.GetArrayElementAtIndex(selectedIndex).vector3Value =
-                    ExternalTool.GetPointOnRay(mouseRay, 0f) - polygonEditor.transform.position;
-            }
         }
 
         protected override int GetIndex()

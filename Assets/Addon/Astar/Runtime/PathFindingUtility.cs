@@ -6,31 +6,21 @@ namespace AStar
 {
     public static class PathFindingUtility
     {
-        //边长
-        public static float Side = 10f;
-        //对角线长
-        public static float Diagnol = 14f;
+        public const float Diagnol = 1.41421356f;
+        public const float Epsilon = 1e-6f;
 
-        /// <summary>
-        /// 默认的计算权重的方法
-        /// </summary>
         public static float CalculateWeight_Default(PathFindingProcess _)
         {
             return 1f;
         }
-        /// <summary>
-        /// 默认的判断能否移动的方法
-        /// </summary>
-        public static bool CheckPassable_Default(PathNode _, PathNode to)
+
+        public static bool CheckObstacle_Default()
         {
-            return to.Type != ENodeType.Obstacle;
+            return true;
         }
-        /// <summary>
-        /// 默认的用于确定节点类型的方法
-        /// </summary>
-        public static ENodeType DefineNodeType_Default(Vector2Int _)
+        public static AStarNode GenerateNode_Default(PathFindingProcess process, Vector2Int position)
         {
-            return ENodeType.Blank;
+            return new AStarNode(process, position);
         }
 
         #region 四向寻路
@@ -40,12 +30,12 @@ namespace AStar
         /// 求曼哈顿距离
         /// </summary>
         public static float ManhattanDistance(Vector2Int a, Vector2Int b)
-            => Mathf.Abs(a.x - b.x) * Side + Mathf.Abs(a.y - b.y) * Side;
+            => Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
 
         /// <summary>
         /// 获取某节点周围的四个节点
         /// </summary>
-        public static void GetAdjoinNodes_Four(PathFindingProcess process, PathNode node, List<PathNode> ret)
+        public static void GetAdjoinNodes_Four(PathFindingProcess process, AStarNode node, List<AStarNode> ret)
         {
             ret.Clear();
             foreach (Vector2Int direction in fourDirections)
@@ -59,6 +49,7 @@ namespace AStar
         #region 八向寻路
 
         public static readonly ReadOnlyCollection<Vector2Int> eightDirections;
+
         /// <summary>
         /// 求切比雪夫距离
         /// </summary>
@@ -68,12 +59,12 @@ namespace AStar
             float deltaY = Mathf.Abs(a.y - b.y);
             float max = Mathf.Max(deltaX, deltaY);
             float min = Mathf.Min(deltaX, deltaY);
-            return min * Diagnol + (max - min) * Side;
+            return min * Diagnol + (max - min);
         }
         /// <summary>
         /// 获取某节点周围的八个节点
         /// </summary>
-        public static void GetAdjoinNodes_Eight(PathFindingProcess process, PathNode node, List<PathNode> ret)
+        public static void GetAdjoinNodes_Eight(PathFindingProcess process, AStarNode node, List<AStarNode> ret)
         {
             ret.Clear();
             foreach (Vector2Int direction in eightDirections)

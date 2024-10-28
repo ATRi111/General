@@ -4,19 +4,29 @@ using UnityEngine;
 
 namespace EditorExtend.PointEditor
 {
-    public abstract class Editor_PointEditor : AutoEditor
+    public abstract class Editor_PointEditor : InteractiveEditor
     {
         protected PointEditorSettings settings;
-
-        /// <summary>
-        /// 是否处于编辑状态；编辑状态下，才会响应各种鼠标事件
-        /// </summary>
-        protected bool isEditting;
 
         protected int selectedIndex;    //当前选中点的索引
         protected virtual bool IsSelecting => selectedIndex != -1;
 
         protected string helpInfo;
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            selectedIndex = -1;
+            settings = Resources.Load<PointEditorSettings>(nameof(PointEditorSettings));
+            editorModeOnly = true;
+        }
+
+        protected override void MyOnInspectorGUI()
+        {
+            base.MyOnInspectorGUI();
+            if (!string.IsNullOrEmpty(helpInfo))
+                EditorGUILayout.HelpBox(helpInfo, MessageType.Info);
+        }
 
         /// <summary>
         /// 获取所给点中，到鼠标最近且小于给定距离的点的索引号；如果没有满足条件的点，返回-1
@@ -38,69 +48,6 @@ namespace EditorExtend.PointEditor
             return ret;
         }
 
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-            isEditting = false;
-            selectedIndex = -1;
-            focusMode = EFocusMode.Default;
-            settings = Resources.Load<PointEditorSettings>(nameof(PointEditorSettings));
-        }
-
-        protected override void MyOnInspectorGUI()
-        {
-            string s = isEditting ? "结束编辑" : "开始编辑";
-            if (GUILayout.Button(s))
-            {
-                isEditting = !isEditting;
-                if (isEditting)
-                {
-                    focusMode = EFocusMode.Lock;
-                    UnityEditor.Tools.current = Tool.None;
-                }
-                else
-                {
-                    focusMode = EFocusMode.Default;
-                    UnityEditor.Tools.current = Tool.Move;
-                    selectedIndex = -1;
-                }
-                SceneView.RepaintAll();
-            }
-            if (isEditting && !string.IsNullOrEmpty(helpInfo))
-                EditorGUILayout.HelpBox(helpInfo, MessageType.Info);
-        }
-
-        protected override void MyOnSceneGUI()
-        {
-            if (currentEvent.type == EventType.Repaint)
-                Paint();
-            if (isEditting)
-            {
-                switch (currentEvent.type)
-                {
-                    case EventType.MouseDown:
-                        if (currentEvent.button == 0)
-                            OnLeftMouseDown();
-                        else if (currentEvent.button == 1)
-                            OnRightMouseDown();
-                        break;
-                    case EventType.MouseDrag:
-                        if (currentEvent.button == 0)
-                            OnLeftMouseDrag();
-                        break;
-                    case EventType.MouseUp:
-                        if (currentEvent.button == 0)
-                            OnLeftMouseUp();
-                        break;
-                }
-            }
-        }
-
-        protected virtual void OnLeftMouseDown() { }
-        protected virtual void OnLeftMouseDrag() { }
-        protected virtual void OnLeftMouseUp() { }
-        protected virtual void OnRightMouseDown() { }
-
         /// <summary>
         /// 获取当前鼠标位置对应的点，如果不对应任何点，返回-1
         /// </summary>
@@ -109,6 +56,9 @@ namespace EditorExtend.PointEditor
             return -1;
         }
 
-        protected virtual void Paint() { }
+        protected virtual void Select()
+        {
+            selectedIndex = GetIndex();
+        }
     }
 }

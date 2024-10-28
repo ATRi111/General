@@ -13,44 +13,46 @@ namespace AStar
     {
         [SerializeField]
         private PathFindingSettings settings;
+
         public PathFindingSettings Settings => settings;
 
-        private List<PathNode> output;
+        public AStarMover mover;
+        public MonoBehaviour mono;
+
+        public List<AStarNode> output = new();
+        public List<AStarNode> available = new();
 
         #region 基础方法
 
         /// <summary>
-        /// 获取地图上某个位置的节点，并自动确定其节点类型
+        /// 获取地图上某个位置的节点，必要时创建新节点
         /// </summary>
-        internal PathNode GetNode(Vector2Int pos)
+        internal AStarNode GetNode(Vector2Int pos)
         {
             if (discoveredNodes.ContainsKey(pos))
                 return discoveredNodes[pos];
-            PathNode node = new PathNode(this, pos)
-            {
-                Type = settings.DefineNodeType(pos)
-            };
+            AStarNode node = settings.GenerateNode(this, pos);
             discoveredNodes.Add(pos, node);
             countOfQuery++;
             return node;
         }
 
         /// <summary>
-        /// 获取与一个节点相邻且可通行且不为Close的节点
+        /// 获取与一个节点相邻的节点(过滤不可通行节点)
         /// </summary>
-        internal void GetAdjoinPassableNodes(PathNode from)
+        internal void GetFilteredAdjoinNodes(AStarNode from)
         {
-            adjoins_original.Clear();
-            adjoins_handled.Clear();
-            settings.GetAdjoinNodes.Invoke(this, from, adjoins_original);
-            foreach (PathNode to in adjoins_original)
+            adjoins.Clear();
+            adjoins_filtered.Clear();
+            settings.GetAdjoinNodes.Invoke(this, from, adjoins);
+            foreach (AStarNode to in adjoins)
             {
-                if (to.Type != ENodeType.Close && settings.MoveCheck(from, to))
-                    adjoins_handled.Add(to);
+                if (mover.MoveCheck(from, to))
+                    adjoins_filtered.Add(to);
             }
         }
 
-        public PathNode[] GetAllNodes()
+        public AStarNode[] GetAllNodes()
         {
             return discoveredNodes.Values.ToArray();
         }
@@ -67,41 +69,35 @@ namespace AStar
         /// <summary>
         /// 起点
         /// </summary>
-        public PathNode From { get; private set; }
+        public AStarNode From { get; private set; }
         /// <summary>
         /// 终点
         /// </summary>
-        public PathNode To { get; private set; }
+        public AStarNode To { get; private set; }
         /// <summary>
         /// 所有已发现节点
         /// </summary>
-        internal readonly Dictionary<Vector2, PathNode> discoveredNodes = new Dictionary<Vector2, PathNode>();
+        internal readonly Dictionary<Vector2, AStarNode> discoveredNodes = new();
 
-        private readonly List<PathNode> adjoins_original = new List<PathNode>();
-        private readonly List<PathNode> adjoins_handled = new List<PathNode>();
+        private readonly List<AStarNode> adjoins = new();
+        private readonly List<AStarNode> adjoins_filtered = new();
         /// <summary>
         /// 待访问节点表
         /// </summary>
-        internal Heap<PathNode> open;
+        internal Heap<AStarNode> open;
 
         /// <summary>
-        /// 当前访问的点
+        /// 当前经过的节点
         /// </summary>
-        [SerializeField]
-        internal PathNode currentNode;
-        public PathNode CurrentNode => currentNode;
+        public AStarNode currentNode;
+        /// <summary>
+        /// 在可计算的范围内，到终点距离最近的节点
+        /// </summary>
+        public AStarNode nearest;
 
-        internal PathNode nearest;
-        /// <summary>
-        /// 当前已访问的离终点最近的点
-        /// </summary>
-        public PathNode Nearest => nearest;
         [SerializeField]
-        internal int countOfTestedNode;
-        /// <summary>
-        /// 测试过的节点数
-        /// </summary>
-        public int CountOfTestedNode => countOfTestedNode;
+        internal int countOfCloseNode;
+        public int CountOfCloseNode => countOfCloseNode;
 
         [SerializeField]
         internal int countOfQuery;
@@ -110,12 +106,7 @@ namespace AStar
         /// </summary>
         public int CountOfQuery => countOfQuery;
 
-        [SerializeField]
-        internal float currentWeight;
-        /// <summary>
-        /// 寻路的当前一步中,HCost的权重
-        /// </summary>
-        public float CurrentWeight => currentWeight;
+        public float HCostWeight => settings.hCostWeight;
 
         #endregion
 
@@ -126,7 +117,7 @@ namespace AStar
         /// <param name="fromPos">起点</param>
         /// <param name="toPos">终点</param>
         /// <param name="ret">接收结果</param>
-        public void Start(Vector2Int fromPos, Vector2Int toPos, List<PathNode> ret = null)
+        public void Start(Vector2Int fromPos, Vector2Int toPos)
         {
             if (fromPos == toPos)
             {
@@ -136,20 +127,19 @@ namespace AStar
 
             isRunning = true;
             countOfQuery = 0;
-            countOfTestedNode = 0;
-            currentWeight = 1f;
+            countOfCloseNode = 0;
 
+            available.Clear();
+            output.Clear();
             discoveredNodes.Clear();
-            open = new Heap<PathNode>(settings.capacity, new Comparer_Cost());
-            output = ret;
+            open.Clear();
 
             To = GetNode(toPos);
-            To.Type = ENodeType.Route;
+            To.HCost = 0;
 
             From = GetNode(fromPos);
-            From.Type = ENodeType.Route;
             From.Parent = null;
-            From.UpdateHCost(To);
+            From.HCost = From.CostTo(To);
 
             open.Push(From);
             nearest = From;
@@ -178,33 +168,38 @@ namespace AStar
             }
 
             currentNode = open.Pop();
-            currentNode.Type = ENodeType.Close;
-            GetAdjoinPassableNodes(currentNode);
-            currentWeight = settings.CalculateWeight(this);
+            currentNode.state = ENodeState.Close;
+            countOfCloseNode++;
 
-            foreach (PathNode node in adjoins_handled)
+            if (mover.MoveAbilityCheck(currentNode) && mover.StayCheck(currentNode))
             {
-                switch (node.Type)
+                available.Add(currentNode);
+            }
+            if (currentNode.HCost < nearest.HCost)
+                nearest = currentNode;
+
+            if (currentNode == To)
+            {
+                Stop();     //移动力受限的情况下，如果权重系数超过1，有可能在没有找到更短可行路径的情况下提前退出
+                return false;
+            }
+
+            GetFilteredAdjoinNodes(currentNode);
+
+            foreach (AStarNode node in adjoins_filtered)
+            {
+                switch (node.state)
                 {
-                    case ENodeType.Blank:
-                        node.UpdateHCost(To);
-                        node.Parent = currentNode;
-                        node.Type = ENodeType.Open;
+                    case ENodeState.Blank:
+                        node.HCost = node.CostTo(To);
+                        node.Parent = currentNode;      //一开始得到的GCost不一定是最小的，故不在这里进行MoveAbilityCheck
+                        node.state = ENodeState.Open;
                         open.Push(node);
                         break;
-                    case ENodeType.Route:
-                        node.Parent = currentNode;
-                        nearest = node;
-                        Stop();
-                        return false;
-                    case ENodeType.Open:
-                        if (node.GCost > currentNode.GCost + currentNode.CalculateGCost(node))
-                            node.Parent = currentNode;
+                    case ENodeState.Open:
+                        node.UpdateParent(currentNode);
                         break;
                 }
-                if (node.HCost < nearest.HCost)
-                    nearest = node;
-                countOfTestedNode++;
             }
             return true;
         }
@@ -216,7 +211,7 @@ namespace AStar
             isRunning = false;
             nearest.Recall(output);
         }
-
+    
         private bool CheckNextStep()
         {
             if (!isRunning)
@@ -224,9 +219,9 @@ namespace AStar
                 Debug.LogWarning("寻路未开始");
                 return false;
             }
-            if (countOfTestedNode > settings.maxDepth)
+            if (countOfCloseNode > settings.maxDepth)
             {
-                Debug.LogWarning("超出步数限制");
+                Debug.LogWarning("超出搜索深度限制");
                 return false;
             }
             if (open.IsEmpty)
@@ -238,9 +233,11 @@ namespace AStar
         }
         #endregion
 
-        public PathFindingProcess(PathFindingSettings settings)
+        public PathFindingProcess(PathFindingSettings settings, AStarMover mover = null)
         {
             this.settings = settings;
+            this.mover = mover ?? new AStarMover();
+            open = new Heap<AStarNode>(settings.capacity, new Comparer_Cost());
         }
     }
 }
