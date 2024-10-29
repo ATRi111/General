@@ -26,16 +26,20 @@ namespace Services.SceneManagement
         protected override void Awake()
         {
             base.Awake();
-            core = new SceneControllerCore(this, BeforeLoadScene, AfterLoadScene);
+            core = new SceneControllerCore(this, BeforeLoadScene, AfterLoadScene, BeforeUnLoadScene, AfterUnLoadScene);
         }
 
         public void LoadScene(string name, LoadSceneMode mode = LoadSceneMode.Single)
             => core.LoadScene(SceneControllerUtility.ToSceneIndex(name), mode, async, needConfirm);
-
         public void LoadScene(int index, LoadSceneMode mode = LoadSceneMode.Single)
             => core.LoadScene(index, mode, async, needConfirm);
         public void LoadNextScene(LoadSceneMode mode = LoadSceneMode.Single)
             => LoadScene(SceneControllerUtility.SceneIndex + 1, mode);
+
+        public void UnloadScene(string name, UnloadSceneOptions options = UnloadSceneOptions.None)
+           => core.UnLoadScene(SceneControllerUtility.ToSceneIndex(name), options);
+        public void UnloadScene(int index, UnloadSceneOptions options = UnloadSceneOptions.None)
+            => core.UnLoadScene(index, options);
 
         public void Quit()
             => core.Quit();
@@ -44,10 +48,17 @@ namespace Services.SceneManagement
         {
             eventSystem.Invoke(EEvent.BeforeLoadScene, index);
         }
-
         private void AfterLoadScene(int index)
         {
             eventSystem.Invoke(EEvent.AfterLoadScene, index);
+        }
+        private void BeforeUnLoadScene(int index)
+        {
+            eventSystem.Invoke(EEvent.BeforeUnLoadScene, index);
+        }
+        private void AfterUnLoadScene(int index)
+        {
+            eventSystem.Invoke(EEvent.AfterUnLoadScene, index);
         }
     }
 }

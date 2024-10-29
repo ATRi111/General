@@ -10,26 +10,40 @@ namespace Services.SceneManagement
         /// <summary>
         /// 开始异步加载场景时，发送异步操作
         /// </summary>
-        public readonly UnityEvent<AsyncOperation> AsyncLoadScene = new UnityEvent<AsyncOperation>();
+        public readonly UnityEvent<AsyncOperation> AsyncLoadScene = new();
 
-        internal readonly UnityEvent<int> BeforeLoadScene = new UnityEvent<int>();
-        internal readonly UnityEvent<int> AfterLoadScene = new UnityEvent<int>();
+        /// <summary>
+        /// 开始异步卸载场景时，发送异步操作
+        /// </summary>
+        public readonly UnityEvent<AsyncOperation> AsyncUnLoadScene = new();
+
+        internal readonly UnityEvent<int> BeforeLoadScene = new();
+        internal readonly UnityEvent<int> AfterLoadScene = new();
+        internal readonly UnityEvent<int> BeforeUnLoadScene = new();
+        internal readonly UnityEvent<int> AfterUnLoadScene = new();
         internal MonoBehaviour mono;
 
-        internal SceneControllerCore(MonoBehaviour mono, UnityAction<int> BeforeLoadScene, UnityAction<int> AfterLoadScene)
+        internal SceneControllerCore(
+            MonoBehaviour mono, 
+            UnityAction<int> BeforeLoadScene, 
+            UnityAction<int> AfterLoadScene,
+            UnityAction<int> BeforeUnLoadScene,
+            UnityAction<int> AfterUnLoadScene)
         {
             this.mono = mono;
             this.BeforeLoadScene.AddListener(BeforeLoadScene);
             this.AfterLoadScene.AddListener(AfterLoadScene);
+            this.BeforeUnLoadScene.AddListener(BeforeUnLoadScene);
+            this.AfterUnLoadScene.AddListener(AfterUnLoadScene);
         }
 
         public void LoadScene(int index, LoadSceneMode mode, bool async, bool confirm)
         {
-            StartLoadScene(new LoadSceneRequest(index, mode, async, confirm));
+            mono.StartCoroutine(LoadScene_(index, mode, async, confirm));
         }
-        private void StartLoadScene(LoadSceneRequest request)
+        public void UnLoadScene(int index, UnloadSceneOptions options)
         {
-            mono.StartCoroutine(LoadScene_(request));
+            mono.StartCoroutine(UnLoadScene_(index, options));
         }
 
         public void Quit()
@@ -37,26 +51,35 @@ namespace Services.SceneManagement
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else
-        Application.Quit();
+            Application.Quit();
 #endif
         }
 
-        private IEnumerator LoadScene_(LoadSceneRequest request)
+        private IEnumerator LoadScene_(int index, LoadSceneMode mode, bool async, bool needConfirm)
         {
-            BeforeLoadScene?.Invoke(request.index);
-            if (request.async)
+            BeforeLoadScene?.Invoke(index);
+            if (async)
             {
-                AsyncOperation operation = SceneManager.LoadSceneAsync(request.index);
-                operation.allowSceneActivation = !request.needConfirm;
+                AsyncOperation operation = SceneManager.LoadSceneAsync(index);
+                operation.allowSceneActivation = !needConfirm;
                 AsyncLoadScene?.Invoke(operation);
                 yield return operation;
             }
             else
             {
-                SceneManager.LoadScene(request.index);
+                SceneManager.LoadScene(index, mode);
             }
             yield return null;
-            AfterLoadScene?.Invoke(request.index);
+            AfterLoadScene?.Invoke(index);
+        }
+
+        private IEnumerator UnLoadScene_(int index, UnloadSceneOptions options)
+        {
+            BeforeUnLoadScene?.Invoke(index);
+            AsyncOperation operation = SceneManager.UnloadSceneAsync(index, options);
+            AsyncUnLoadScene?.Invoke(operation);
+            yield return operation;
+            AfterUnLoadScene?.Invoke(index);
         }
     }
 }
