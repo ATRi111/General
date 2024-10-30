@@ -33,7 +33,8 @@ namespace EditorExtend.GridEditor
             }
             else
             {
-                if (!prefab.TryGetComponent(out GridCollider collider))
+                GridCollider collider = prefab.GetComponentInChildren<GridCollider>();
+                if (collider == null)
                     IGridShape.GetStrip_Default(gizmoPoints);
                 else
                     collider.GetStrip(gizmoPoints);

@@ -76,6 +76,27 @@ namespace EditorExtend.GridEditor
             maxLayer = Mathf.Max(maxLayer, layer);
         }
 
+        public override GridObject RemoveObject(Vector3Int cellPosition)
+        {
+            GridObject gridObject = base.RemoveObject(cellPosition);
+            UpdateMaxLayerXY((Vector2Int)gridObject.CellPosition);
+            return gridObject;
+        }
+
+        public void UpdateMaxLayerXY(Vector2Int xy)
+        {
+            if (!maxLayerDict.ContainsKey(xy))
+                maxLayerDict.Add(xy, 0);
+            else
+            {
+                GridObject gridObject = GetObejectXY(xy);
+                if (gridObject != null)
+                    maxLayerDict[xy] = gridObject.CellPosition.z;
+                else
+                    maxLayerDict[xy] = 0;
+            }    
+        }
+
         /// <summary>
         /// 获取xy坐标上的所有物体
         /// </summary>
@@ -134,7 +155,12 @@ namespace EditorExtend.GridEditor
                 Vector3Int temp = cellPosition.ResetZ(layer);
                 GridObject obj = GetObject(temp);
                 if (obj != null)
-                    return cellPosition.z >= obj.GroundHeight + obj.CellPosition.z;
+                {
+                    if (cellPosition.z < obj.GroundHeight + obj.CellPosition.z)
+                        return false;
+                    if (obj.Overlap(temp))
+                        return false;
+                }
             }
             return true;
         }

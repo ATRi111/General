@@ -3,7 +3,7 @@ using UnityEditor;
 namespace EditorExtend.GridEditor
 {
     [CustomEditor(typeof(IsometricGridManagerBase))]
-    public class IsometricGridManagerBaseEditor : GridManagerEditor
+    public class IsometricGridManagerBaseEditor : GridManagerBaseEditor
     {
         [AutoProperty]
         public SerializedProperty maxLayer;

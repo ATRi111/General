@@ -126,7 +126,8 @@ namespace EditorExtend.GridEditor
 #if UNITY_EDITOR
                 if (!Application.isPlaying)
                 {
-                    if (TryGetComponent(out GridGround ground))
+                    GridGround ground = GetComponentInChildren<GridGround>();
+                    if (ground != null)
                         return ground.GroundHeight();
                 }
 #endif
@@ -140,7 +141,15 @@ namespace EditorExtend.GridEditor
         /// </summary>
         public virtual bool Overlap(Vector3 p)
         {
-            if(OverlapFunc != null)
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                GridCollider collider = GetComponentInChildren<GridCollider>();
+                if (collider != null)
+                    return collider.Overlap(p);
+            }
+#endif
+            if (OverlapFunc != null)
                 return OverlapFunc.Invoke(p);
             return GridUtility.BoxOverlap(cellPosition, Vector3Int.one, p);
         }

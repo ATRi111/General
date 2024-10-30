@@ -4,7 +4,7 @@ using UnityEngine;
 namespace EditorExtend.GridEditor
 {
     [CustomEditor(typeof(GridManagerBase),true)]
-    public class GridManagerEditor : AutoEditor
+    public class GridManagerBaseEditor : AutoEditor
     {
         public GridManagerBase GridManager => target as GridManagerBase;
 
@@ -14,6 +14,9 @@ namespace EditorExtend.GridEditor
         protected override void MyOnInspectorGUI()
         {
             RefreshObjects();
+            EditorGUI.BeginDisabledGroup(true);
+            EditorGUILayout.IntField("物体总数", GridManager.ObjectDict.Count);
+            EditorGUI.EndDisabledGroup();
             if (Application.isPlaying)
                 return;
 

@@ -95,7 +95,7 @@ namespace EditorExtend.GridEditor
                 cellPosition.vector3IntValue = ObjectBrush.cellPosition;
                 gridObject.CellPosition = ObjectBrush.cellPosition;
                 temp.ApplyModifiedProperties();
-                ObjectBrush.Manager.AddObject(gridObject);
+                //ObjectBrush.Manager.AddObject(gridObject);   //Editor模式下GridManager会自动刷新以获取新物体
             }
             else
                 Erase();
