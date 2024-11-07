@@ -6,7 +6,7 @@ namespace EditorExtend.GridEditor
     public class GridObject : MonoBehaviour
     {
         #region ×é¼þ
-        private GridManagerBase manager;
+        protected GridManagerBase manager;
         public GridManagerBase Manager
         {
             get

@@ -12,7 +12,7 @@ namespace AStar
         /// </summary>
         public int capacity;
         /// <summary>
-        /// 最大搜索深度(即Closed节点数)
+        /// 最大Closed节点数
         /// </summary>
         public int maxDepth;
         /// <summary>

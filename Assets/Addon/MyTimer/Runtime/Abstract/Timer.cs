@@ -3,6 +3,37 @@ using UnityEngine.Events;
 
 namespace MyTimer
 {
+    public class TimerBase
+    {
+        [SerializeField]
+        protected bool paused;
+
+        [SerializeField]
+        protected bool completed;
+
+        [SerializeField]
+        protected float time;
+        /// <summary>
+        /// 经过的时间
+        /// </summary>
+        public float Time => time;
+        [SerializeField]
+        protected float duration;
+        /// <summary>
+        /// 总时间
+        /// </summary>
+        public float Duration => duration;
+        /// <summary>
+        /// 到达的百分比（0～1)
+        /// </summary>
+        public float Percent => Mathf.Clamp01(Time / Duration);
+
+        public TimerBase()
+        {
+            paused = true;
+        }
+    }
+
     //Timer类用于代替部分协程，适合代替规律性强的、需要反复访问的或需要反复启动关闭的协程
 
     /// <summary>
@@ -11,12 +42,9 @@ namespace MyTimer
     /// <typeparam name="TValue">变化过程中的返回值类型</typeparam>
     /// <typeparam name="TLerp">计算返回值的方法</typeparam>
     [System.Serializable]
-    public class Timer<TValue, TLerp> : ITimer where TLerp : ILerp<TValue>, new()
+    public class Timer<TValue, TLerp> : TimerBase,ITimer where TLerp : ILerp<TValue>, new()
     {
-        private GameCycle gameCycle;
-
-        [SerializeField]
-        protected bool paused;
+        protected GameCycle gameCycle;
 
         /// <summary>
         /// 是否暂停，弃用Timer前，一定要确保其Paused==true
@@ -43,8 +71,6 @@ namespace MyTimer
             }
         }
 
-        [SerializeField]
-        protected bool completed;
         /// <summary>
         /// 是否完成
         /// </summary>
@@ -64,18 +90,6 @@ namespace MyTimer
             }
         }
 
-        /// <summary>
-        /// 经过的时间
-        /// </summary>
-        public float Time { get; protected set; }
-        /// <summary>
-        /// 到达的百分比（0～1)
-        /// </summary>
-        public float Percent => Mathf.Clamp01(Time / Duration);
-        /// <summary>
-        /// 总时间
-        /// </summary>
-        public float Duration { get; protected set; }
         /// <summary>
         /// 初值
         /// </summary>
@@ -109,9 +123,9 @@ namespace MyTimer
         public event UnityAction<TValue> OnTick;
 
         public Timer()
+            :base()
         {
             Lerp = new TLerp();
-            paused = true;
         }
 
         /// <summary>
@@ -120,7 +134,7 @@ namespace MyTimer
         public virtual void Initialize(TValue origin, TValue target, float duration, bool start = true)
         {
             gameCycle = GameCycle.Instance;
-            Duration = duration;
+            this.duration = duration;
             Origin = origin;
             Target = target;
             if (start)
@@ -129,7 +143,7 @@ namespace MyTimer
 
         protected void Update()
         {
-            Time += UnityEngine.Time.deltaTime;
+            time += UnityEngine.Time.deltaTime;
             OnTick?.Invoke(Current);
             if (Time >= Duration)
             {
@@ -142,9 +156,9 @@ namespace MyTimer
         public void Restart(bool fixedTime = false)
         {
             if (fixedTime)
-                Time -= Duration;
+                time -= Duration;
             else
-                Time = 0;
+                time = 0;
             Paused = false;
             Completed = false;
         }
@@ -154,7 +168,7 @@ namespace MyTimer
         /// </summary>
         public void ForceComplete()
         {
-            Time = Duration;
+            time = Duration;
             OnTick?.Invoke(Current);
             Paused = true;
             Completed = true;

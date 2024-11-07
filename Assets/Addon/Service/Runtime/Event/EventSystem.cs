@@ -4,7 +4,7 @@ using UnityEngine.Events;
 namespace Services.Event
 {
     [DefaultExecutionOrder(-100)]
-    public sealed class EventSystem : Service, IEventSystem
+    internal sealed class EventSystem : Service, IEventSystem
     {
         private EventSystemCore core;
 

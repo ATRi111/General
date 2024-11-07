@@ -13,7 +13,7 @@ namespace MyTimer
                 value %= 360f;
                 if (value < 0f)
                     value += 360f;
-                Time = Duration / 360f * value;
+                time = Duration / 360f * value;
             }
 
         }

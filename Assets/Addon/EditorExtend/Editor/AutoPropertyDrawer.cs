@@ -4,36 +4,42 @@ using UnityEngine;
 
 namespace EditorExtend
 {
+    /// <summary>
+    /// 通常，继承此类后只需要重写MyOnGUI，并在其中使用Layout版本的GUI即可，不需要重写其他函数
+    /// </summary>
     public abstract class AutoPropertyDrawer : PropertyDrawer
     {
-        public Rect[] DevideRectVertical(Rect rect, int count)
-        {
-            Rect[] rects = new Rect[count];
-            float height = rect.height / count;
-            float delta = 0;
-            for (int i = 0; i < count; i++)
-            {
-                rects[i] = new Rect(rect.x, rect.y + delta, rect.width, height);
-                delta += height;
-            }
-            return rects;
-        }
-
         /// <summary>
-        /// 通常来说，不应该重写此方法，而应该重写MyOnGUI
+        /// 若此方法返回true,则此属性在显示时不折叠
         /// </summary>
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        protected virtual bool AlwaysFoldout => false;
+        protected bool foldout;
+        protected Vector2 min;
+        protected float width;
+        protected float totalHeight;
+
+        public Rect NextRectRelative(float multiplier = 1, float gapMultiplier = 0.111f)
+            => NextRect(multiplier * EditorGUIUtility.singleLineHeight, gapMultiplier * EditorGUIUtility.singleLineHeight);
+        public Rect NextRect(SerializedProperty property)
+            => NextRect(EditorGUI.GetPropertyHeight(property, property.isArray), 0f);
+        public Rect NextRect(float height, float gap = 2f)
         {
-            EditorGUI.BeginProperty(position, label, property);
-            Initialize(property);
-            MyOnGUI(position, property, label);
-            EditorGUI.EndProperty();
+            Rect ret = new(min, new Vector2(width, height));
+            totalHeight += height + gap;
+            min.y += height + gap;
+            return ret;
         }
 
-        protected abstract void MyOnGUI(Rect position, SerializedProperty property, GUIContent label);
-
-        public virtual void Initialize(SerializedProperty property)
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
+            return totalHeight;
+        }
+
+        public virtual void Initialize(Rect position, SerializedProperty property)
+        {
+            totalHeight = 0;
+            min = position.min;
+            width = position.width;
             FieldInfo[] fields = GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             foreach (FieldInfo info in fields)
             {
@@ -47,5 +53,27 @@ namespace EditorExtend
                 }
             }
         }
+
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+            Initialize(position, property);
+            EditorGUI.BeginProperty(position, label, property);
+            if (AlwaysFoldout)
+                EditorGUI.LabelField(NextRectRelative(), label);
+            else
+                foldout = EditorGUI.Foldout(NextRectRelative(), foldout, label);
+            if (AlwaysFoldout || foldout)
+            {
+                EditorGUI.indentLevel++;
+                MyOnGUI(position, property, label);
+                EditorGUI.indentLevel--;
+            }
+            EditorGUI.EndProperty();
+        }
+
+        /// <summary>
+        /// 此方法中禁止调用Layout版本的EditorGUI,必须使用NextRect
+        /// </summary>
+        protected abstract void MyOnGUI(Rect position, SerializedProperty property, GUIContent label);
     }
 }

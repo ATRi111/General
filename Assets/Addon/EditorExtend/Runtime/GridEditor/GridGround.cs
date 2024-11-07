@@ -10,7 +10,7 @@ namespace EditorExtend.GridEditor
             get
             {
                 if (gridObject == null)
-                    gridObject = GetComponent<GridObject>();
+                    gridObject = GetComponentInParent<GridObject>();
                 return gridObject;
             }
         }

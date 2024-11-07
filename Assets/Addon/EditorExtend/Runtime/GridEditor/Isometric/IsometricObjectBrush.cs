@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace EditorExtend.GridEditor
@@ -7,6 +8,7 @@ namespace EditorExtend.GridEditor
 #if UNITY_EDITOR
         public bool lockLayer;
         public int layer;
+        [NonSerialized]
         public bool lockXY;
 
         public override Vector3Int CalculateCellPosition(Vector3 worldPosition)

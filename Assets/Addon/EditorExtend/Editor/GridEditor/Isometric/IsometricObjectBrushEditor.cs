@@ -6,8 +6,9 @@ namespace EditorExtend.GridEditor
     [CustomEditor(typeof(IsometricObjectBrush))]
     public class IsometricObjectBrushEditor : ObjectBrushEditor
     {
+        public new IsometricObjectBrush ObjectBrush => target as IsometricObjectBrush;
         [AutoProperty]
-        public SerializedProperty lockLayer, layer, lockXY;
+        public SerializedProperty lockLayer, layer;
 
         protected override void MyOnInspectorGUI()
         {
@@ -17,18 +18,18 @@ namespace EditorExtend.GridEditor
             {
                 layer.IntField("层数");
             }
-            lockXY.BoolField("锁定XY");
+            EditorGUILayout.HelpBox("按住Ctrl锁定XY;按数字键锁定或解锁层数", MessageType.Info);
         }
 
         protected override void OnKeyDown(KeyCode keyCode)
         {
-            currentEvent.Use();
             if (keyCode == KeyCode.LeftControl || keyCode == KeyCode.RightControl)
             {
-                lockXY.boolValue = true;
+                ObjectBrush.lockXY = true;
             }
             else if (keyCode >= KeyCode.Alpha0 && keyCode <= KeyCode.Alpha9)
             {
+                currentEvent.Use();
                 int num = keyCode - KeyCode.Alpha0;
                 if (lockLayer.boolValue)
                 {
@@ -45,13 +46,14 @@ namespace EditorExtend.GridEditor
             }
             else if(keyCode == KeyCode.BackQuote)
             {
+                currentEvent.Use();
                 lockLayer.boolValue = !lockLayer.boolValue;
             }
         }
         protected override void OnKeyUp(KeyCode keyCode)
         {
             if (keyCode == KeyCode.LeftControl || keyCode == KeyCode.RightControl)
-                lockXY.boolValue = false;
+                ObjectBrush.lockXY = false;
         }
     }
 }

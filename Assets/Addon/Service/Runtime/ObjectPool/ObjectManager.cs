@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Services.ObjectPools
 {
-    public sealed class ObjectManager : Service, IObjectManager
+    internal sealed class ObjectManager : Service, IObjectManager
     {
         private ObjectManagerCore core;
         private ObjectLocatorBase locator;

@@ -14,6 +14,7 @@ namespace EditorExtend
             HandleKeyInput();
         }
 
+        //必要时调用currentEvent.Use()
         protected override void MyOnSceneGUI()
         {
             base.MyOnSceneGUI();

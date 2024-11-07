@@ -18,5 +18,9 @@ namespace Services
         /// 卸载场景后（至少一帧以后），参数：刚卸载完的场景号
         /// </summary>
         AfterUnLoadScene,
+        /// <summary>
+        /// 玩家开始控制某个角色，参数：控制的角色
+        /// </summary>
+        OnHumanControl,
     }
 }

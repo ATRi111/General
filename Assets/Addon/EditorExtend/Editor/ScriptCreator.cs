@@ -10,10 +10,10 @@ namespace EditorExtend
     {
         [MenuItem("Tools/EditorExtend/CreateAutoEditorScript")]
         public static void CreateAutoEditorScript()
-            => CreateEditorScript('a');
-        [MenuItem("Tools/EditorExtend/CreateIndirectEditorScript")]
-        public static void CreateIndirectEditorScript()
-            => CreateEditorScript('i');
+            => CreateEditorScript('e');
+        [MenuItem("Tools/EditorExtend/CreateAutoPropertyDrawerScript")]
+        public static void CreateAutoPropertyDrawerScript()
+            => CreateEditorScript('d');
 
         public static void CreateEditorScript(char type)
         {
@@ -24,16 +24,16 @@ namespace EditorExtend
             {
                 if (objects[i] is MonoScript)
                 {
-                    EditorExtendUtility.DevideAssetPath(AssetDatabase.GetAssetPath(objects[i]), out string folder, out string file, out string extend);
+                    EditorExtendUtility.DivideAssetPath(AssetDatabase.GetAssetPath(objects[i]), out string folder, out string file, out string extend);
                     string path = type switch
                     {
-                        'i' => "IndirectEditor",
+                        'd' => "Drawer",
                         _ => "Editor",
                     };
                     path = folder + file + path + extend;
                     string code = type switch
                     {
-                        'i' => GenerateIndirectEditorCode(file),
+                        'd' => GenerateAutoPropertyDrawerCode(file),
                         _ => GenerateAutoEditorCode(file),
                     };
                     try
@@ -55,40 +55,41 @@ namespace EditorExtend
 
         internal static string GenerateAutoEditorCode(string className)
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("using EditorExtend;\n" +
-                "using UnityEditor;\n" +
-                "using UnityEngine;\n\n");
-            sb.Append($"[CustomEditor(typeof({className}))]\n" +
-                $"public class {className}Editor : AutoEditor\n" +
-                "{\r\n    " +
-                "[AutoProperty]\r\n" +
-                "    public SerializedProperty data;\r\n\r\n" +
-                "    protected override void MyOnInspectorGUI()\r\n" +
-                "    {\r\n" +
-                "        \r\n" +
-                "    }\r\n" +
-                "}");
+            StringBuilder sb = new();
+            sb.Append("using EditorExtend;\n");
+            sb.Append("using UnityEditor;\n");
+            sb.Append("using UnityEngine;\n\n");
+
+            sb.Append($"[CustomEditor(typeof({className}))]\n");
+            sb.Append($"public class {className}Editor : AutoEditor\n");
+            sb.Append("{\r\n");
+            sb.Append("    [AutoProperty]\r\n");
+            sb.Append("    public SerializedProperty data;\r\n\r\n");
+            sb.Append("    protected override void MyOnInspectorGUI()\r\n");
+            sb.Append("    {\r\n");
+            sb.Append("        \r\n");
+            sb.Append("    }\r\n");
+            sb.Append("}");
             return sb.ToString();
         }
 
-        internal static string GenerateIndirectEditorCode(string className)
+        internal static string GenerateAutoPropertyDrawerCode(string className)
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("using EditorExtend;\n" +
-                "using UnityEditor;\n" +
-                "using UnityEngine;\n\n");
-            sb.Append($"[CustomEditor(typeof({className}))]\n" +
-                $"public class {className}IndirectEditor : IndirectEditor\n" +
-                "{\r\n" +
-                "    protected override string DefaultLabel => base.DefaultLabel;\r\n" +
-                "    [AutoProperty]\r\n" +
-                "    public SerializedProperty data;\r\n\r\n" +
-                "    protected override void MyOnInspectorGUI()\r\n" +
-                "    {\r\n" +
-                "        \r\n" +
-                "    }\r\n" +
-                "}");
+            StringBuilder sb = new();
+            sb.Append("using EditorExtend;\n");
+            sb.Append("using UnityEditor;\n");
+            sb.Append("using UnityEngine;\n\n");
+
+            sb.Append($"[CustomPropertyDrawer(typeof({className}))]\n");
+            sb.Append($"public class {className}Drawer : AutoPropertyDrawer\n");
+            sb.Append("{\r\n");
+            sb.Append("    [AutoProperty]\r\n");
+            sb.Append("    public SerializedProperty data;\r\n\r\n");
+            sb.Append("    protected override void MyOnGUI(Rect position, SerializedProperty property, GUIContent label)\r\n");
+            sb.Append("    {\r\n");
+            sb.Append("        \r\n");
+            sb.Append("    }\r\n");
+            sb.Append("}");
             return sb.ToString();
         }
     }

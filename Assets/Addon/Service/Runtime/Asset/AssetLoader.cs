@@ -2,7 +2,7 @@ using System;
 
 namespace Services.Asset
 {
-    public sealed class AssetLoader : Service, IAssetLoader
+    internal sealed class AssetLoader : Service, IAssetLoader
     {
         internal AssetLoaderCore core;
 
