@@ -58,6 +58,17 @@ namespace MyTool
             return x + (y - x) * Mathf.Pow(k, p);
         }
 
+        public static int GreatestCommonDivisor(int a, int b)
+        {
+            while (b != 0)
+            {
+                int temp = a % b;
+                a = b;
+                b = temp;
+            }
+            return a;
+        }
+
         /// <summary>
         /// 排列几种对象，输出均匀排列后的结果，用对象的序号表示
         /// </summary>

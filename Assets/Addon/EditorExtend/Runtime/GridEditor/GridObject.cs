@@ -113,29 +113,31 @@ namespace EditorExtend.GridEditor
         #endregion
 
         #region 游戏逻辑
-        protected internal Func<int> GroundHeightFunc;
+        [SerializeField]
+        protected int groundHeight = 1;
         /// <summary>
         /// 发挥地面作用时，此物体的高度
         /// </summary>
-        public int GroundHeight
+        public virtual int GroundHeight => groundHeight;
+        /// <summary>
+        /// 中心点坐标
+        /// </summary>
+        public virtual Vector3 Center
         {
             get
             {
-                if (GroundHeightFunc != null)
-                    return GroundHeightFunc.Invoke();
 #if UNITY_EDITOR
                 if (!Application.isPlaying)
-                {
-                    GridGround ground = GetComponentInChildren<GridGround>();
-                    if (ground != null)
-                        return ground.GroundHeight();
-                }
+                    gridCollider = GetComponentInChildren<GridCollider>();
 #endif
-                return 1;
+                if (gridCollider != null)
+                    return gridCollider.Center;
+
+                return cellPosition + 0.5f * Vector3.one;
             }
         }
 
-        protected internal Func<Vector3, bool> OverlapFunc;
+        protected GridCollider gridCollider;
         /// <summary>
         /// 物体占据的范围是否覆盖网格坐标下的某点
         /// </summary>
@@ -143,20 +145,39 @@ namespace EditorExtend.GridEditor
         {
 #if UNITY_EDITOR
             if (!Application.isPlaying)
-            {
-                GridCollider collider = GetComponentInChildren<GridCollider>();
-                if (collider != null)
-                    return collider.Overlap(p);
-            }
+                gridCollider = GetComponentInChildren<GridCollider>();
 #endif
-            if (OverlapFunc != null)
-                return OverlapFunc.Invoke(p);
-            return GridUtility.BoxOverlap(cellPosition, Vector3Int.one, p);
+            if (gridCollider != null)
+                return gridCollider.Overlap(p);
+
+            return GridPhysics.BoxOverlap(cellPosition, Vector3Int.one, p);
         }
+
+        /// <summary>
+        /// 判断物体是否与线段相交，若相交则计算交点
+        /// </summary>
+        public virtual bool OverlapLineSegment(ref Vector3 from,ref Vector3 to)
+        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+                gridCollider = GetComponentInChildren<GridCollider>();
+#endif
+            if (gridCollider != null)
+                return gridCollider.OverlapLineSegment(ref from, ref to);
+
+            return GridPhysics.LineSegmentCastBox(cellPosition, Vector3Int.one, ref from, ref to);
+        }
+
 
         #endregion
 
         #region 生命周期
+
+        protected virtual void Awake()
+        {
+            gridCollider = GetComponentInChildren<GridCollider>();
+        }
+
         protected virtual void OnEnable()
         {
             Register();

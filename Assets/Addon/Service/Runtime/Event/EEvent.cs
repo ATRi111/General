@@ -1,4 +1,4 @@
-namespace Services
+namespace Services.Event
 {
     public enum EEvent
     {
@@ -19,8 +19,28 @@ namespace Services
         /// </summary>
         AfterUnLoadScene,
         /// <summary>
-        /// 玩家开始控制某个角色，参数：控制的角色
+        /// 玩家开始控制某个角色，参数：所控制的角色的Brain
         /// </summary>
         OnHumanControl,
+        /// <summary>
+        /// 显示信息，参数：引发事件的对象，屏幕坐标，信息内容
+        /// </summary>
+        ShowMessage,
+        /// <summary>
+        /// 隐藏信息，参数：引发事件的对象
+        /// </summary>
+        HideMessage,
+        /// <summary>
+        /// 战斗开始前
+        /// </summary>
+        BeforeBattle,
+        /// <summary>
+        /// 战斗结束后
+        /// </summary>
+        AfterBattle,
+        /// <summary>
+        /// 时间变动，参数：当前全局时间
+        /// </summary>
+        OnTick,
     }
 }

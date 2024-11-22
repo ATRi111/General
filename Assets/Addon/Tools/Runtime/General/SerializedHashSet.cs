@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace MyTool
 {
@@ -8,8 +7,7 @@ namespace MyTool
     public class SerializedHashSet<T> : ICollection<T>
     {
         protected readonly HashSet<T> set;
-        [SerializeField]
-        protected List<T> list;
+        public List<T> list;
 
         public int Count => list.Count;
 

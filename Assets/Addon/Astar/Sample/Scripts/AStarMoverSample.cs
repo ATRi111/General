@@ -8,8 +8,7 @@ namespace AStar.Sample
         private readonly Tilemap map;
         private readonly PathFindingSample sample;
 
-        public AStarMoverSample(PathFindingProcess process, float moveAbility = float.PositiveInfinity) 
-            : base(moveAbility)
+        public AStarMoverSample(PathFindingProcess process)
         {
             map = process.mono.GetComponentInChildren<Tilemap>();
             sample = process.mono.GetComponentInChildren<PathFindingSample>();

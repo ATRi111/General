@@ -4,9 +4,6 @@ using UnityEngine;
 
 namespace EditorExtend
 {
-    /// <summary>
-    /// 通常，继承此类后只需要重写MyOnGUI，并在其中使用Layout版本的GUI即可，不需要重写其他函数
-    /// </summary>
     public abstract class AutoPropertyDrawer : PropertyDrawer
     {
         /// <summary>
@@ -33,6 +30,14 @@ namespace EditorExtend
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             return totalHeight;
+        }
+
+        public void AutoPropertyField(string label, SerializedProperty property)
+        {
+            if (property.isArray)
+                property.ListField(label, NextRect(property));
+            else
+                property.PropertyField(label, NextRect(property));
         }
 
         public virtual void Initialize(Rect position, SerializedProperty property)

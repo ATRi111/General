@@ -36,7 +36,7 @@ namespace Services
                 AudioClip clip = objects[i] as AudioClip;
                 if (clip != null)
                 {
-                    GameObject obj = new GameObject(clip.name);
+                    GameObject obj = new(clip.name);
 
                     obj.AddComponent<AudioSource>();
                     AudioSource audioSource = obj.GetComponent<AudioSource>();

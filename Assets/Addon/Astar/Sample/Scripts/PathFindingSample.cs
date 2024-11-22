@@ -17,7 +17,11 @@ namespace AStar.Sample
         public void StartPathFinding()
         {
             PathFindingSettings settings = new(getAdjoinedNodesSO.GetAdjoinedNodes, null, GenerateNode, hCostWeight);
-            process = new(settings, new AStarMoverSample(process, moveAbility))
+            AStarMoverSample mover = new(process)
+            {
+                MoveAbility = () => moveAbility,
+            };
+            process = new(settings, mover)
             {
                 mono = this
             };

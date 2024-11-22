@@ -1,3 +1,4 @@
+using EditorExtend.GridEditor;
 using UnityEngine;
 
 namespace EditorExtend.GridEditor
@@ -7,6 +8,10 @@ namespace EditorExtend.GridEditor
         public const int MaxHeight = 114514;
 
         public const float Diagnol = 1.41421356f;
+        /// <summary>
+        /// (网格坐标系中)一格中心点的坐标相对于该格坐标的偏移量，进行各种求交时均应注意此偏移量
+        /// </summary>
+        public static Vector3 CenterOffset = 0.5f * Vector3.one;
 
         public static readonly Vector3Int[] AdjoinPoints8 = new Vector3Int[]
         {
@@ -52,24 +57,6 @@ namespace EditorExtend.GridEditor
         {
             float angle = -Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
             return ClampAngle(angle);
-        }
-
-        public static bool BoxOverlap(Vector3 min, Vector3 extend, Vector3 p)
-        {
-            return p.x >= min.x && p.x < min.x + extend.x
-                && p.y >= min.y && p.y < min.y + extend.y
-                && p.z >= min.z && p.z < min.z + extend.z;
-        }
-        public static bool SphereOverlap(Vector3 center, float radius, Vector3 p)
-        {
-            return (p - center).sqrMagnitude < radius * radius;
-        }
-        public static bool CylinderOverlap(Vector3 bottomCenter, float height, float radius, Vector3 p)
-        {
-            if (p.z < bottomCenter.z || p.z >= bottomCenter.z + height) 
-                return false;
-            float projSqrDistance = (p - bottomCenter).ResetZ().sqrMagnitude;
-            return projSqrDistance < radius * radius;
         }
     }
 }

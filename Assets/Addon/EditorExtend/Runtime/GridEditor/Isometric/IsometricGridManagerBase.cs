@@ -15,7 +15,8 @@ namespace EditorExtend.GridEditor
 
         public override int CellToSortingOrder(GridObject obj)
         {
-            return 10 * (-obj.CellPosition.x - obj.CellPosition.y + obj.CellPosition.z) + obj.ExtraSortingOrder;
+            Vector3 cell = WorldToCell(obj.transform.position);
+            return Mathf.RoundToInt(10 * (-cell.x - cell.y + cell.z) + obj.ExtraSortingOrder);
         }
 
         public float LayerToWorldZ(int layer)
@@ -34,7 +35,7 @@ namespace EditorExtend.GridEditor
         }
 
         /// <summary>
-        /// 根据世界坐标（忽略z）确定一些列网格坐标，判断这些网格坐标上是否有物体，若有则返回其中的最高层数
+        /// 根据世界坐标（忽略z）确定一系列网格坐标，判断这些网格坐标上是否有物体，若有则返回其中的最高层数
         /// </summary>
         public bool MatchMaxLayer(Vector3 worldPosition, out int layer)
         {
@@ -100,17 +101,30 @@ namespace EditorExtend.GridEditor
         /// <summary>
         /// 获取xy坐标上的所有物体
         /// </summary>
-        public void GetObejectsXY(Vector2Int xy, List<GridObject> objects)
+        public void GetObejectsXY(Vector2Int xy, List<GridObject> objects, bool top_down = true)
         {
             objects.Clear();
             if (!maxLayerDict.ContainsKey(xy))
                 return;
-            for (int layer = maxLayerDict[xy]; layer >= 0; layer--) 
+            if(top_down)
             {
-                Vector3Int temp = xy.AddZ(layer);
-                GridObject obj = GetObject(temp);
-                if (obj != null)
-                    objects.Add(obj);
+                for (int layer = maxLayerDict[xy]; layer >= 0; layer--)
+                {
+                    Vector3Int temp = xy.AddZ(layer);
+                    GridObject obj = GetObject(temp);
+                    if (obj != null)
+                        objects.Add(obj);
+                }
+            }
+            else
+            {
+                for (int layer = 0; layer <= maxLayerDict[xy]; layer++)
+                {
+                    Vector3Int temp = xy.AddZ(layer);
+                    GridObject obj = GetObject(temp);
+                    if (obj != null)
+                        objects.Add(obj);
+                }
             }
         }
         /// <summary>

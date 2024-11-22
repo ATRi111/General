@@ -83,6 +83,7 @@ namespace EditorExtend.GridEditor
         {
             Vector3 world = SceneViewUtility.SceneToWorld(mousePosition);
             ObjectBrush.cellPosition = ObjectBrush.CalculateCellPosition(world);
+            SceneView.RepaintAll();
         }
 
         protected virtual void Brush()

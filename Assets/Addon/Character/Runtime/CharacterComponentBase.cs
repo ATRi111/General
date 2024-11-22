@@ -5,7 +5,7 @@ namespace Character
     public abstract class CharacterComponentBase : MonoBehaviour 
     {
         [AutoComponent(EComponentPosition.SelfOrParent)]
-        protected CharacterEntity entity;
+        protected EntityBase entity;
 
         protected virtual void Awake()
         {

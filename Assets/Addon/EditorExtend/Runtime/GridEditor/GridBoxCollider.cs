@@ -6,9 +6,17 @@ namespace EditorExtend.GridEditor
     public class GridBoxCollider : GridCollider
     {
         public float height = 1;
+
+        public override Vector3 Center => CellPosition + new Vector3(0.5f, 0.5f, 0.5f * height);
+
         public override bool Overlap(Vector3 p)
         {
-            return GridUtility.BoxOverlap(CellPosition, Vector3.one.ResetZ(height), p);
+            return GridPhysics.BoxOverlap(CellPosition, Vector3.one.ResetZ(height), p);
+        }
+
+        public override bool OverlapLineSegment(ref Vector3 from, ref Vector3 to)
+        {
+            return GridPhysics.LineSegmentCastBox(CellPosition, Vector3.one.ResetZ(height), ref from, ref to);
         }
 
         public override void GetStrip(List<Vector3> ret)

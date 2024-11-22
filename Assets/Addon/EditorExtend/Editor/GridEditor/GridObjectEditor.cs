@@ -8,7 +8,7 @@ namespace EditorExtend.GridEditor
     {
         public GridObject GridObject => target as GridObject;
         [AutoProperty]
-        public SerializedProperty shortName, cellPosition;
+        public SerializedProperty shortName, cellPosition, groundHeight;
 
         private Vector3Int prev;
 
@@ -22,6 +22,7 @@ namespace EditorExtend.GridEditor
         {
             shortName.TextField("名称(可空)");
             cellPosition.Vector3IntField("网格坐标");
+            groundHeight.IntField("地面高度");
             if (cellPosition.vector3IntValue != prev)
             {
                 prev = cellPosition.vector3IntValue;

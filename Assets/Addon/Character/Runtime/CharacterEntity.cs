@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Character
 {
     [DefaultExecutionOrder(-100)]
-    public class CharacterEntity : MonoBehaviour
+    public class EntityBase : MonoBehaviour
     {
         protected virtual void Awake()
         {

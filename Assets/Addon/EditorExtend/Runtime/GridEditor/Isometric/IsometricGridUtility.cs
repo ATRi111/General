@@ -5,6 +5,10 @@ namespace EditorExtend.GridEditor
 {
     public static class IsometricGridUtility
     {
+        static IsometricGridUtility()
+        {
+            cache_withinProjectManhattanDistance.Add(new List<Vector2Int>());
+        }
         public static Vector3 CellToWorld(Vector3 cellPosition, Vector3 cellSize)
         {
             float x = 0.5f * cellPosition.x * cellSize.x - 0.5f * cellPosition.y * cellSize.x;
@@ -47,9 +51,9 @@ namespace EditorExtend.GridEditor
                 for (int i = 0; i < layerNum; i++)
                 {
                     temp.Add(new Vector2Int(-layerNum + i, i));
-                    temp.Add(new Vector2Int(layerNum - i, i));
-                    temp.Add(new Vector2Int(-i, layerNum - i));
-                    temp.Add(new Vector2Int(-layerNum + i, -i));
+                    temp.Add(new Vector2Int(i, layerNum - i));
+                    temp.Add(new Vector2Int(layerNum - i,  - i));
+                    temp.Add(new Vector2Int(-i, -layerNum + i));
                 }
                 layer.AddRange(temp);
                 cache_withinProjectManhattanDistance.Add(layer);

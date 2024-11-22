@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Reflection;
+using UnityEditor;
 using UnityEngine;
 
 namespace MyTool
@@ -25,7 +27,7 @@ namespace MyTool
         /// <param name="disable">要查找的组件所在的游戏物体是否可能被禁用</param>
         public static T FindComponent<T>(string obj_name, bool disable = false) where T : Component
         {
-            GameObject obj = disable ? GeneralTool.FindGameObject(obj_name) : GameObject.Find(obj_name);
+            GameObject obj = disable ? FindGameObject(obj_name) : GameObject.Find(obj_name);
             if (obj == null)
                 return null;
             T ret = obj.GetComponentInChildren<T>();
@@ -43,14 +45,35 @@ namespace MyTool
             return ret;
         }
 
-        public static void Log<T>(this List<T> list)
+        public static void SetLossyScale(this Transform transform,Vector3 lossyScale)
         {
-            string s = null;
-            foreach (T item in list)
+            if (transform.parent == null)
             {
-                s += item.ToString() + "|";
+                transform.localScale = lossyScale;
             }
-            Debug.Log(s);
+            else
+            {
+                Vector3 temp = transform.parent.lossyScale;
+                transform.localScale = new Vector3(lossyScale.x / temp.x, lossyScale.y / temp.y, lossyScale.z / temp.z);
+            }
+        }
+
+        /// <summary>
+        /// 根据CreateAssetMenuAttribute自动创建ScriptableObject
+        /// </summary>
+        /// <param name="path">从"Assets"开始的路径,不含文件名，末尾不含"/"</param>
+        public static ScriptableObject CreateScriptableObject(Type type, string path, bool save = true)
+        {
+            CreateAssetMenuAttribute attribute = type.GetTypeInfo().GetCustomAttribute<CreateAssetMenuAttribute>();
+            ScriptableObject so = null;
+            if (attribute != null)
+            {
+                so = ScriptableObject.CreateInstance(type);
+                AssetDatabase.CreateAsset(so, path + $"/{attribute.fileName}.asset");
+            }
+            if(save)
+                AssetDatabase.SaveAssets();
+            return so;
         }
     }
 }

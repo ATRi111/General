@@ -6,16 +6,11 @@ namespace AStar
     [Serializable]
     public class AStarMover
     {
-        public float moveAbility;
-        
-        public AStarMover(float moveAbility = float.PositiveInfinity)
-        {
-            this.moveAbility = moveAbility;
-        }
+        public Func<float> MoveAbility;
 
         public virtual bool MoveAbilityCheck(AStarNode node)
         {
-            return Mathf.RoundToInt(node.GCost) <= moveAbility;
+            return Mathf.RoundToInt(node.GCost) <= MoveAbility();
         }
 
         public virtual bool StayCheck(AStarNode node)

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -72,7 +71,7 @@ namespace MyTool
         /// </summary>
         public static List<Vector2Int> GetDirections()
         {
-            List<Vector2Int> ret = new List<Vector2Int>(8);
+            List<Vector2Int> ret = new(8);
             for (int i = 0; i < 8; i++)
             {
                 ret.Add(((EDirection)i).ToVector());
@@ -111,100 +110,76 @@ namespace MyTool
         }
 
         /// <summary>
-        /// 将位移分解成八向移动的组合，尽量使结果接近直线
+        /// 计算线段覆盖的坐标为整数的方格（线段从from的中心点延申到to的中心点）
         /// </summary>
-        /// <returns>路径上的每一点（包括起点）</returns>
-        public static List<Vector2Int> DivideDisplacement(Vector2Int origin, Vector2Int target, int maxCount = 20)
+        public static void OverlapInt(Vector2Int from, Vector2Int to, List<Vector2Int> ret)
         {
-            Vector2Int offset = target - origin;
-            int sign = (int)(((Vector2)offset).ToAngle() / 45f);
-            Vector2Int base1, base2;
-            int c1, c2;
-            switch (sign)
-            {
-                case 0:
-                    base1 = Vector2Int.up;
-                    base2 = Vector2Int.up + Vector2Int.left;
-                    break;
-                case 1:
-                    base1 = Vector2Int.left;
-                    base2 = Vector2Int.up + Vector2Int.left;
-                    break;
-                case 2:
-                    base1 = Vector2Int.left;
-                    base2 = Vector2Int.down + Vector2Int.left;
-                    break;
-                case 3:
-                    base1 = Vector2Int.down;
-                    base2 = Vector2Int.down + Vector2Int.left;
-                    break;
-                case 4:
-                    base1 = Vector2Int.down;
-                    base2 = Vector2Int.down + Vector2Int.right;
-                    break;
-                case 5:
-                    base1 = Vector2Int.right;
-                    base2 = Vector2Int.down + Vector2Int.right;
-                    break;
-                case 6:
-                    base1 = Vector2Int.right;
-                    base2 = Vector2Int.up + Vector2Int.right;
-                    break;
-                case 7:
-                    base1 = Vector2Int.up;
-                    base2 = Vector2Int.up + Vector2Int.right;
-                    break;
-                default:
-                    base1 = Vector2Int.up;
-                    base2 = Vector2Int.one;
-                    break;
-            }
-            int x = Mathf.Abs(offset.x);
-            int y = Mathf.Abs(offset.y);
-            c1 = Mathf.Abs(x - y);
-            c2 = Mathf.Min(x, y);
-            int count = c1 + c2;
-            if (count > maxCount)
-            {
-                c1 = Mathf.RoundToInt((float)c1 / count * maxCount);
-                c2 = Mathf.RoundToInt((float)c2 / count * maxCount);
-            }
-            count = c1 + c2;
-            List<int> mix = MathTool.MixList(c1, c2);
-            Vector2Int[] bases = new Vector2Int[] { base1, base2 };
-            Vector2Int current = origin;
-            List<Vector2Int> ret = new() { origin };
-            for (int i = 0; i < count; i++)
-            {
-                current += bases[mix[i]];
-                ret.Add(current);
-            }
-            return ret;
+            ret.Clear();
+            ret.Add(from);
+            OverlapInt(to - from, ret);
         }
 
-        /// <summary>
-        /// 沿一条直线前进，在不符合条件时停下（直线用每一点的坐标表示）
-        /// </summary>
-        /// <param name="CanMove">条件，两个参数分别表示一步的起点和终点</param>
-        /// <param name="containStop">返回结果是否包含使直线停下的点</param>
-        /// <param name="containStart">返回结果是否包含起点</param>
-        /// <returns>直线直到停下之前的部分</returns>
-        public static List<Vector2Int> StopLine(List<Vector2Int> line, Func<Vector2Int, Vector2Int, bool> CanMove, bool containStop = false, bool containStart = false)
+        private static void OverlapInt(Vector2Int v, List<Vector2Int> ret, int gcd = -1)
         {
-            List<Vector2Int> ret = new() { line[0] };
-            for (int i = 0; i < line.Count - 1; i++)
+            void Add(Vector2Int v)
             {
-                if (!CanMove(line[i], line[i + 1]))
-                {
-                    if (containStop)
-                        ret.Add(line[i + 1]);
-                    break;
-                }
-                ret.Add(line[i + 1]);
+                ret.Add(ret[^1] + v);
             }
-            if (!containStart)
-                ret.RemoveAt(0);
-            return ret;
+
+            if (v.x == 0 && v.y == 0)
+                return;
+
+            int deltaX = v.x;
+            int deltaY = v.y;
+            int absx = Mathf.Abs(deltaX);
+            int absy = Mathf.Abs(deltaY);
+            Vector2Int x, y;
+
+            if (v.x == 0)
+            {
+                y = new(0, deltaY / absy);
+                for (int i = 0; i < absy; i++)
+                    Add(y);
+                return;
+            }
+            
+            if(v.y == 0)
+            {
+                x = new(deltaX / absx, 0);
+                for (int i = 0; i < absx; i++)
+                    Add(x);
+                return;
+            }
+
+            if (gcd == -1)
+                gcd = MathTool.GreatestCommonDivisor(absx, absy);
+
+            if (gcd > 1)
+            {
+                for (int i = 0; i < gcd; i++)
+                    OverlapInt(new Vector2Int(deltaX / gcd, deltaY / gcd), ret, 1);
+                return;
+            }
+
+            //约分后，absx/absy若为一奇一偶，必然可以分解为若干x/y的组合；若均为奇数，必然可以分解为仅一个x+y和若干x/y的组合
+            x = new(deltaX / absx, 0);
+            y = new(0, deltaY / absy);
+            Vector2Int[] bases = new Vector2Int[] { x, y };
+            if((absx & 1) == 0 || (absy & 1) == 0)
+            {
+                List<int> mix = MathTool.MixList(absx, absy);
+                for (int i = 0; i < mix.Count; i++)
+                    Add(bases[mix[i]]);
+            }
+            else
+            {
+                List<int> mix = MathTool.MixList(absx / 2, absy / 2);
+                for (int i = 0; i < mix.Count; i++)
+                    Add(bases[mix[i]]);
+                Add(x + y);
+                for (int i = 0; i < mix.Count; i++)
+                    Add(bases[mix[i]]);
+            }
         }
     }
 }

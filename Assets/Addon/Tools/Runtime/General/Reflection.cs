@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace MyTool
@@ -26,6 +27,26 @@ namespace MyTool
         {
             ParameterInfo[] infos = info.GetParameters();
             return infos.Length == 0;
+        }
+
+        /// <summary>
+        /// 获取一个类的所有子类
+        /// </summary>
+        public static List<Type> GetSubclasses(Type baseClass)
+        {
+            // 获取所有已加载的程序集
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            List<Type> subclasses = new();
+            foreach (Assembly assembly in assemblies)
+            {
+                Type[] types = assembly.GetTypes();
+                foreach (Type type in types)
+                {
+                    if (type.IsSubclassOf(baseClass) && !type.IsAbstract)
+                        subclasses.Add(type);
+                }
+            }
+            return subclasses;
         }
     }
 }
