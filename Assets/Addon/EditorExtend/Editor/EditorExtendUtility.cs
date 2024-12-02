@@ -12,14 +12,14 @@ namespace EditorExtend
         /// 拆分资产的路径
         /// </summary>
         /// <param name="path">完整路径</param>
-        /// <param name="folder">到所在文件夹为止的路径(末尾含'/')</param>
+        /// <param name="directory">到所在文件夹为止的路径(末尾含'/')</param>
         /// <param name="file">文件名(不含拓展名)</param>
         /// <param name="extend">拓展名(含点号)</param>
-        public static void DivideAssetPath(in string path, out string folder, out string file, out string extend)
+        public static void DivideAssetPath(in string path, out string directory, out string file, out string extend)
         {
             int i = path.LastIndexOf('/');
             int j = path.LastIndexOf('.');
-            folder = path[..(i + 1)];
+            directory = path[..(i + 1)];
             file = path[(i + 1)..j];
             extend = path[j..];
         }

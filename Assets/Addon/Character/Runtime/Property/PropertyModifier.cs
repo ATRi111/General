@@ -1,6 +1,6 @@
 namespace Character
 {
-    public enum EModifyTiming
+    public enum EModifyMethod
     {
         DirectAdd,
         DirectMultiply,
@@ -25,22 +25,22 @@ namespace Character
         /// <summary>
         /// 变化方式
         /// </summary>
-        public EModifyTiming timing;
+        public EModifyMethod method;
 
         public void Register(CharacterProperty property)
         {
-            switch (timing)
+            switch (method)
             {
-                case EModifyTiming.DirectAdd:
+                case EModifyMethod.DirectAdd:
                     property.DirectAdd += Add;
                     break;
-                case EModifyTiming.DirectMultiply:
+                case EModifyMethod.DirectMultiply:
                     property.DirectMultiply += Multiply;
                     break;
-                case EModifyTiming.FinalAdd:
+                case EModifyMethod.FinalAdd:
                     property.FinalAdd += Add;
                     break;
-                case EModifyTiming.FinalMultiply:
+                case EModifyMethod.FinalMultiply:
                     property.FinalMultiply += Multiply;
                     break;
             }
@@ -49,18 +49,18 @@ namespace Character
 
         public void Unregister(CharacterProperty property)
         {
-            switch (timing)
+            switch (method)
             {
-                case EModifyTiming.DirectAdd:
+                case EModifyMethod.DirectAdd:
                     property.DirectAdd -= Add;
                     break;
-                case EModifyTiming.DirectMultiply:
+                case EModifyMethod.DirectMultiply:
                     property.DirectMultiply -= Multiply;
                     break;
-                case EModifyTiming.FinalAdd:
+                case EModifyMethod.FinalAdd:
                     property.FinalAdd -= Add;
                     break;
-                case EModifyTiming.FinalMultiply:
+                case EModifyMethod.FinalMultiply:
                     property.FinalMultiply -= Multiply;
                     break;
             }

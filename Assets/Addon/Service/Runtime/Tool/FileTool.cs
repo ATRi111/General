@@ -10,8 +10,8 @@ namespace Services
 
         public static string CombinePath(params string[] paths)
         {
-            StringBuilder sb = new StringBuilder();
-            List<string> processed = new List<string>();
+            StringBuilder sb = new();
+            List<string> processed = new();
             for (int i = 0; i < paths.Length; i++)
             {
                 if (!string.IsNullOrEmpty(paths[i]))
@@ -23,7 +23,7 @@ namespace Services
                 current = processed[i];
                 next = processed[i + 1];
                 sb.Append(current);
-                if (!current[^1].IsPathSeparater() && !next[0].IsPathSeparater())
+                if (!current[^1].IsPathSeparator() && !next[0].IsPathSeparator())
                     sb.Append('/');
             }
             sb.Append(processed[^1]);
@@ -35,7 +35,7 @@ namespace Services
             return CombinePath(strs).Replace('/', '\\');
         }
 
-        public static bool IsPathSeparater(this char c)
+        public static bool IsPathSeparator(this char c)
         {
             return c == '\\' || c == '/';
         }
@@ -44,7 +44,7 @@ namespace Services
         {
             if (Directory.Exists(directoryPath))
             {
-                DirectoryInfo d = new DirectoryInfo(directoryPath);
+                DirectoryInfo d = new(directoryPath);
                 FileInfo[] fs = d.GetFiles("*", SearchOption.AllDirectories);
                 foreach (FileInfo info in fs)
                 {
@@ -62,11 +62,14 @@ namespace Services
         /// <param name="create">文件不存在时，是否新创建文件</param>
         public static FileInfo GetFileInfo(string path, bool create = false)
         {
-            FileInfo fileInfo = new FileInfo(path);
+            FileInfo fileInfo = new(path);
             if (!fileInfo.Exists)
             {
                 if (create)
+                {
+                    Directory.CreateDirectory(fileInfo.DirectoryName);
                     fileInfo.Create().Dispose();
+                }
                 else
                     Debugger.LogWarning($"{path}文件不存在", EMessageType.System);
             }

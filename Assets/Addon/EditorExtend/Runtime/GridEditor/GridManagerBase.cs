@@ -41,7 +41,7 @@ namespace EditorExtend.GridEditor
         public virtual Vector3 CellToWorld(Vector3Int cellPosition)
             => Grid.CellToWorld(cellPosition);
         public virtual Vector3 CellToWorld(Vector3 cellPosition)
-            => CellToWorld(cellPosition.Integerized());
+            => CellToWorld(cellPosition.Round());
         public virtual Vector3Int WorldToCell(Vector3 worldPosition)
            => Grid.WorldToCell(worldPosition);
         public virtual Vector3Int ClosestCell(Vector3 worldPosition)

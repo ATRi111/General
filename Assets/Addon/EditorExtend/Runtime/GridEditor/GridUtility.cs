@@ -40,7 +40,7 @@ namespace EditorExtend.GridEditor
         internal static Vector3Int AddZ(this Vector2Int v, int z)
            => new(v.x, v.y, z);
 
-        internal static Vector3Int Integerized(this Vector3 v)
+        internal static Vector3Int Round(this Vector3 v)
             => new(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y), Mathf.RoundToInt(v.z));
 
         public static float ClampAngle(float angle)

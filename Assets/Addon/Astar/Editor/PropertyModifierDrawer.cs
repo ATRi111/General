@@ -8,36 +8,36 @@ namespace Character
     public class PropertyModifierDrawer : AutoPropertyDrawer
     {
         [AutoProperty]
-        public SerializedProperty value, so, timing;
+        public SerializedProperty value, so, method;
 
         protected override void MyOnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             static bool Percent(int timing)
             {
-                return timing == (int)EModifyTiming.DirectMultiply || timing == (int)EModifyTiming.FinalMultiply;
+                return timing == (int)EModifyMethod.DirectMultiply || timing == (int)EModifyMethod.FinalMultiply;
             }
 
-            int temp = timing.enumValueIndex;
+            int temp = method.enumValueIndex;
             AutoPropertyField("作用属性", so);
-            timing.EnumField<EModifyTiming>("修改方式", NextRectRelative());
+            method.EnumField<EModifyMethod>("修改方式", NextRectRelative());
 
-            if(Percent(temp) && !Percent(timing.enumValueIndex))
+            if(Percent(temp) && !Percent(method.enumValueIndex))
             {
                 value.floatValue *= 100f;
             }
-            else if(!Percent(temp) && Percent(timing.enumValueIndex))
+            else if(!Percent(temp) && Percent(method.enumValueIndex))
             {
                 value.floatValue /= 100f;
             }
 
-            switch((EModifyTiming)timing.enumValueIndex)
+            switch((EModifyMethod)method.enumValueIndex)
             {
-                case EModifyTiming.DirectAdd:
-                case EModifyTiming.FinalAdd:
+                case EModifyMethod.DirectAdd:
+                case EModifyMethod.FinalAdd:
                     value.FloatField("变化量", NextRectRelative());
                     break;
-                case EModifyTiming.DirectMultiply:
-                case EModifyTiming.FinalMultiply:
+                case EModifyMethod.DirectMultiply:
+                case EModifyMethod.FinalMultiply:
                     value.floatValue = EditorGUI.FloatField(NextRectRelative(), "变化百分比", value.floatValue * 100f) / 100f;
                     break;
             }

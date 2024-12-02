@@ -2,6 +2,7 @@ using Services;
 using System.IO;
 using System.Text;
 using UnityEditor;
+using UnityEditor.VersionControl;
 using UnityEngine;
 
 namespace EditorExtend
@@ -24,13 +25,13 @@ namespace EditorExtend
             {
                 if (objects[i] is MonoScript)
                 {
-                    EditorExtendUtility.DivideAssetPath(AssetDatabase.GetAssetPath(objects[i]), out string folder, out string file, out string extend);
-                    string path = type switch
+                    EditorExtendUtility.DivideAssetPath(AssetDatabase.GetAssetPath(objects[i]), out string directory, out string file, out string extend);
+                    string suffix = type switch
                     {
                         'd' => "Drawer",
                         _ => "Editor",
                     };
-                    path = folder + file + path + extend;
+                    string path = directory.Replace("Runtime", "Editor") + file + suffix + extend;
                     string code = type switch
                     {
                         'd' => GenerateAutoPropertyDrawerCode(file),

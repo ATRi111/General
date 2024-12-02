@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 namespace EditorExtend.GridEditor
@@ -155,7 +154,7 @@ namespace EditorExtend.GridEditor
         /// </summary>
         /// <param name="from">起点</param>
         /// <param name="to">终点</param>
-        /// <param name="includedAngle">初速度与地面的夹角（弧度制）</param>
+        /// <param name="includedAngle">初速度与地面的夹角</param>
         /// <param name="gravity">重力加速度（沿Z轴负方向为正）</param>
         public static bool InitialVelocityOfParabola(Vector3 from, Vector3 to, float includedAngle, float gravity, out Vector3 velocity, out float time)
         {
@@ -169,7 +168,7 @@ namespace EditorExtend.GridEditor
                 velocity = Vector3.zero;
                 return false;
             }
-            velocity = speed * (project + p * Mathf.Tan(includedAngle) * Vector3.forward).normalized;
+            velocity = speed * (project + p * Mathf.Tan(includedAngle * Mathf.Deg2Rad) * Vector3.forward).normalized;
             return true;
         }
 
@@ -178,19 +177,19 @@ namespace EditorExtend.GridEditor
         /// </summary>
         /// <param name="h">高度改变量</param>
         /// <param name="p">xy平面内投影距离</param>
-        /// <param name="includedAngle">初速度与地面的夹角（弧度制）</param>
+        /// <param name="includedAngle">初速度与地面的夹角</param>
         /// <param name="gravity">重力加速度（沿Z轴负方向为正）</param>
         public static bool InitialSpeedOfParabola(float h, float p, float includedAngle, float gravity, out float speed, out float time)
         {
-            float t_square = 2 / gravity * (p * Mathf.Tan(includedAngle) - h);
-            if (t_square < 0)
+            float t_square = 2 / gravity * (p * Mathf.Tan(includedAngle * Mathf.Deg2Rad) - h);
+            if (t_square <= 0)
             {
                 time = -1;
                 speed = -1;
                 return false;
             }
             time = Mathf.Sqrt(t_square);
-            speed = p / time / Mathf.Cos(includedAngle);
+            speed = p / time / Mathf.Cos(includedAngle * Mathf.Deg2Rad);
             return speed >= 0;
         }
 
@@ -205,6 +204,8 @@ namespace EditorExtend.GridEditor
         public static void DiscretizeParabola(Vector3 from, Vector3 velocity, float gravity, float time, float precision, List<Vector3> ret)
         {
             ret.Clear();
+            if (time <= 0)
+                throw new System.ArgumentException();
             int count = Mathf.CeilToInt(precision * ((Vector2)velocity).magnitude) + 1;
             float t = 0;
             for (int i = 0; i <= count; i++)

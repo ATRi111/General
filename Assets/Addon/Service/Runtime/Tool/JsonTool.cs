@@ -32,7 +32,7 @@ namespace Services
         public static void SaveAsJson<T>(T t, string path, JsonSerializerSettings settings)
         {
             try
-            {
+            {   
                 FileInfo info = FileTool.GetFileInfo(path, true);
                 using StreamWriter writer = info.CreateText();
                 string str = JsonConvert.SerializeObject(t, Formatting.Indented, settings);
