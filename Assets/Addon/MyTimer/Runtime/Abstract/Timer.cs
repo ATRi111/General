@@ -34,7 +34,7 @@ namespace MyTimer
         }
     }
 
-    //Timer类用于代替部分协程，适合代替规律性强的、需要反复访问的或需要反复启动关闭的协程
+    //Timer类用于代替部分协程,适合代替规律性强的,或需要反复启动关闭的协程
 
     /// <summary>
     /// 描述一段随时间的变化
@@ -84,7 +84,7 @@ namespace MyTimer
                     completed = value;
                     if (value)
                     {
-                        AfterCompelete?.Invoke(Current);
+                        AfterComplete?.Invoke(Target);
                     }
                 }
             }
@@ -106,19 +106,19 @@ namespace MyTimer
         public TValue Current => Lerp.Value(Origin, Target, Percent, Time, Duration);
 
         /// <summary>
-        /// 暂停时触发
+        /// 暂停时触发;参数:Current
         /// </summary>
         public event UnityAction<TValue> BeforePause;
         /// <summary>
-        /// 启动/解除暂停时触发
+        /// 启动/解除暂停时触发;参数:Current
         /// </summary>
         public event UnityAction<TValue> BeforeResume;
         /// <summary>
-        /// 到时间时触发
+        /// 到时间时触发;参数:Target（为了确保最终值精确）
         /// </summary>
-        public event UnityAction<TValue> AfterCompelete;
+        public event UnityAction<TValue> AfterComplete;
         /// <summary>
-        /// 未暂停时每帧触发
+        /// 未暂停时每帧触发;参数:Current
         /// </summary>
         public event UnityAction<TValue> OnTick;
 

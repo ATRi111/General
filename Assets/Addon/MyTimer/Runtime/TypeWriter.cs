@@ -60,7 +60,7 @@ namespace MyTimer
         public TypeWriterExtend()
         {
             timer = new TimerOnly();
-            timer.AfterCompelete += AfterDelay;
+            timer.AfterComplete += AfterDelay;
         }
 
         /// <param name="typeWriter">Òª¿ØÖÆµÄTypeWriter</param>

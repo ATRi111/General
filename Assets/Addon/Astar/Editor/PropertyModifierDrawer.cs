@@ -12,7 +12,7 @@ namespace Character
 
         protected override void MyOnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            bool Percent(int timing)
+            static bool Percent(int timing)
             {
                 return timing == (int)EModifyTiming.DirectMultiply || timing == (int)EModifyTiming.FinalMultiply;
             }

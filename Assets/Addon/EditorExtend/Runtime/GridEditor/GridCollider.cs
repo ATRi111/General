@@ -17,6 +17,8 @@ namespace EditorExtend.GridEditor
         }
         protected Vector3Int CellPosition => GridObject.CellPosition;
         public abstract Vector3 Center { get; }
+        public abstract Vector3 TopCenter { get; }
+        public abstract Vector3 BottomCenter { get; }
 
         public abstract bool Overlap(Vector3 p);
 

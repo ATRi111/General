@@ -3,8 +3,13 @@ using System.Collections.Generic;
 
 namespace MyTool
 {
+    public class SerializedHashSetBase
+    {
+
+    }
+
     [System.Serializable]
-    public class SerializedHashSet<T> : ICollection<T>
+    public class SerializedHashSet<T> : SerializedHashSetBase, ICollection<T>
     {
         protected readonly HashSet<T> set;
         public List<T> list;

@@ -11,6 +11,7 @@ namespace MyTool
     }
 
 
+
     [Serializable]
     public sealed class SerializedKeyValuePair<TKey, TValue> : SerializedKeyValueBase
     {
@@ -56,8 +57,13 @@ namespace MyTool
         }
     }
 
+    public class SerializedDictionaryBase
+    {
+
+    }
+
     [Serializable]
-    public class SerializedDictionary<TKey, TValue> : IDictionary<TKey, TValue>
+    public class SerializedDictionary<TKey, TValue> : SerializedDictionaryBase, IDictionary<TKey, TValue>
     {
         protected readonly Dictionary<TKey, TValue> dict;
         [SerializeField]

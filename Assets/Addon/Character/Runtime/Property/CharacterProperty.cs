@@ -29,6 +29,14 @@ namespace Character
             FinalMultiply?.Invoke(this);
         }
 
+        public void Clear()
+        {
+            DirectAdd = null;
+            DirectMultiply = null;
+            FinalAdd = null;
+            FinalMultiply = null;
+        }
+
         public void Add(float value)
         {
             currentValue += value;

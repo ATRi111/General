@@ -10,6 +10,11 @@ namespace EditorExtend
         /// 若此方法返回true,则此属性在显示时不折叠
         /// </summary>
         protected virtual bool AlwaysFoldout => false;
+        /// <summary>
+        /// 若此方法返回true，则不显示Label
+        /// </summary>
+        public virtual bool NoLabel => false;
+
         protected bool foldout;
         protected Vector2 min;
         protected float width;
@@ -63,11 +68,14 @@ namespace EditorExtend
         {
             Initialize(position, property);
             EditorGUI.BeginProperty(position, label, property);
-            if (AlwaysFoldout)
-                EditorGUI.LabelField(NextRectRelative(), label);
-            else
-                foldout = EditorGUI.Foldout(NextRectRelative(), foldout, label);
-            if (AlwaysFoldout || foldout)
+            if (!NoLabel)
+            {
+                if (AlwaysFoldout)
+                    EditorGUI.LabelField(NextRectRelative(), label);
+                else
+                    foldout = EditorGUI.Foldout(NextRectRelative(), foldout, label);
+            }
+            if (NoLabel || AlwaysFoldout || foldout)
             {
                 EditorGUI.indentLevel++;
                 MyOnGUI(position, property, label);

@@ -11,6 +11,7 @@ namespace EditorExtend.GridEditor
         private string[] displayOptions;
         [AutoProperty]
         public SerializedProperty prefab, mountIndex;
+        private string prefabName;
 
         protected override void OnEnable()
         {
@@ -19,6 +20,7 @@ namespace EditorExtend.GridEditor
             ObjectBrush.MountPoints = null;
             int n = ObjectBrush.MountPoints.Count;
             displayOptions = new string[n];
+            prefabName = string.Empty;
             for (int i = 0; i < n; i++)
             {
                 displayOptions[i] = ObjectBrush.MountPoints[i].gameObject.name;
@@ -32,7 +34,31 @@ namespace EditorExtend.GridEditor
                 return;
 
             prefab.PropertyField("±ÊË¢");
+            if (prefabName != prefab.objectReferenceValue.name)
+            {
+                prefabName = prefab.objectReferenceValue.name;
+                UpdateMountPoint(prefabName);
+            }
             mountIndex.intValue = EditorGUILayout.Popup("¹ÒÔØµã", mountIndex.intValue, displayOptions);
+        }
+
+        protected void UpdateMountPoint(string prefabName)
+        {
+            Transform[] transforms = ObjectBrush.GetComponentsInChildren<Transform>();
+            for (int i = 0; i < transforms.Length; i++)
+            {
+                if (transforms[i].gameObject.name == prefabName)
+                {
+                    for (int j = 0; j < displayOptions.Length; j++)
+                    {
+                        if (transforms[i].parent.name == displayOptions[j])
+                        {
+                            mountIndex.intValue = j;
+                            return;
+                        }
+                    }
+                }
+            }
         }
 
         protected override void MyOnSceneGUI()

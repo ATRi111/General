@@ -20,7 +20,7 @@ namespace UIExtend
             base.Awake();
             TypeWriter = new TypeWriter();
             TypeWriter.OnTick += OnUpdate;
-            TypeWriter.AfterCompelete += OnUpdate;
+            TypeWriter.AfterComplete += OnUpdate;
             TypeWriterExtend = new TypeWriterExtend();
             TypeWriterExtend.Initialize(TypeWriter, interval);
         }

@@ -90,7 +90,7 @@ namespace EditorExtend.GridEditor
                 maxLayerDict.Add(xy, 0);
             else
             {
-                GridObject gridObject = GetObejectXY(xy);
+                GridObject gridObject = GetObjectXY(xy);
                 if (gridObject != null)
                     maxLayerDict[xy] = gridObject.CellPosition.z;
                 else
@@ -101,7 +101,7 @@ namespace EditorExtend.GridEditor
         /// <summary>
         /// 获取xy坐标上的所有物体
         /// </summary>
-        public void GetObejectsXY(Vector2Int xy, List<GridObject> objects, bool top_down = true)
+        public void GetObjectsXY(Vector2Int xy, List<GridObject> objects, bool top_down = true)
         {
             objects.Clear();
             if (!maxLayerDict.ContainsKey(xy))
@@ -130,7 +130,7 @@ namespace EditorExtend.GridEditor
         /// <summary>
         /// 获取xy坐标上层数最高的物体
         /// </summary>
-        public GridObject GetObejectXY(Vector2Int xy)
+        public GridObject GetObjectXY(Vector2Int xy)
         {
             if (!maxLayerDict.ContainsKey(xy))
                 return null;
@@ -149,7 +149,7 @@ namespace EditorExtend.GridEditor
         public int AboveGroundLayer(Vector2Int xy)
         {
             int ret = 0;
-            GridObject gridObject = GetObejectXY(xy);
+            GridObject gridObject = GetObjectXY(xy);
             if (gridObject != null)
                 ret = gridObject.CellPosition.z + gridObject.GroundHeight;
             return ret;

@@ -8,20 +8,26 @@ namespace Character
         FinalMultiply,
     }
 
+    /// <summary>
+    /// 影响属性的词条
+    /// </summary>
     [System.Serializable]
     public class PropertyModifier
     {
-        private CharacterProperty property;
-
+        /// <summary>
+        /// 变化量
+        /// </summary>
         public float value;
+        /// <summary>
+        /// 获取属性引用的方法
+        /// </summary>
         public FindPropertySO so;
+        /// <summary>
+        /// 变化方式
+        /// </summary>
         public EModifyTiming timing;
 
-        public void Bind()
-        {
-            property = so.FindProperty();
-        }
-        public void Register()
+        public void Register(CharacterProperty property)
         {
             switch (timing)
             {
@@ -41,7 +47,7 @@ namespace Character
 
         }
 
-        public void Unregister()
+        public void Unregister(CharacterProperty property)
         {
             switch (timing)
             {
@@ -67,7 +73,7 @@ namespace Character
 
         private void Multiply(CharacterProperty property)
         {
-            property.Multiply(value);
+            property.Multiply(1f + value);
         }
     }
 }

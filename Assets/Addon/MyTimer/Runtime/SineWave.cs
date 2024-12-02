@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace MyTimer
 {
-    public class SineWave : Repeataion<float, Sine>
+    public class SineWave : Repetition<float, Sine>
     {
         public float Amplitude => (Target - Origin) / 2;
         public float Angle

@@ -8,7 +8,7 @@ namespace MyTimer
     {
         public Circulation()
         {
-            AfterCompelete += AfterComplete_;
+            AfterComplete += AfterComplete_;
         }
 
         protected virtual void AfterComplete_(TValue _)
@@ -22,11 +22,11 @@ namespace MyTimer
     /// <summary>
     /// 基本的反复变化
     /// </summary>
-    public class Repeataion<TValue, TLerp> : Timer<TValue, TLerp> where TLerp : ILerp<TValue>, new()
+    public class Repetition<TValue, TLerp> : Timer<TValue, TLerp> where TLerp : ILerp<TValue>, new()
     {
-        public Repeataion()
+        public Repetition()
         {
-            AfterCompelete += AfterComplete_;
+            AfterComplete += AfterComplete_;
         }
 
         protected virtual void AfterComplete_(TValue _)
@@ -39,11 +39,11 @@ namespace MyTimer
     /// <summary>
     /// 不使用值，仅周期性调用方法
     /// </summary>
-    public class Metronome : Repeataion<float, DefaultValue<float>>
+    public class Metronome : Repetition<float, CurrentTime>
     {
         public virtual void Initialize(float duration, bool start = true)
         {
-            base.Initialize(0f, 0f, duration, start);
+            base.Initialize(0f, duration, duration, start);
         }
     }
 

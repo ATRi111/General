@@ -18,8 +18,8 @@ namespace MyTool
             return ret;
         }
 
-        protected Dictionary<X, Y> injecion1;
-        protected Dictionary<Y, X> injecion2;
+        protected Dictionary<X, Y> injection1;
+        protected Dictionary<Y, X> injection2;
 
         public Y this[X x]
         {
@@ -35,89 +35,88 @@ namespace MyTool
 
         public Bijection()
         {
-            injecion1 = new Dictionary<X, Y>();
-            injecion2 = new Dictionary<Y, X>();
+            injection1 = new Dictionary<X, Y>();
+            injection2 = new Dictionary<Y, X>();
         }
-        public Bijection(Dictionary<X, Y> injecion)
+        public Bijection(Dictionary<X, Y> injection)
         {
-            injecion1 = injecion;
-            injecion2 = CreateInjection(injecion);
+            injection1 = injection;
+            injection2 = CreateInjection(injection);
         }
-        public Bijection(Dictionary<Y, X> injecion)
+        public Bijection(Dictionary<Y, X> injection)
         {
-            injecion2 = injecion;
-            injecion1 = CreateInjection(injecion);
+            injection2 = injection;
+            injection1 = CreateInjection(injection);
         }
 
         public void Add(X x, Y y)
         {
-            if (injecion1.ContainsKey(x) || injecion2.ContainsKey(y))
+            if (injection1.ContainsKey(x) || injection2.ContainsKey(y))
                 throw new ArgumentException();
-            injecion1.Add(x, y);
-            injecion2.Add(y, x);
+            injection1.Add(x, y);
+            injection2.Add(y, x);
         }
 
         public Y Get(X key)
         {
-            if (!injecion1.ContainsKey(key))
+            if (!injection1.ContainsKey(key))
             {
-                UnityEngine.Debug.LogWarning($"不包含{key}元素");
-                return default;
+                throw new ArgumentException();
             }
-            return injecion1[key];
+            return injection1[key];
         }
         public X Get(Y key)
         {
-            if (!injecion2.ContainsKey(key))
+            if (!injection2.ContainsKey(key))
             {
                 UnityEngine.Debug.LogWarning($"不包含{key}元素");
                 return default;
             }
-            return injecion2[key];
+            return injection2[key];
         }
 
         public void Modify(X key, Y value)
         {
-            if (!injecion1.ContainsKey(key))
+            if (!injection1.ContainsKey(key))
                 throw new IndexOutOfRangeException();
-            Y origin = injecion1[key];
-            injecion1[key] = value;
-            injecion2.Remove(origin);
-            injecion2.Add(value, key);
+            Y origin = injection1[key];
+            injection1[key] = value;
+            injection2.Remove(origin);
+            injection2.Add(value, key);
         }
         public void Modify(Y key, X value)
         {
-            if (!injecion2.ContainsKey(key))
+            if (!injection2.ContainsKey(key))
                 throw new IndexOutOfRangeException();
-            X origin = injecion2[key];
-            injecion2[key] = value;
-            injecion1.Remove(origin);
-            injecion1.Add(value, key);
+            X origin = injection2[key];
+            injection2[key] = value;
+            injection1.Remove(origin);
+            injection1.Add(value, key);
         }
 
         public void Remove(X x)
         {
-            if (injecion1.ContainsKey(x))
+            if (injection1.ContainsKey(x))
             {
-                Y y = injecion1[x];
-                injecion1.Remove(x);
-                injecion2.Remove(y);
+                Y y = injection1[x];
+                injection1.Remove(x);
+                injection2.Remove(y);
             }
         }
         public void Remove(Y y)
         {
-            if (injecion2.ContainsKey(y))
+            if (injection2.ContainsKey(y))
             {
-                X x = injecion2[y];
-                injecion1.Remove(x);
-                injecion2.Remove(y);
+                X x = injection2[y];
+                injection1.Remove(x);
+                injection2.Remove(y);
             }
         }
 
         public void Clear()
         {
-            injecion1.Clear();
-            injecion2.Clear();
+            injection1.Clear();
+            injection2.Clear();
         }
     }
 }

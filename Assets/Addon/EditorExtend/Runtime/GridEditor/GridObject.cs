@@ -84,7 +84,7 @@ namespace EditorExtend.GridEditor
                     Refresh();
                 }
                 else
-                    throw new InvalidOperationException();
+                    throw new Exception($"{gameObject.name}的{referenceCount}值不合理");
             }
         }
 
@@ -136,6 +136,40 @@ namespace EditorExtend.GridEditor
                 return cellPosition + 0.5f * Vector3.one;
             }
         }
+        /// <summary>
+        /// 上表面中心点
+        /// </summary>
+        public virtual Vector3 TopCenter
+        {
+            get
+            {
+#if UNITY_EDITOR
+                if (!Application.isPlaying)
+                    gridCollider = GetComponentInChildren<GridCollider>();
+#endif
+                if (gridCollider != null)
+                    return gridCollider.TopCenter;
+
+                return cellPosition + new Vector3(0.5f, 0.5f, 1f);
+            }
+        }
+        /// <summary>
+        /// 下表面中心点
+        /// </summary>
+        public virtual Vector3 BottomCenter
+        {
+            get
+            {
+#if UNITY_EDITOR
+                if (!Application.isPlaying)
+                    gridCollider = GetComponentInChildren<GridCollider>();
+#endif
+                if (gridCollider != null)
+                    return gridCollider.BottomCenter;
+
+                return cellPosition + new Vector3(0.5f, 0.5f, 0f);
+            }
+        }
 
         protected GridCollider gridCollider;
         /// <summary>
@@ -171,6 +205,8 @@ namespace EditorExtend.GridEditor
 
         #endregion
 
+        public bool autoSortingOrder = true;
+
         #region 生命周期
 
         protected virtual void Awake()
@@ -186,6 +222,18 @@ namespace EditorExtend.GridEditor
         protected virtual void OnDisable()
         {
             Unregister();
+        }
+
+        protected virtual void Update()
+        {
+            if (autoSortingOrder)
+                SpriteRenderer.sortingOrder = Manager.CellToSortingOrder(this);
+        }
+
+        private void OnDrawGizmos()
+        {
+            if(autoSortingOrder)
+                SpriteRenderer.sortingOrder = Manager.CellToSortingOrder(this);
         }
         #endregion 
     }

@@ -46,7 +46,7 @@ namespace UIExtend
             canvasGroup = GetComponent<CanvasGroup>();
             linear = new LinearTransformation();
             linear.OnTick += SetAlpha;
-            linear.AfterCompelete += SetAlpha;
+            linear.AfterComplete += SetAlpha;
             alpha_default = canvasGroup.alpha;
             immediate_next = true;
             visible = !visibleOnAwake;

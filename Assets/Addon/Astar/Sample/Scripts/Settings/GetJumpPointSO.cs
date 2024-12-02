@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace AStar.Sample
 {
-    [CreateAssetMenu(fileName = "跳点")]
     public class GetJumpPointSO : GetAdjoinedNodesSO
     {
         public int depthOnDirection;

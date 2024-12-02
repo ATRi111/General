@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace AStar.Sample
 {
-    [CreateAssetMenu(fileName = "与前进方向更接近的若干节点")]
     public class GetNodesSO_AccordingToParent : GetAdjoinedNodesSO
     {
         public int count;
