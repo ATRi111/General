@@ -10,11 +10,13 @@
 ### Astar
 
 - A*寻路算法（用于2D正方形网格），包括一些拓展和优化，如权重系数、跳点算法等
+- 此模块依赖EditorExtend模块
 
 
 ### Character
 
 - 与游戏角色有关的一些工具类
+- 此模块依赖EditorExtend模块
 
 
 ### MeshExtend
@@ -50,3 +52,4 @@
 ### Tools
 
 - 各种工具方法
+- 此模块依赖EditorExtend模块
