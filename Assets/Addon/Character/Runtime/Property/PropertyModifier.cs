@@ -19,7 +19,7 @@ namespace Character
         /// </summary>
         public float value;
         /// <summary>
-        /// 获取属性引用的方法
+        /// 提供"获取属性引用的方法"的SO
         /// </summary>
         public FindPropertySO so;
         /// <summary>

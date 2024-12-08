@@ -22,8 +22,8 @@ namespace AStar.Sample
                 if(map == null)
                 {
                     isObstacle = false;
-                    map = process.mono.GetComponentInChildren<Tilemap>();
-                    sample = process.mono.GetComponentInChildren<PathFindingSample>();
+                    map = process.mountPoint.GetComponentInChildren<Tilemap>();
+                    sample = process.mountPoint.GetComponentInChildren<PathFindingSample>();
                     Vector3 world = sample.NodeToWorld(Position);
                     Vector3Int tilePos = map.WorldToCell(world);
                     RuleTile tile = map.GetTile(tilePos) as RuleTile;

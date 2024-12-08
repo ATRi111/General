@@ -10,8 +10,8 @@ namespace AStar.Sample
 
         public AStarMoverSample(PathFindingProcess process)
         {
-            map = process.mono.GetComponentInChildren<Tilemap>();
-            sample = process.mono.GetComponentInChildren<PathFindingSample>();
+            map = process.mountPoint.GetComponentInChildren<Tilemap>();
+            sample = process.mountPoint.GetComponentInChildren<PathFindingSample>();
         }
 
         public override bool StayCheck(AStarNode node)

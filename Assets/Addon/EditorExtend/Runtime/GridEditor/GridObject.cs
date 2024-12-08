@@ -232,7 +232,7 @@ namespace EditorExtend.GridEditor
 
         private void OnDrawGizmos()
         {
-            if(autoSortingOrder)
+            if(autoSortingOrder && Manager!= null)
                 SpriteRenderer.sortingOrder = Manager.CellToSortingOrder(this);
         }
         #endregion 

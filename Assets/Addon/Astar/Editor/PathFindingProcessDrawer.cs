@@ -8,13 +8,12 @@ namespace AStar
     public class PathFindingProcessDrawer : AutoPropertyDrawer
     {
         [AutoProperty]
-        public SerializedProperty settings, mover, mono, output, available, isRunning, from, to, currentNode, nearest, countOfCloseNode, countOfQuery;
+        public SerializedProperty settings, mountPoint, output, available, isRunning, from, to, currentNode, nearest, countOfCloseNode, countOfQuery;
 
         protected override void MyOnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             AutoPropertyField("设置", settings);
-            AutoPropertyField("移动者", mover);
-            mono.PropertyField("脚本", NextRectRelative());
+            mountPoint.PropertyField("挂载点", NextRectRelative());
             AutoPropertyField("输出路径", output);
             AutoPropertyField("可达位置", available);
             isRunning.BoolField("运行中", NextRectRelative());

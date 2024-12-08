@@ -17,6 +17,14 @@ namespace EditorExtend.GridEditor
             return new(x, y, z);
         }
 
+        public static Vector3 WorldToCell(Vector3 worldPosition, Vector3 cellSize)
+        {
+            float x = worldPosition.x / cellSize.x + worldPosition.y / cellSize.y - worldPosition.z / 2;
+            float y = worldPosition.y / cellSize.y - worldPosition.x / cellSize.x - worldPosition.z / 2;
+            float z = worldPosition.z / cellSize.z;
+            return new(x, y, z);
+        }
+
         public static int ManhattanDistance(Vector3Int a, Vector3Int b)
         {
             return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) + Mathf.Abs(a.z - b.z);

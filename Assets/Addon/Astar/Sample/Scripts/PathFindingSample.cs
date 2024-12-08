@@ -23,7 +23,7 @@ namespace AStar.Sample
             };
             process = new(settings, mover)
             {
-                mono = this
+                mountPoint = this
             };
             process.Start(WorldToNode(from.position), WorldToNode(to.position));
             Repaint();
@@ -85,7 +85,7 @@ namespace AStar.Sample
             prefab = Resources.Load<GameObject>("DebugNode");
             from = transform.Find("From").transform;
             to = transform.Find("To").transform;
-            process.mono = this;
+            process.mountPoint = this;
         }
     }
 }

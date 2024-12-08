@@ -150,7 +150,7 @@ namespace EditorExtend.GridEditor
         #region 抛物线
 
         /// <summary>
-        /// 求抛物线初速度
+        /// 求抛物线初速度（抛物线不存在或不符合物理时返回false,且velocity将返回方向正确的单位向量）
         /// </summary>
         /// <param name="from">起点</param>
         /// <param name="to">终点</param>
@@ -165,7 +165,7 @@ namespace EditorExtend.GridEditor
             bool feasible = InitialSpeedOfParabola(h, p, includedAngle, gravity, out float speed, out time);
             if (!feasible)
             {
-                velocity = Vector3.zero;
+                velocity = (project + p * Mathf.Tan(includedAngle * Mathf.Deg2Rad) * Vector3.forward).normalized;
                 return false;
             }
             velocity = speed * (project + p * Mathf.Tan(includedAngle * Mathf.Deg2Rad) * Vector3.forward).normalized;
@@ -175,17 +175,19 @@ namespace EditorExtend.GridEditor
         /// <summary>
         /// 求抛物线初速率
         /// </summary>
-        /// <param name="h">高度改变量</param>
+        /// <param name="z">高度改变量</param>
         /// <param name="p">xy平面内投影距离</param>
         /// <param name="includedAngle">初速度与地面的夹角</param>
         /// <param name="gravity">重力加速度（沿Z轴负方向为正）</param>
-        public static bool InitialSpeedOfParabola(float h, float p, float includedAngle, float gravity, out float speed, out float time)
+        public static bool InitialSpeedOfParabola(float z, float p, float includedAngle, float gravity, out float speed, out float time)
         {
-            float t_square = 2 / gravity * (p * Mathf.Tan(includedAngle * Mathf.Deg2Rad) - h);
+            if (includedAngle < -90f || includedAngle > 90f)
+                throw new System.ArgumentException();
+            float t_square = 2 / gravity * (p * Mathf.Tan(includedAngle * Mathf.Deg2Rad) - z);
             if (t_square <= 0)
             {
-                time = -1;
-                speed = -1;
+                time = -1f;
+                speed = -1f;
                 return false;
             }
             time = Mathf.Sqrt(t_square);
@@ -214,6 +216,42 @@ namespace EditorExtend.GridEditor
                 t += time / count;
                 ret.Add(s);
             }
+        }
+
+        /// <summary>
+        /// 计算物体抛出点到落地点的水平投影距离
+        /// </summary>
+        /// <param name="speed">初速率</param>
+        /// <param name="includedAngle">与地面的夹角</param>
+        /// <param name="g">重力加速度</param>
+        /// <param name="z">高度改变量</param>
+        public static float ProjectDistanceOfParabola(float speed, float includedAngle, float g, float z)
+        {
+            float t = TimeOfParabola(speed, includedAngle, g, z);
+            if (t < 0f)
+                throw new System.ArgumentException();
+            return speed * Mathf.Cos(includedAngle * Mathf.Deg2Rad) * t;
+        }
+
+        /// <summary>
+        /// 计算物体抛出后落地时间
+        /// </summary>
+        /// <param name="speed">初速率</param>
+        /// <param name="includedAngle">与地面的夹角</param>
+        /// <param name="g">重力加速度</param>
+        /// <param name="z">高度改变量</param>
+        public static float TimeOfParabola(float speed,float includedAngle, float g, float z)
+        {
+            if (speed < 0 || g < 0)
+                throw new System.ArgumentException();
+            float a = g / 2;
+            float b = -speed * Mathf.Sin(includedAngle * Mathf.Deg2Rad);
+            float c = z;
+            float d = b * b - 4 * a * c;
+            if (d < 0)
+                return -1f;
+            float t = (-b + Mathf.Sqrt(d)) / 2 / a;
+            return t;
         }
 
         #endregion

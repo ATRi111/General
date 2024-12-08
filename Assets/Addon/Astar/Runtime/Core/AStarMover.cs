@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace AStar
 {
-    [Serializable]
     public class AStarMover
     {
         public Func<float> MoveAbility;

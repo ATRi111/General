@@ -17,7 +17,7 @@ namespace AStar
         public PathFindingSettings Settings => settings;
 
         public AStarMover mover;
-        public MonoBehaviour mono;
+        public MonoBehaviour mountPoint;
 
         public List<AStarNode> output = new();
         public List<AStarNode> available = new();
