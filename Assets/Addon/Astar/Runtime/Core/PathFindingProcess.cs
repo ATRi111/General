@@ -6,32 +6,29 @@ using UnityEngine;
 namespace AStar
 {
     /// <summary>
-    /// 一次寻路过程
+    /// 寻路过程
     /// </summary>
     [Serializable]
     public class PathFindingProcess
     {
-        [SerializeField]
-        private PathFindingSettings settings;
+        public PathFindingSettings settings;
 
-        public PathFindingSettings Settings => settings;
+        public MoverBase mover;
+        public Transform mountPoint;
 
-        public AStarMover mover;
-        public MonoBehaviour mountPoint;
-
-        public List<AStarNode> output = new();
-        public List<AStarNode> available = new();
+        public List<Node> output;
+        public List<Node> available;
 
         #region 基础方法
 
         /// <summary>
         /// 获取地图上某个位置的节点，必要时创建新节点
         /// </summary>
-        internal AStarNode GetNode(Vector2Int pos)
+        internal Node GetNode(Vector2Int pos)
         {
             if (discoveredNodes.ContainsKey(pos))
                 return discoveredNodes[pos];
-            AStarNode node = settings.GenerateNode(this, pos);
+            Node node = settings.GenerateNode(this, pos);
             discoveredNodes.Add(pos, node);
             countOfQuery++;
             return node;
@@ -40,19 +37,19 @@ namespace AStar
         /// <summary>
         /// 获取与一个节点相邻的节点(过滤不可通行节点)
         /// </summary>
-        internal void GetFilteredAdjoinNodes(AStarNode from)
+        internal void GetFilteredAdjoinNodes(Node from)
         {
             adjoins.Clear();
             adjoins_filtered.Clear();
             settings.GetAdjoinNodes.Invoke(this, from, adjoins);
-            foreach (AStarNode to in adjoins)
+            foreach (Node to in adjoins)
             {
                 if (mover.MoveCheck(from, to))
                     adjoins_filtered.Add(to);
             }
         }
 
-        public AStarNode[] GetAllNodes()
+        public Node[] GetAllNodes()
         {
             return discoveredNodes.Values.ToArray();
         }
@@ -67,37 +64,37 @@ namespace AStar
         public bool IsRunning => isRunning;
 
         [SerializeField]
-        private AStarNode from;
+        private Node from;
         /// <summary>
         /// 起点
         /// </summary>
-        public AStarNode From => from;
+        public Node From => from;
         [SerializeField]
-        private AStarNode to;
+        private Node to;
         /// <summary>
         /// 终点
         /// </summary>
-        public AStarNode To => to;
+        public Node To => to;
         /// <summary>
         /// 所有已发现节点
         /// </summary>
-        internal readonly Dictionary<Vector2, AStarNode> discoveredNodes = new();
+        internal Dictionary<Vector2, Node> discoveredNodes;
 
-        private readonly List<AStarNode> adjoins = new();
-        private readonly List<AStarNode> adjoins_filtered = new();
+        private List<Node> adjoins;
+        private List<Node> adjoins_filtered;
         /// <summary>
         /// 待访问节点表
         /// </summary>
-        internal Heap<AStarNode> open;
+        internal Heap<Node> open;
 
         /// <summary>
         /// 当前经过的节点
         /// </summary>
-        public AStarNode currentNode;
+        public Node currentNode;
         /// <summary>
         /// 在可计算的范围内，到终点距离最近的节点
         /// </summary>
-        public AStarNode nearest;
+        public Node nearest;
 
         [SerializeField]
         internal int countOfCloseNode;
@@ -115,6 +112,22 @@ namespace AStar
         #endregion
 
         #region 运行过程
+
+        public void Initialize()
+        {
+            settings.Refresh();
+            mover ??= new MoverBase();
+
+            discoveredNodes = new();
+            adjoins = new();
+            adjoins_filtered = new();
+            output = new();
+            available = new();
+            open = new Heap<Node>(settings.capacity, new Comparer_Cost());
+            countOfQuery = 0;
+            countOfCloseNode = 0;
+        }
+
         /// <summary>
         /// 开始寻路
         /// </summary>
@@ -123,6 +136,7 @@ namespace AStar
         /// <param name="ret">接收结果</param>
         public void Start(Vector2Int fromPos, Vector2Int toPos)
         {
+            Initialize();
             if (fromPos == toPos)
             {
                 Debug.LogWarning("起点与终点相同");
@@ -130,13 +144,6 @@ namespace AStar
             }
 
             isRunning = true;
-            countOfQuery = 0;
-            countOfCloseNode = 0;
-
-            available.Clear();
-            output.Clear();
-            discoveredNodes.Clear();
-            open.Clear();
 
             to = GetNode(toPos);
             To.HCost = 0;
@@ -151,7 +158,7 @@ namespace AStar
         /// <summary>
         /// 立刻完成寻路
         /// </summary>
-        public void Compelete()
+        public void Complete()
         {
             for (; ; )
             {
@@ -190,7 +197,7 @@ namespace AStar
 
             GetFilteredAdjoinNodes(currentNode);
 
-            foreach (AStarNode node in adjoins_filtered)
+            foreach (Node node in adjoins_filtered)
             {
                 switch (node.state)
                 {
@@ -230,18 +237,10 @@ namespace AStar
             }
             if (open.IsEmpty)
             {
-                //Debug.LogWarning("找不到路径");
                 return false;
             }
             return true;
         }
         #endregion
-
-        public PathFindingProcess(PathFindingSettings settings, AStarMover mover = null)
-        {
-            this.settings = settings;
-            this.mover = mover ?? new AStarMover();
-            open = new Heap<AStarNode>(settings.capacity, new Comparer_Cost());
-        }
     }
 }

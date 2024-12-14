@@ -53,8 +53,8 @@ namespace MyTool
                 Rect leftDown = new(rect.position + v, h + v);
                 Rect right = new(rect.position + h, rect.size - h);
                 EditorGUI.LabelField(leftUp, "Key");
-                SerializedDictionaryrHelper.AutoField(leftDown, key, GUIContent.none);
-                SerializedDictionaryrHelper.AutoField(right, value, GUIContent.none);
+                SerializedDictionaryHelper.AutoField(leftDown, key, GUIContent.none);
+                SerializedDictionaryHelper.AutoField(right, value, GUIContent.none);
                 EditorGUI.indentLevel--;
             }
             EditorGUI.EndProperty();

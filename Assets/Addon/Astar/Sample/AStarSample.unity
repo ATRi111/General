@@ -150,37 +150,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1335244205}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &26904374
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 26904375}
-  m_Layer: 0
-  m_Name: From
-  m_TagString: Untagged
-  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &26904375
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 26904374}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.58, y: -1.53, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 885614154}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &43003411
 GameObject:
   m_ObjectHideFlags: 0
@@ -237,306 +206,12 @@ Transform:
   m_GameObject: {fileID: 50156274}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 17.68, y: -1.59, z: 0}
+  m_LocalPosition: {x: 18.46, y: -1.59, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1920400652}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &180730709
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 180730710}
-  - component: {fileID: 180730712}
-  - component: {fileID: 180730711}
-  m_Layer: 0
-  m_Name: Tilemap2
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &180730710
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 180730709}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1967197973}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!483693784 &180730711
-TilemapRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 180730709}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 0
-  m_ReflectionProbeUsage: 0
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
-  m_MaxChunkCount: 16
-  m_MaxFrameAge: 16
-  m_SortOrder: 0
-  m_Mode: 0
-  m_DetectChunkCullingBounds: 0
-  m_MaskInteraction: 0
---- !u!1839735485 &180730712
-Tilemap:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 180730709}
-  m_Enabled: 1
-  m_Tiles:
-  - first: {x: 6, y: -5, z: 0}
-    second:
-      serializedVersion: 2
-      m_TileIndex: 1
-      m_TileSpriteIndex: 1
-      m_TileMatrixIndex: 0
-      m_TileColorIndex: 1
-      m_TileObjectToInstantiateIndex: 65535
-      dummyAlignment: 0
-      m_AllTileFlags: 1073741826
-  - first: {x: 7, y: -5, z: 0}
-    second:
-      serializedVersion: 2
-      m_TileIndex: 1
-      m_TileSpriteIndex: 1
-      m_TileMatrixIndex: 0
-      m_TileColorIndex: 1
-      m_TileObjectToInstantiateIndex: 65535
-      dummyAlignment: 0
-      m_AllTileFlags: 1073741826
-  - first: {x: 8, y: -5, z: 0}
-    second:
-      serializedVersion: 2
-      m_TileIndex: 1
-      m_TileSpriteIndex: 1
-      m_TileMatrixIndex: 0
-      m_TileColorIndex: 1
-      m_TileObjectToInstantiateIndex: 65535
-      dummyAlignment: 0
-      m_AllTileFlags: 1073741826
-  - first: {x: 6, y: -4, z: 0}
-    second:
-      serializedVersion: 2
-      m_TileIndex: 1
-      m_TileSpriteIndex: 1
-      m_TileMatrixIndex: 0
-      m_TileColorIndex: 1
-      m_TileObjectToInstantiateIndex: 65535
-      dummyAlignment: 0
-      m_AllTileFlags: 1073741826
-  - first: {x: 6, y: -3, z: 0}
-    second:
-      serializedVersion: 2
-      m_TileIndex: 1
-      m_TileSpriteIndex: 1
-      m_TileMatrixIndex: 0
-      m_TileColorIndex: 1
-      m_TileObjectToInstantiateIndex: 65535
-      dummyAlignment: 0
-      m_AllTileFlags: 1073741826
-  - first: {x: 3, y: -2, z: 0}
-    second:
-      serializedVersion: 2
-      m_TileIndex: 0
-      m_TileSpriteIndex: 0
-      m_TileMatrixIndex: 0
-      m_TileColorIndex: 1
-      m_TileObjectToInstantiateIndex: 65535
-      dummyAlignment: 0
-      m_AllTileFlags: 1073741826
-  - first: {x: 6, y: -2, z: 0}
-    second:
-      serializedVersion: 2
-      m_TileIndex: 1
-      m_TileSpriteIndex: 1
-      m_TileMatrixIndex: 0
-      m_TileColorIndex: 1
-      m_TileObjectToInstantiateIndex: 65535
-      dummyAlignment: 0
-      m_AllTileFlags: 1073741826
-  - first: {x: 6, y: -1, z: 0}
-    second:
-      serializedVersion: 2
-      m_TileIndex: 1
-      m_TileSpriteIndex: 1
-      m_TileMatrixIndex: 0
-      m_TileColorIndex: 1
-      m_TileObjectToInstantiateIndex: 65535
-      dummyAlignment: 0
-      m_AllTileFlags: 1073741826
-  - first: {x: 2, y: 0, z: 0}
-    second:
-      serializedVersion: 2
-      m_TileIndex: 1
-      m_TileSpriteIndex: 1
-      m_TileMatrixIndex: 0
-      m_TileColorIndex: 1
-      m_TileObjectToInstantiateIndex: 65535
-      dummyAlignment: 0
-      m_AllTileFlags: 1073741826
-  - first: {x: 3, y: 0, z: 0}
-    second:
-      serializedVersion: 2
-      m_TileIndex: 1
-      m_TileSpriteIndex: 1
-      m_TileMatrixIndex: 0
-      m_TileColorIndex: 1
-      m_TileObjectToInstantiateIndex: 65535
-      dummyAlignment: 0
-      m_AllTileFlags: 1073741826
-  - first: {x: 4, y: 0, z: 0}
-    second:
-      serializedVersion: 2
-      m_TileIndex: 1
-      m_TileSpriteIndex: 1
-      m_TileMatrixIndex: 0
-      m_TileColorIndex: 1
-      m_TileObjectToInstantiateIndex: 65535
-      dummyAlignment: 0
-      m_AllTileFlags: 1073741826
-  - first: {x: 5, y: 0, z: 0}
-    second:
-      serializedVersion: 2
-      m_TileIndex: 1
-      m_TileSpriteIndex: 1
-      m_TileMatrixIndex: 0
-      m_TileColorIndex: 1
-      m_TileObjectToInstantiateIndex: 65535
-      dummyAlignment: 0
-      m_AllTileFlags: 1073741826
-  - first: {x: 6, y: 0, z: 0}
-    second:
-      serializedVersion: 2
-      m_TileIndex: 1
-      m_TileSpriteIndex: 1
-      m_TileMatrixIndex: 0
-      m_TileColorIndex: 1
-      m_TileObjectToInstantiateIndex: 65535
-      dummyAlignment: 0
-      m_AllTileFlags: 1073741826
-  - first: {x: 9, y: 0, z: 0}
-    second:
-      serializedVersion: 2
-      m_TileIndex: 0
-      m_TileSpriteIndex: 0
-      m_TileMatrixIndex: 0
-      m_TileColorIndex: 1
-      m_TileObjectToInstantiateIndex: 65535
-      dummyAlignment: 0
-      m_AllTileFlags: 1073741826
-  m_AnimatedTiles: {}
-  m_TileAssetArray:
-  - m_RefCount: 2
-    m_Data: {fileID: 11400000, guid: 1360b9d9d30315e47b47036ff9080200, type: 2}
-  - m_RefCount: 12
-    m_Data: {fileID: 11400000, guid: 77e1033876feed541be7c8593e3e2bf8, type: 2}
-  m_TileSpriteArray:
-  - m_RefCount: 2
-    m_Data: {fileID: 21300000, guid: ccd5a016e77a74b4fbe5cdbcbc30e372, type: 3}
-  - m_RefCount: 12
-    m_Data: {fileID: 21300000, guid: 121aba4003ecf10488358acb11ba4d56, type: 3}
-  m_TileMatrixArray:
-  - m_RefCount: 14
-    m_Data:
-      e00: 1
-      e01: 0
-      e02: 0
-      e03: 0
-      e10: 0
-      e11: 1
-      e12: 0
-      e13: 0
-      e20: 0
-      e21: 0
-      e22: 1
-      e23: 0
-      e30: 0
-      e31: 0
-      e32: 0
-      e33: 1
-  m_TileColorArray:
-  - m_RefCount: 0
-    m_Data: {r: 4.1094e-41, g: 4.1094e-41, b: 4.1094e-41, a: 4.1094e-41}
-  - m_RefCount: 14
-    m_Data: {r: 1, g: 1, b: 1, a: 1}
-  m_TileObjectToInstantiateArray:
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  m_AnimationFrameRate: 1
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Origin: {x: -5, y: -11, z: 0}
-  m_Size: {x: 26, y: 16, z: 1}
-  m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
-  m_TileOrientation: 0
-  m_TileOrientationMatrix:
-    e00: 1
-    e01: 0
-    e02: 0
-    e03: 0
-    e10: 0
-    e11: 1
-    e12: 0
-    e13: 0
-    e20: 0
-    e21: 0
-    e22: 1
-    e23: 0
-    e30: 0
-    e31: 0
-    e32: 0
-    e33: 1
 --- !u!1 &185560334
 GameObject:
   m_ObjectHideFlags: 0
@@ -1009,18 +684,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   process:
     settings:
-      capacity: 0
-      maxDepth: 0
-      hCostWeight: 0
-    mover:
-      moveAbility: 0
-    mono: {fileID: 0}
+      capacity: 1000
+      maxDepth: 2000
+      hCostWeight: 1
+      getAdjoinedNodesSO: {fileID: 11400000, guid: 784715f1651a715438a480e9de9dc26e, type: 2}
+      calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
+      generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
+    mountPoint: {fileID: 394363656}
+    output: []
+    available: []
     isRunning: 0
+    from:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    to:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    currentNode:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    nearest:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
     countOfCloseNode: 0
     countOfQuery: 0
-  getAdjoinedNodesSO: {fileID: 11400000, guid: 0f805f45e0e22714d88fc3c8a23578ac, type: 2}
-  hCostWeight: 2
-  moveAbility: 1000
+  prefab: {fileID: 1374839061621688556, guid: a3ac64f7204db424099a07e7046b2ec0, type: 3}
+  moveAbility: 100
 --- !u!4 &394363656
 Transform:
   m_ObjectHideFlags: 0
@@ -1053,18 +750,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   process:
     settings:
-      capacity: 0
-      maxDepth: 0
-      hCostWeight: 0
-    mover:
-      moveAbility: 0
-    mono: {fileID: 0}
+      capacity: 1000
+      maxDepth: 2000
+      hCostWeight: 1
+      getAdjoinedNodesSO: {fileID: 11400000, guid: a546b5bcd5ada2e46a6a9cd5551e8f8b, type: 2}
+      calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
+      generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
+    mountPoint: {fileID: 394363656}
+    output: []
+    available: []
     isRunning: 0
+    from:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    to:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    currentNode:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    nearest:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
     countOfCloseNode: 0
     countOfQuery: 0
-  getAdjoinedNodesSO: {fileID: 11400000, guid: a546b5bcd5ada2e46a6a9cd5551e8f8b, type: 2}
-  hCostWeight: 2
-  moveAbility: 1000
+  prefab: {fileID: 1374839061621688556, guid: a3ac64f7204db424099a07e7046b2ec0, type: 3}
+  moveAbility: 100
 --- !u!1 &513431481
 GameObject:
   m_ObjectHideFlags: 0
@@ -2203,6 +1922,7 @@ GameObject:
   - component: {fileID: 716189441}
   - component: {fileID: 716189440}
   - component: {fileID: 716189439}
+  - component: {fileID: 716189442}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2278,12 +1998,56 @@ Transform:
   m_GameObject: {fileID: 716189438}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: -30.3, y: 1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &716189442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 716189438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
+  m_TaaSettings:
+    quality: 3
+    frameInfluence: 0.1
+    jitterScale: 1
+    mipBias: 0
+    varianceClampScale: 0.9
+    contrastAdaptiveSharpening: 0
 --- !u!1 &786810150
 GameObject:
   m_ObjectHideFlags: 0
@@ -2329,94 +2093,6 @@ Grid:
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
---- !u!1 &885614151
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 885614154}
-  - component: {fileID: 885614153}
-  - component: {fileID: 885614152}
-  m_Layer: 0
-  m_Name: "\u83B7\u53D6\u8282\u70B91"
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &885614152
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 885614151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6c753e31a842ac439404c4e5afc6900, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  process:
-    settings:
-      capacity: 0
-      maxDepth: 0
-      hCostWeight: 0
-    mover:
-      moveAbility: 0
-    mono: {fileID: 0}
-    isRunning: 0
-    countOfCloseNode: 0
-    countOfQuery: 0
-  getAdjoinedNodesSO: {fileID: 11400000, guid: 0f805f45e0e22714d88fc3c8a23578ac, type: 2}
-  hCostWeight: 2
-  moveAbility: 1000
---- !u!114 &885614153
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 885614151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6c753e31a842ac439404c4e5afc6900, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  process:
-    settings:
-      capacity: 0
-      maxDepth: 0
-      hCostWeight: 0
-    mover:
-      moveAbility: 0
-    mono: {fileID: 0}
-    isRunning: 0
-    countOfCloseNode: 0
-    countOfQuery: 0
-  getAdjoinedNodesSO: {fileID: 11400000, guid: 784715f1651a715438a480e9de9dc26e, type: 2}
-  hCostWeight: 2
-  moveAbility: 1000
---- !u!4 &885614154
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 885614151}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 50, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1967197973}
-  - {fileID: 26904375}
-  - {fileID: 1095015545}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &925912208
 GameObject:
   m_ObjectHideFlags: 0
@@ -2493,37 +2169,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1302146505}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1095015544
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1095015545}
-  m_Layer: 0
-  m_Name: To
-  m_TagString: Untagged
-  m_Icon: {fileID: -5397416234189338067, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1095015545
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1095015544}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.6, y: 0.53, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 885614154}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1110367216
 GameObject:
   m_ObjectHideFlags: 0
@@ -2556,18 +2201,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   process:
     settings:
-      capacity: 0
-      maxDepth: 0
-      hCostWeight: 0
-    mover:
-      moveAbility: 0
-    mono: {fileID: 0}
+      capacity: 1000
+      maxDepth: 2000
+      hCostWeight: 1
+      getAdjoinedNodesSO: {fileID: 11400000, guid: a546b5bcd5ada2e46a6a9cd5551e8f8b, type: 2}
+      calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
+      generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
+    mountPoint: {fileID: 1110367219}
+    output: []
+    available: []
     isRunning: 0
+    from:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    to:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    currentNode:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    nearest:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
     countOfCloseNode: 0
     countOfQuery: 0
-  getAdjoinedNodesSO: {fileID: 11400000, guid: a546b5bcd5ada2e46a6a9cd5551e8f8b, type: 2}
-  hCostWeight: 2
-  moveAbility: 1000
+  prefab: {fileID: 1374839061621688556, guid: a3ac64f7204db424099a07e7046b2ec0, type: 3}
+  moveAbility: 100
 --- !u!114 &1110367218
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2582,18 +2249,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   process:
     settings:
-      capacity: 0
-      maxDepth: 0
-      hCostWeight: 0
-    mover:
-      moveAbility: 0
-    mono: {fileID: 0}
+      capacity: 1000
+      maxDepth: 2000
+      hCostWeight: 1
+      getAdjoinedNodesSO: {fileID: 11400000, guid: 784715f1651a715438a480e9de9dc26e, type: 2}
+      calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
+      generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
+    mountPoint: {fileID: 1110367219}
+    output: []
+    available: []
     isRunning: 0
+    from:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    to:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    currentNode:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    nearest:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
     countOfCloseNode: 0
     countOfQuery: 0
-  getAdjoinedNodesSO: {fileID: 11400000, guid: 0f805f45e0e22714d88fc3c8a23578ac, type: 2}
-  hCostWeight: 2
-  moveAbility: 1000
+  prefab: {fileID: 1374839061621688556, guid: a3ac64f7204db424099a07e7046b2ec0, type: 3}
+  moveAbility: 100
 --- !u!4 &1110367219
 Transform:
   m_ObjectHideFlags: 0
@@ -2782,18 +2471,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   process:
     settings:
-      capacity: 0
-      maxDepth: 0
-      hCostWeight: 0
-    mover:
-      moveAbility: 0
-    mono: {fileID: 0}
+      capacity: 1000
+      maxDepth: 2000
+      hCostWeight: 1
+      getAdjoinedNodesSO: {fileID: 11400000, guid: 784715f1651a715438a480e9de9dc26e, type: 2}
+      calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
+      generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
+    mountPoint: {fileID: 1302146505}
+    output: []
+    available: []
     isRunning: 0
+    from:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    to:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    currentNode:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    nearest:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
     countOfCloseNode: 0
     countOfQuery: 0
-  getAdjoinedNodesSO: {fileID: 11400000, guid: 7992b2de22549654da1a50fe569be08a, type: 2}
-  hCostWeight: 0
-  moveAbility: 5
+  prefab: {fileID: 1374839061621688556, guid: a3ac64f7204db424099a07e7046b2ec0, type: 3}
+  moveAbility: 20
 --- !u!114 &1302146504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2808,18 +2519,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   process:
     settings:
-      capacity: 0
-      maxDepth: 0
-      hCostWeight: 0
-    mover:
-      moveAbility: 0
-    mono: {fileID: 0}
+      capacity: 1000
+      maxDepth: 2000
+      hCostWeight: 1
+      getAdjoinedNodesSO: {fileID: 11400000, guid: 784715f1651a715438a480e9de9dc26e, type: 2}
+      calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
+      generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
+    mountPoint: {fileID: 0}
+    output: []
+    available: []
     isRunning: 0
+    from:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    to:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    currentNode:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    nearest:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
     countOfCloseNode: 0
     countOfQuery: 0
-  getAdjoinedNodesSO: {fileID: 11400000, guid: 7992b2de22549654da1a50fe569be08a, type: 2}
-  hCostWeight: 1
-  moveAbility: 100
+  prefab: {fileID: 1374839061621688556, guid: a3ac64f7204db424099a07e7046b2ec0, type: 3}
+  moveAbility: 10
 --- !u!4 &1302146505
 Transform:
   m_ObjectHideFlags: 0
@@ -3354,18 +3087,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   process:
     settings:
-      capacity: 0
-      maxDepth: 0
-      hCostWeight: 0
-    mover:
-      moveAbility: 0
-    mono: {fileID: 0}
+      capacity: 1000
+      maxDepth: 2000
+      hCostWeight: 1
+      getAdjoinedNodesSO: {fileID: 11400000, guid: a546b5bcd5ada2e46a6a9cd5551e8f8b, type: 2}
+      calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
+      generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
+    mountPoint: {fileID: 1335244205}
+    output: []
+    available: []
     isRunning: 0
+    from:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    to:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    currentNode:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    nearest:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
     countOfCloseNode: 0
     countOfQuery: 0
-  getAdjoinedNodesSO: {fileID: 11400000, guid: a546b5bcd5ada2e46a6a9cd5551e8f8b, type: 2}
-  hCostWeight: 2
-  moveAbility: 1000
+  prefab: {fileID: 1374839061621688556, guid: a3ac64f7204db424099a07e7046b2ec0, type: 3}
+  moveAbility: 100
 --- !u!114 &1335244204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3380,18 +3135,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   process:
     settings:
-      capacity: 0
-      maxDepth: 0
-      hCostWeight: 0
-    mover:
-      moveAbility: 0
-    mono: {fileID: 0}
+      capacity: 1000
+      maxDepth: 2000
+      hCostWeight: 1
+      getAdjoinedNodesSO: {fileID: 11400000, guid: 784715f1651a715438a480e9de9dc26e, type: 2}
+      calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
+      generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
+    mountPoint: {fileID: 1335244205}
+    output: []
+    available: []
     isRunning: 0
+    from:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    to:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    currentNode:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    nearest:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
     countOfCloseNode: 0
     countOfQuery: 0
-  getAdjoinedNodesSO: {fileID: 11400000, guid: 0f805f45e0e22714d88fc3c8a23578ac, type: 2}
-  hCostWeight: 2
-  moveAbility: 1000
+  prefab: {fileID: 1374839061621688556, guid: a3ac64f7204db424099a07e7046b2ec0, type: 3}
+  moveAbility: 100
 --- !u!4 &1335244205
 Transform:
   m_ObjectHideFlags: 0
@@ -5429,18 +5206,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   process:
     settings:
-      capacity: 0
-      maxDepth: 0
-      hCostWeight: 0
-    mover:
-      moveAbility: 0
-    mono: {fileID: 0}
+      capacity: 1000
+      maxDepth: 2000
+      hCostWeight: 1
+      getAdjoinedNodesSO: {fileID: 11400000, guid: 784715f1651a715438a480e9de9dc26e, type: 2}
+      calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
+      generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
+    mountPoint: {fileID: 1920400652}
+    output: []
+    available: []
     isRunning: 0
+    from:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    to:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    currentNode:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    nearest:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
     countOfCloseNode: 0
     countOfQuery: 0
-  getAdjoinedNodesSO: {fileID: 11400000, guid: 784715f1651a715438a480e9de9dc26e, type: 2}
-  hCostWeight: 1
-  moveAbility: 12
+  prefab: {fileID: 1374839061621688556, guid: a3ac64f7204db424099a07e7046b2ec0, type: 3}
+  moveAbility: 20
 --- !u!114 &1920400654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5455,63 +5254,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   process:
     settings:
-      capacity: 0
-      maxDepth: 0
-      hCostWeight: 0
-    mover:
-      moveAbility: 0
-    mono: {fileID: 0}
+      capacity: 1000
+      maxDepth: 2000
+      hCostWeight: 2
+      getAdjoinedNodesSO: {fileID: 11400000, guid: 784715f1651a715438a480e9de9dc26e, type: 2}
+      calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
+      generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
+    mountPoint: {fileID: 1920400652}
+    output: []
+    available: []
     isRunning: 0
+    from:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    to:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    currentNode:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
+    nearest:
+      position: {x: 0, y: 0}
+      state: 0
+      GCost: 0
+      HCost: 0
     countOfCloseNode: 0
     countOfQuery: 0
-  getAdjoinedNodesSO: {fileID: 11400000, guid: 784715f1651a715438a480e9de9dc26e, type: 2}
-  hCostWeight: 4
-  moveAbility: 13
---- !u!1 &1967197972
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1967197973}
-  - component: {fileID: 1967197974}
-  m_Layer: 0
-  m_Name: Grid
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1967197973
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1967197972}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 180730710}
-  m_Father: {fileID: 885614154}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!156049354 &1967197974
-Grid:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1967197972}
-  m_Enabled: 1
-  m_CellSize: {x: 1, y: 1, z: 0}
-  m_CellGap: {x: 0, y: 0, z: 0}
-  m_CellLayout: 0
-  m_CellSwizzle: 0
+  prefab: {fileID: 1374839061621688556, guid: a3ac64f7204db424099a07e7046b2ec0, type: 3}
+  moveAbility: 20
 --- !u!1 &2045330950
 GameObject:
   m_ObjectHideFlags: 0
@@ -5686,7 +5462,7 @@ Tilemap:
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1073741826
-  - first: {x: 17, y: -2, z: 0}
+  - first: {x: 18, y: -2, z: 0}
     second:
       serializedVersion: 2
       m_TileIndex: 0
@@ -5845,7 +5621,6 @@ SceneRoots:
   - {fileID: 538442722}
   - {fileID: 1302146505}
   - {fileID: 1920400652}
-  - {fileID: 885614154}
   - {fileID: 1335244205}
   - {fileID: 394363656}
   - {fileID: 1110367219}

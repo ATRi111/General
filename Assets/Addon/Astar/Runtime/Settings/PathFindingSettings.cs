@@ -10,11 +10,11 @@ namespace AStar
         /// <summary>
         /// 堆容量
         /// </summary>
-        public int capacity;
+        public int capacity = 1000;
         /// <summary>
         /// 最大Closed节点数
         /// </summary>
-        public int maxDepth;
+        public int maxDepth = 2000;
         /// <summary>
         /// HCost权重
         /// </summary>
@@ -23,30 +23,44 @@ namespace AStar
         /// <summary>
         /// 获取相邻节点的方法
         /// </summary>
-        public Action<PathFindingProcess, AStarNode, List<AStarNode>> GetAdjoinNodes;
+        public Action<PathFindingProcess, Node, List<Node>> GetAdjoinNodes;
+        public GetAdjoinedNodesSO getAdjoinedNodesSO;
+
         /// <summary>
-        /// 计算地图上两点间距离的方法
+        /// 计算两点间距离的方法
         /// </summary>
         public Func<Vector2Int, Vector2Int, float> CalculateDistance;
+        public CalculateDistanceSO calculateDistanceSO;
+
         /// <summary>
         /// 生成新节点的方法
         /// </summary>
-        public Func<PathFindingProcess, Vector2Int, AStarNode> GenerateNode;
+        public Func<PathFindingProcess, Vector2Int, Node> GenerateNode;
+        public GenerateNodeSO generateNodeSO;
 
-        public PathFindingSettings(
-            Action<PathFindingProcess, AStarNode, List<AStarNode>> GetAdjoinNodes = null,
-            Func<Vector2Int, Vector2Int, float> CalculateDistance = null,
-            Func<PathFindingProcess, Vector2Int, AStarNode> GenerateNode = null,
-            float hCostWeight = 1,
-            int capacity = 1000,
-            int maxDepth = 2000)
+        public void Refresh()
         {
-            this.GetAdjoinNodes = GetAdjoinNodes ?? PathFindingUtility.GetAdjoinNodes_Eight;
-            this.CalculateDistance = CalculateDistance ?? PathFindingUtility.ChebyshevDistance;
-            this.GenerateNode = GenerateNode ?? PathFindingUtility.GenerateNode_Default;
-            this.hCostWeight = hCostWeight;
-            this.capacity = capacity;
-            this.maxDepth = maxDepth;
+            if (GetAdjoinNodes == null)
+            {
+                if (getAdjoinedNodesSO != null)
+                    GetAdjoinNodes = getAdjoinedNodesSO.GetAdjoinedNodes;
+                else
+                    GetAdjoinNodes = PathFindingUtility.GetAdjoinNodes_Four;
+            }
+            if (CalculateDistance == null )
+            {
+                if(calculateDistanceSO != null)
+                    CalculateDistance = calculateDistanceSO.CalculateDistance;
+                else
+                    CalculateDistance = PathFindingUtility.ManhattanDistance;
+            }
+            if (GenerateNode == null)
+            {
+                if (generateNodeSO != null)
+                    GenerateNode = generateNodeSO.GenerateNode;
+                else
+                    GenerateNode = PathFindingUtility.GenerateNode_Default;
+            }
         }
     }
 }

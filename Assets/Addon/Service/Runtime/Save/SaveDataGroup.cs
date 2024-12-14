@@ -11,41 +11,41 @@ namespace Services.Save
     [System.Serializable]
     public sealed class SaveDataGroup
     {
-        internal Dictionary<string, SaveData> runtimeDatas;
+        internal Dictionary<string, SaveData> searcher;
         [JsonProperty]
-        internal List<SaveData> datas;
+        internal List<SaveData> dataList;
 
         internal SaveDataGroup()
         {
-            runtimeDatas = new Dictionary<string, SaveData>();
-            datas = new List<SaveData>();
+            searcher = new Dictionary<string, SaveData>();
+            dataList = new List<SaveData>();
         }
 
         internal T Bind<T>(string identifier, Object obj) where T : SaveData, new()
         {
-            if (!runtimeDatas.ContainsKey(identifier))
+            if (!searcher.ContainsKey(identifier))
             {
                 T t = new();
-                runtimeDatas.Add(identifier, t);
-                datas.Add(t);
+                searcher.Add(identifier, t);
+                dataList.Add(t);
             }
-            runtimeDatas[identifier].Initialize(identifier, obj);
-            return runtimeDatas[identifier] as T;
+            searcher[identifier].Initialize(identifier, obj);
+            return searcher[identifier] as T;
         }
 
         internal void Initialize()
         {
-            datas ??= new List<SaveData>();
-            runtimeDatas ??= new Dictionary<string, SaveData>();
-            for (int i = 0; i < datas.Count; i++)
+            dataList ??= new List<SaveData>();
+            searcher ??= new Dictionary<string, SaveData>();
+            for (int i = 0; i < dataList.Count; i++)
             {
-                runtimeDatas.Add(datas[i].identifier, datas[i]);
+                searcher.Add(dataList[i].identifier, dataList[i]);
             }
         }
 
         internal void Load()
         {
-            foreach (SaveData data in runtimeDatas.Values)
+            foreach (SaveData data in searcher.Values)
             {
                 data.LoadIfExist();
             }
@@ -53,7 +53,7 @@ namespace Services.Save
 
         internal void Save()
         {
-            foreach (SaveData data in runtimeDatas.Values)
+            foreach (SaveData data in searcher.Values)
             {
                 data.SaveIfExist();
             }
@@ -61,10 +61,10 @@ namespace Services.Save
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < datas.Count; i++)
+            StringBuilder sb = new();
+            for (int i = 0; i < dataList.Count; i++)
             {
-                sb.AppendLine(datas[i].ToString());
+                sb.AppendLine(dataList[i].ToString());
             }
             return sb.ToString();
         }

@@ -23,7 +23,7 @@ namespace EditorExtend
         public Rect NextRectRelative(float multiplier = 1, float gapMultiplier = 0.111f)
             => NextRect(multiplier * EditorGUIUtility.singleLineHeight, gapMultiplier * EditorGUIUtility.singleLineHeight);
         public Rect NextRect(SerializedProperty property)
-            => NextRect(EditorGUI.GetPropertyHeight(property, property.isArray), 0f);
+            => NextRect(EditorGUI.GetPropertyHeight(property, property.isArray));
         public Rect NextRect(float height, float gap = 2f)
         {
             Rect ret = new(min, new Vector2(width, height));

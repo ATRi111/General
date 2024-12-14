@@ -27,7 +27,7 @@ namespace Services.Save
         }
 
         /// <summary>
-        /// <para>获取指定标识符、指定类型的存档数据，如果没有，则创建一份；然后将其与指定对象绑定，并试图读档</para>
+        /// <para>获取指定标识符、指定类型的存档数据，如果没有，则创建一份；必要时读取该数据</para>
         /// </summary>
         public T Bind<T>(string identifier, Object obj) where T : SaveData, new()
         {

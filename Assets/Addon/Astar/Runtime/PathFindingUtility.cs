@@ -6,7 +6,7 @@ namespace AStar
 {
     public static class PathFindingUtility
     {
-        public const float Diagnol = 1.41421356f;
+        public const float Diagonal = 1.41421356f;
         public const float Epsilon = 1e-6f;
 
         public static float CalculateWeight_Default(PathFindingProcess _)
@@ -18,14 +18,14 @@ namespace AStar
         {
             return true;
         }
-        public static AStarNode GenerateNode_Default(PathFindingProcess process, Vector2Int position)
+        public static Node GenerateNode_Default(PathFindingProcess process, Vector2Int position)
         {
-            return new AStarNode(process, position);
+            return new Node(process, position);
         }
 
         #region 四向寻路
 
-        public static readonly ReadOnlyCollection<Vector2Int> fourDirections;
+        public static readonly ReadOnlyCollection<Vector2Int> FourDirections;
         /// <summary>
         /// 求曼哈顿距离
         /// </summary>
@@ -35,10 +35,10 @@ namespace AStar
         /// <summary>
         /// 获取某节点周围的四个节点
         /// </summary>
-        public static void GetAdjoinNodes_Four(PathFindingProcess process, AStarNode node, List<AStarNode> ret)
+        public static void GetAdjoinNodes_Four(PathFindingProcess process, Node node, List<Node> ret)
         {
             ret.Clear();
-            foreach (Vector2Int direction in fourDirections)
+            foreach (Vector2Int direction in FourDirections)
             {
                 ret.Add(process.GetNode(node.Position + direction));
             }
@@ -48,7 +48,7 @@ namespace AStar
 
         #region 八向寻路
 
-        public static readonly ReadOnlyCollection<Vector2Int> eightDirections;
+        public static readonly ReadOnlyCollection<Vector2Int> EightDirections;
 
         /// <summary>
         /// 求切比雪夫距离
@@ -59,15 +59,15 @@ namespace AStar
             float deltaY = Mathf.Abs(a.y - b.y);
             float max = Mathf.Max(deltaX, deltaY);
             float min = Mathf.Min(deltaX, deltaY);
-            return min * Diagnol + (max - min);
+            return min * Diagonal + (max - min);
         }
         /// <summary>
         /// 获取某节点周围的八个节点
         /// </summary>
-        public static void GetAdjoinNodes_Eight(PathFindingProcess process, AStarNode node, List<AStarNode> ret)
+        public static void GetAdjoinNodes_Eight(PathFindingProcess process, Node node, List<Node> ret)
         {
             ret.Clear();
-            foreach (Vector2Int direction in eightDirections)
+            foreach (Vector2Int direction in EightDirections)
             {
                 ret.Add(process.GetNode(node.Position + direction));
             }
@@ -80,21 +80,21 @@ namespace AStar
         /// </summary>
         public class Comparer_Vector2_Nearer : IComparer<Vector2>, IComparer<Vector2Int>
         {
-            public Vector2 direciton;
+            public Vector2 direction;
 
-            public Comparer_Vector2_Nearer(Vector2 direciton)
+            public Comparer_Vector2_Nearer(Vector2 direction)
             {
-                this.direciton = direciton;
+                this.direction = direction;
             }
 
             public int Compare(Vector2 x, Vector2 y)
             {
-                float angleX = Vector2.Angle(direciton, x);
-                float angleY = Vector2.Angle(direciton, y);
+                float angleX = Vector2.Angle(direction, x);
+                float angleY = Vector2.Angle(direction, y);
                 if (angleX != angleY)
                     return angleX.CompareTo(angleY);
-                float zX = Vector3.Cross(direciton, x).z;
-                float zY = Vector3.Cross(direciton, y).z;
+                float zX = Vector3.Cross(direction, x).z;
+                float zY = Vector3.Cross(direction, y).z;
                 return zX.CompareTo(zY);
             }
 
@@ -117,15 +117,15 @@ namespace AStar
                 Vector2Int.right,
                 Vector2Int.right + Vector2Int.up,
             };
-            eightDirections = new ReadOnlyCollection<Vector2Int>(eight);
+            EightDirections = new ReadOnlyCollection<Vector2Int>(eight);
             Vector2Int[] four = new Vector2Int[]
             {
-                 Vector2Int.up,
+                Vector2Int.up,
                 Vector2Int.left,
                 Vector2Int.down,
                 Vector2Int.right,
             };
-            fourDirections = new ReadOnlyCollection<Vector2Int>(four);
+            FourDirections = new ReadOnlyCollection<Vector2Int>(four);
         }
     }
 }

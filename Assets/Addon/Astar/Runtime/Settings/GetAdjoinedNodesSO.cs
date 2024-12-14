@@ -3,8 +3,12 @@ using UnityEngine;
 
 namespace AStar
 {
-    public abstract class GetAdjoinedNodesSO : ScriptableObject
+    [System.Serializable]
+    public class GetAdjoinedNodesSO : ScriptableObject
     {
-        public abstract void GetAdjoinedNodes(PathFindingProcess process, AStarNode node, List<AStarNode> ret);
+        public virtual void GetAdjoinedNodes(PathFindingProcess process, Node node, List<Node> ret)
+        {
+
+        }
     }
 }
