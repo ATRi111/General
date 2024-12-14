@@ -49,10 +49,10 @@ namespace Services.ObjectPools
         {
             if (b_createdByPool && objectPoolAttached != null)
             {
+                transform.SetParent(objectPoolAttached.transform, false);
                 OnRecycle?.Invoke();
                 Active = false;
                 objectPoolAttached.Recycle(this);
-                transform.SetParent(objectPoolAttached.transform, false);
             }
             else
                 Destroy(gameObject);
