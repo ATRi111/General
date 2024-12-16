@@ -27,7 +27,7 @@ namespace EditorExtend
         /// <summary>
         /// 查找某个类的脚本文件（需要确保类名和脚本文件名一致）
         /// </summary>
-        public static UnityEngine.Object FindMonoScrpit(Type type)
+        public static UnityEngine.Object FindMonoScript(Type type)
         {
             static string GetLast(string s, char seperator)
             {
@@ -51,6 +51,25 @@ namespace EditorExtend
 
             return null;
         }
+
+        /// <summary>
+        /// 获取所有继承某个类的脚本的类型
+        /// </summary>
+        public static void FindAllScriptInherit(Type baseType,List<Type> ret)
+        {
+            string[] temp = AssetDatabase.FindAssets($"t:MonoScript");
+            for (int i = 0; i < temp.Length; i++)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(temp[i]);
+                MonoScript mono = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
+                Type type = null;
+                if (mono != null)
+                    type = mono.GetClass();
+                if (type != null && type.IsSubclassOf(baseType))
+                    ret.Add(type);
+            }
+        }
+
 
         public static bool HasAttribute<T>(MemberInfo member, bool inherit = false) where T : Attribute
         {
@@ -84,7 +103,7 @@ namespace EditorExtend
         /// </summary>
         public static List<Vector2> GetSpritePhysicsShape(Sprite sprite)
         {
-            List<Vector2> ret = new List<Vector2>();
+            List<Vector2> ret = new();
             sprite.GetPhysicsShape(0, ret);
             return ret;
         }

@@ -3,7 +3,7 @@ using UnityEditor;
 
 namespace UIExtend
 {
-    [CustomEditor(typeof(CanvasGrounpPlus))]
+    [CustomEditor(typeof(CanvasGroupPlus))]
     public class CanvasGrounpPlusEditor : AutoEditor
     {
         [AutoProperty]

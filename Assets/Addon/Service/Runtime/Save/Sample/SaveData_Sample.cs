@@ -1,16 +1,7 @@
 using System.Text;
-using UnityEngine;
 
 namespace Services.Save
 {
-    public class SaveTargetController_Sample : SaveTargetController
-    {
-        protected override void Bind(string identifier, Object obj)
-        {
-            Group.Bind<SaveData_Sample>(identifier, obj);
-        }
-    }
-
     public class SaveData_Sample : SaveData
     {
         private SampleTarget Sample => obj as SampleTarget;

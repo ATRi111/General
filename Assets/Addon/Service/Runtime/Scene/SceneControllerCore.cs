@@ -60,7 +60,7 @@ namespace Services.SceneManagement
             BeforeLoadScene?.Invoke(index);
             if (async)
             {
-                AsyncOperation operation = SceneManager.LoadSceneAsync(index);
+                AsyncOperation operation = SceneManager.LoadSceneAsync(index, mode);
                 operation.allowSceneActivation = !needConfirm;
                 AsyncLoadScene?.Invoke(operation);
                 yield return operation;

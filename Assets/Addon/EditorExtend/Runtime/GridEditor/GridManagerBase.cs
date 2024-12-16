@@ -63,6 +63,7 @@ namespace EditorExtend.GridEditor
         /// 根据CellPosition自动计算SortingOrder
         /// </summary>
         public abstract int CellToSortingOrder(GridObject obj);
+        public abstract int CellToSortingOrder(Vector3 position);
 
         public virtual void Clear()
         {

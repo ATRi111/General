@@ -7,7 +7,7 @@ namespace Services.Save
     /// </summary>
     public class SaveManagerBase : Service, ISaveManager
     {
-        protected Dictionary<int, SaveGroupController> groups = new Dictionary<int, SaveGroupController>();
+        protected Dictionary<int, SaveGroupController> groups = new();
 
         public SaveGroupController GetGroup(int groupId)
         {

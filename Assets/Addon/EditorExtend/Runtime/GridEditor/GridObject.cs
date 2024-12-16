@@ -113,6 +113,7 @@ namespace EditorExtend.GridEditor
         #endregion
 
         #region ÓÎÏ·Âß¼­
+        public bool IsGround => groundHeight > 0;
         [SerializeField]
         protected int groundHeight = 1;
         /// <summary>

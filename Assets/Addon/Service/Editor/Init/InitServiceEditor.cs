@@ -9,6 +9,7 @@ namespace Services
     [CustomEditor(typeof(InitService))]
     public class InitServiceEditor : AutoEditor
     {
+        [AutoProperty]
         public SerializedProperty search;
         private List<Type> searchResult;
 
@@ -16,18 +17,7 @@ namespace Services
         {
             base.OnEnable();
             searchResult = new List<Type>();
-            search = serializedObject.FindProperty(nameof(search));
-            string[] temp = AssetDatabase.FindAssets($"t:MonoScript");
-            for (int i = 0; i < temp.Length; i++)
-            {
-                string path = AssetDatabase.GUIDToAssetPath(temp[i]);
-                MonoScript mono = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
-                Type type = null;
-                if (mono != null)
-                    type = mono.GetClass();
-                if (type != null && type.IsSubclassOf(typeof(Service)))
-                    searchResult.Add(type);
-            }
+            EditorExtendUtility.FindAllScriptInherit(typeof(Service), searchResult);
         }
 
         protected override void MyOnInspectorGUI()

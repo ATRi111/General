@@ -5,7 +5,7 @@ namespace Services.Save
 {
     /// <summary>
     /// <para>规定了一个对象的存档数据，以及读档存档时存档数据与对象的关系</para>
-    /// <para>子类不需要添加[Serializable]，但其字段必须正确使用public和[JsonProperty]</para>
+    /// <para>子类中的字段必须正确使用public或[JsonProperty]</para>
     /// </summary>
     [System.Serializable]
     public abstract class SaveData
@@ -19,7 +19,7 @@ namespace Services.Save
         /// </summary>
         protected Object obj;
 
-        public void Initialize(string identifier, Object obj)
+        public virtual void Initialize(string identifier, Object obj)
         {
             this.obj = obj;
             this.identifier = identifier;

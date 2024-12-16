@@ -5,7 +5,7 @@ namespace UIExtend
 {
     //挂在需要隐藏-显示的UI物体上
     [RequireComponent(typeof(CanvasGroup))]
-    public class CanvasGrounpPlus : MonoBehaviour
+    public class CanvasGroupPlus : MonoBehaviour
     {
         protected CanvasGroup canvasGroup;
         private LinearTransformation linear;
@@ -25,7 +25,7 @@ namespace UIExtend
         /// </summary>
         public bool immediate;
         [SerializeField]
-        private bool visibleOnAwake;
+        private bool visibleOnAwake = true;
 
         private bool visible;
         public bool Visible
@@ -39,6 +39,12 @@ namespace UIExtend
                     SetVisibleAndActive();
                 }
             }
+        }
+
+        public float Alpha
+        {
+            get => canvasGroup.alpha;
+            set => SetAlpha(value);
         }
 
         protected virtual void Awake()

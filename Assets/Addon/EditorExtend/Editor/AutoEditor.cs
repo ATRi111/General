@@ -46,7 +46,7 @@ namespace EditorExtend
             if (target != null)
                 AutoPropertyAttribute.Apply(this, serializedObject);
             targetType = target.GetType();
-            monoScript = EditorExtendUtility.FindMonoScrpit(targetType);
+            monoScript = EditorExtendUtility.FindMonoScript(targetType);
         }
 
         /// <summary>

@@ -1,3 +1,5 @@
+using System;
+using System.Reflection;
 using UnityEngine;
 
 namespace Services.Save
@@ -5,19 +7,20 @@ namespace Services.Save
     /// <summary>
     /// 控制特定对象正确地与SaveData绑定
     /// </summary>
-    public abstract class SaveTargetController : MonoBehaviour
+    public class SaveTargetController : MonoBehaviour
     {
         public SaveGroupController Group { get; protected set; }
         [SerializeField]
         protected int groupId;
 
         [SerializeField]
-        protected Object obj;
-
+        protected UnityEngine.Object obj;
+        [SerializeField]
+        protected string saveDataType;
         [SerializeField]
         protected EIdentifier eIdentifier;
         [SerializeField]
-        protected string customizedIdentifier;
+        protected string customIdentifier;
         public virtual string Identifier
         {
             get
@@ -26,7 +29,7 @@ namespace Services.Save
                 {
                     EIdentifier.SceneAndName => SaveUtility.DefineIdentifier_SceneAndName(obj),
                     EIdentifier.NameOnly => obj.name,
-                    _ => customizedIdentifier,
+                    _ => customIdentifier,
                 };
             }
         }
@@ -37,13 +40,18 @@ namespace Services.Save
             Bind(Identifier, obj);
         }
 
-        protected abstract void Bind(string identifier, Object obj);
+        protected virtual void Bind(string identifier, UnityEngine.Object obj)
+        {
+            Type type = Type.GetType(saveDataType);
+            MethodInfo method = Group.GetType().GetMethod("Bind").MakeGenericMethod(type);
+            method.Invoke(Group, new object[] { identifier, obj });
+        }
     }
 
     public enum EIdentifier
     {
         SceneAndName,
         NameOnly,
-        Customized,
+        Custom,
     }
 }

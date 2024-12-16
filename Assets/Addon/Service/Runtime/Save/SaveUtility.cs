@@ -11,7 +11,7 @@ namespace Services.Save
         /// </summary>
         public static string DefineIdentifier_SceneAndName(Object obj)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             sb.Append(SceneManager.GetActiveScene().name);
             sb.Append("-");
             sb.Append(obj.name);

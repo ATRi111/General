@@ -23,12 +23,6 @@ namespace Services.SceneManagement
 
         public UnityEvent<AsyncOperation> AsyncLoadScene => core.AsyncLoadScene;
 
-        protected override void Awake()
-        {
-            base.Awake();
-            core = new SceneControllerCore(this, BeforeLoadScene, AfterLoadScene, BeforeUnLoadScene, AfterUnLoadScene);
-        }
-
         public void LoadScene(string name, LoadSceneMode mode = LoadSceneMode.Single)
             => core.LoadScene(SceneControllerUtility.ToSceneIndex(name), mode, async, needConfirm);
         public void LoadScene(int index, LoadSceneMode mode = LoadSceneMode.Single)
@@ -59,6 +53,12 @@ namespace Services.SceneManagement
         private void AfterUnLoadScene(int index)
         {
             eventSystem.Invoke(EEvent.AfterUnLoadScene, index);
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            core = new SceneControllerCore(this, BeforeLoadScene, AfterLoadScene, BeforeUnLoadScene, AfterUnLoadScene);
         }
     }
 }
