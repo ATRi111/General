@@ -13,11 +13,6 @@ namespace EditorExtend.GridEditor
         public override Vector3 CellToWorld(Vector3 cellPosition)
             => IsometricGridUtility.CellToWorld(cellPosition, Grid.cellSize);
 
-        public override int CellToSortingOrder(GridObject obj)
-        {
-            return CellToSortingOrder(obj.transform.position) + obj.ExtraSortingOrder;
-        }
-
         public override int CellToSortingOrder(Vector3 position)
         {
             Vector3 cell = IsometricGridUtility.WorldToCell(position, Grid.cellSize);
@@ -66,9 +61,11 @@ namespace EditorExtend.GridEditor
             maxLayerDict.Clear();
         }
 
-        public override void AddObject(GridObject gridObject)
+        public override bool TryAddObject(GridObject gridObject)
         {
-            base.AddObject(gridObject);
+            if(!base.TryAddObject(gridObject))
+                return false;
+
             Vector2Int xy = (Vector2Int)gridObject.CellPosition;
             int layer = gridObject.CellPosition.z;
             if (!maxLayerDict.ContainsKey(xy))
@@ -80,12 +77,14 @@ namespace EditorExtend.GridEditor
                 maxLayerDict[xy] = Mathf.Max(maxLayerDict[xy], layer);
             }
             maxLayer = Mathf.Max(maxLayer, layer);
+            return true;
         }
 
-        public override GridObject RemoveObject(Vector3Int cellPosition)
+        public override GridObject TryRemoveObject(Vector3Int cellPosition)
         {
-            GridObject gridObject = base.RemoveObject(cellPosition);
-            UpdateMaxLayerXY((Vector2Int)gridObject.CellPosition);
+            GridObject gridObject = base.TryRemoveObject(cellPosition);
+            if(gridObject != null)
+                UpdateMaxLayerXY((Vector2Int)gridObject.CellPosition);
             return gridObject;
         }
 

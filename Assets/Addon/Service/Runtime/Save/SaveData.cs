@@ -6,6 +6,7 @@ namespace Services.Save
     /// <summary>
     /// <para>规定了一个对象的存档数据，以及读档存档时存档数据与对象的关系</para>
     /// <para>子类中的字段必须正确使用public或[JsonProperty]</para>
+    /// <para>子类及子类中的所有成员必须有无参构造函数</para>
     /// </summary>
     [System.Serializable]
     public abstract class SaveData

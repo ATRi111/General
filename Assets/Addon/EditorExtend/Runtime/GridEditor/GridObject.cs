@@ -17,44 +17,23 @@ namespace EditorExtend.GridEditor
             }
         }
 
-        private SpriteRenderer spriteRenderer;
-        public SpriteRenderer SpriteRenderer
-        {
-            get
-            {
-                if (spriteRenderer == null)
-                    spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-                return spriteRenderer;
-            }
-        }
-
-        [SerializeField]
-        private string shortName;
-        public string ShortName
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(shortName))
-                    shortName = ExternalTool.GetShortName(gameObject);
-                return shortName;
-            }
-        }
-
-        public virtual int ExtraSortingOrder => 0;
         [NonSerialized]
         /// <summary>
         /// 此数值通常情况下应当保持在1
         /// </summary>
         public int referenceCount;
 
-        protected void Register()
+        public void Register()
         {
-            Manager.AddObject(this);
+            //是Manager的子物体才可注册
+            if(Manager != null)
+                Manager.TryAddObject(this);
         }
 
-        protected virtual void Unregister()
+        public virtual void Unregister()
         {
-            Manager.RemoveObject(CellPosition);
+            //是Manager的子物体才可取消注册
+            Manager.TryRemoveObject(CellPosition);
         }
 
         #endregion
@@ -70,7 +49,8 @@ namespace EditorExtend.GridEditor
                 if (referenceCount == 0)
                 {
                     cellPosition = value;
-                    Manager.AddObject(this);
+                    if (Manager != null)
+                        Manager.TryAddObject(this);
                     Refresh();
                 }
                 else if (referenceCount == 1)
@@ -78,8 +58,9 @@ namespace EditorExtend.GridEditor
                     if (value != cellPosition)
                     {
                         Vector3Int prev = cellPosition;
-                        cellPosition = value;
-                        Manager.RelocateObject(this, prev);
+                        cellPosition = value; 
+                        if (Manager != null)
+                            Manager.RelocateObject(this, prev);
                     }
                     Refresh();
                 }
@@ -91,7 +72,6 @@ namespace EditorExtend.GridEditor
         public Vector3 Refresh()
         {
             transform.position = Manager.Grid.CellToWorld(cellPosition);
-            SpriteRenderer.sortingOrder = Manager.CellToSortingOrder(this);
             return transform.position;
         }
         /// <summary>
@@ -206,8 +186,6 @@ namespace EditorExtend.GridEditor
 
         #endregion
 
-        public bool autoSortingOrder = true;
-
         #region 生命周期
 
         protected virtual void Awake()
@@ -223,18 +201,6 @@ namespace EditorExtend.GridEditor
         protected virtual void OnDisable()
         {
             Unregister();
-        }
-
-        protected virtual void Update()
-        {
-            if (autoSortingOrder)
-                SpriteRenderer.sortingOrder = Manager.CellToSortingOrder(this);
-        }
-
-        private void OnDrawGizmos()
-        {
-            if(autoSortingOrder && Manager!= null)
-                SpriteRenderer.sortingOrder = Manager.CellToSortingOrder(this);
         }
         #endregion 
     }

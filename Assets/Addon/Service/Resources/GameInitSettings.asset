@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9657a0106acda5c40879fa89421bd106, type: 3}
   m_Name: GameInitSettings
   m_EditorClassIdentifier: 
-  startGameIndex: 2
+  startGameIndex: 1

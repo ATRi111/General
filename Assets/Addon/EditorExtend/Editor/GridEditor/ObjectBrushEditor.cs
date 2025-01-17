@@ -137,7 +137,7 @@ namespace EditorExtend.GridEditor
         {
             if(ObjectBrush.Manager.ObjectDict.ContainsKey(ObjectBrush.cellPosition))
             {
-                GridObject gridObject = ObjectBrush.Manager.RemoveObject(ObjectBrush.cellPosition);
+                GridObject gridObject = ObjectBrush.Manager.TryRemoveObject(ObjectBrush.cellPosition);
                 ExternalTool.Destroy(gridObject.gameObject);
             }
             currentEvent.Use();

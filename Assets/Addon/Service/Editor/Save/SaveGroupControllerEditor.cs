@@ -41,7 +41,7 @@ namespace Services.Save
             readOnAwake.BoolField("Awake时便读存档文件");
             fileName.TextField("默认存档文件名");
             index.TextField("存档槽位");
-            groupId.IntPopUp("存档组", GroupNames, OptionValues);
+            groupId.IntPopField("存档组", GroupNames, OptionValues);
         }
     }
 }

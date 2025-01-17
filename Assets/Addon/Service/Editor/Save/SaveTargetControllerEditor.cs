@@ -37,7 +37,7 @@ namespace Services.Save
                 }
             }
             obj.PropertyField("游戏对象");
-            groupId.IntPopUp("存档组", SaveGroupControllerEditor.GroupNames, SaveGroupControllerEditor.OptionValues);
+            groupId.IntPopField("存档组", SaveGroupControllerEditor.GroupNames, SaveGroupControllerEditor.OptionValues);
             eIdentifier.EnumField<EIdentifier>("标识符类型");
             if (eIdentifier.intValue == (int)EIdentifier.Custom)
             {

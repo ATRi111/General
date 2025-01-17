@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +9,8 @@ namespace EditorExtend.GridEditor
     [RequireComponent(typeof(Grid))]
     public abstract class GridManagerBase : MonoBehaviour
     {
+        public static Func<GridManagerBase> FindInstance;
+
         private Grid grid;
         public Grid Grid
         {
@@ -62,7 +65,6 @@ namespace EditorExtend.GridEditor
         /// <summary>
         /// 根据CellPosition自动计算SortingOrder
         /// </summary>
-        public abstract int CellToSortingOrder(GridObject obj);
         public abstract int CellToSortingOrder(Vector3 position);
 
         public virtual void Clear()
@@ -80,7 +82,7 @@ namespace EditorExtend.GridEditor
             GridObject[] objects = GetComponentsInChildren<GridObject>();
             for (int i = 0; i < objects.Length; i++)
             {
-                AddObject(objects[i]);
+                TryAddObject(objects[i]);
             }
         }
 
@@ -91,21 +93,32 @@ namespace EditorExtend.GridEditor
             return null;
         }
 
-        public virtual void AddObject(GridObject gridObject)
+        public virtual bool TryAddObject(GridObject gridObject)
         {
             if (gridObject.referenceCount != 0)
             {
-                Debug.LogWarning($"{gridObject.gameObject.name}试图加入,但referenceCount={gridObject.referenceCount}");
-                throw new System.InvalidOperationException();
+                Debug.LogWarning($"试图添加{gridObject.gameObject.name},但referenceCount={gridObject.referenceCount}");
+                return false;
             }
 
             ObjectDict.Add(gridObject.CellPosition, gridObject);
             gridObject.referenceCount++;
+            return true;
         }
 
-        public virtual GridObject RemoveObject(Vector3Int cellPosition)
+        public virtual GridObject TryRemoveObject(Vector3Int cellPosition)
         {
             GridObject gridObject = ObjectDict[cellPosition];
+
+            if (cellPosition == null)
+                return null;
+
+            if (gridObject.referenceCount != 1)
+            {
+                Debug.LogWarning($"试图移除{gridObject.gameObject.name},但referenceCount={gridObject.referenceCount}");
+                return null;
+            }
+
             ObjectDict.Remove(cellPosition);
             gridObject.referenceCount--;
             return gridObject;
@@ -116,8 +129,8 @@ namespace EditorExtend.GridEditor
             if (gridObject.referenceCount != 1)
                 throw new System.InvalidOperationException();
 
-            RemoveObject(prevPosition); 
-            AddObject(gridObject);
+            TryRemoveObject(prevPosition); 
+            TryAddObject(gridObject);
         }
 
         public virtual bool CanPlaceAt(Vector3Int cellPosition)

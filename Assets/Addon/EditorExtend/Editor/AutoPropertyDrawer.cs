@@ -15,15 +15,15 @@ namespace EditorExtend
         /// </summary>
         public virtual bool NoLabel => false;
 
-        protected bool foldout;
+        protected bool foldout = true;
         protected Vector2 min;
         protected float width;
         protected float totalHeight;
 
         public Rect NextRectRelative(float multiplier = 1, float gapMultiplier = 0.111f)
             => NextRect(multiplier * EditorGUIUtility.singleLineHeight, gapMultiplier * EditorGUIUtility.singleLineHeight);
-        public Rect NextRect(SerializedProperty property)
-            => NextRect(EditorGUI.GetPropertyHeight(property, property.isArray));
+        public Rect NextRect(SerializedProperty property, bool includingChildren = true)
+            => NextRect(EditorGUI.GetPropertyHeight(property, includingChildren));
         public Rect NextRect(float height, float gap = 2f)
         {
             Rect ret = new(min, new Vector2(width, height));
@@ -40,7 +40,7 @@ namespace EditorExtend
         public void AutoPropertyField(string label, SerializedProperty property)
         {
             if (property.isArray)
-                property.ListField(label, NextRect(property));
+                property.ListField(label, NextRect(property, true));
             else
                 property.PropertyField(label, NextRect(property));
         }

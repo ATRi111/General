@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Services;
+using System;
+using System.IO;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
@@ -61,18 +63,26 @@ namespace MyTool
         /// <summary>
         /// 根据CreateAssetMenuAttribute自动创建ScriptableObject
         /// </summary>
+        /// <param name="type">要在哪个类的子类中查找CreateAssetMenuAttribute</param>
         /// <param name="path">从"Assets"开始的路径,不含文件名，末尾不含"/"</param>
-        public static ScriptableObject CreateScriptableObject(Type type, string path, bool save = true)
+        /// <param name="replace">是否替换现有ScriptableObject</param>
+        public static ScriptableObject CreateScriptableObject(Type type, string path, bool replace = false)
         {
             CreateAssetMenuAttribute attribute = type.GetTypeInfo().GetCustomAttribute<CreateAssetMenuAttribute>();
             ScriptableObject so = null;
             if (attribute != null)
             {
+                path += $"/{attribute.fileName}.asset";
+                if (!replace)
+                {
+                    string fullPath = FileTool.CombinePath_Windows(Application.dataPath, path[path.IndexOf("/")..]);
+                    if (File.Exists(fullPath))
+                        return null;
+                }
                 so = ScriptableObject.CreateInstance(type);
-                AssetDatabase.CreateAsset(so, path + $"/{attribute.fileName}.asset");
+                AssetDatabase.CreateAsset(so, path);
             }
-            if(save)
-                AssetDatabase.SaveAssets();
+            AssetDatabase.SaveAssets();
             return so;
         }
     }
