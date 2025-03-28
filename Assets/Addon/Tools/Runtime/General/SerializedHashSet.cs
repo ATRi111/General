@@ -14,6 +14,8 @@ namespace MyTool
         protected readonly HashSet<T> set;
         public List<T> list;
 
+        public T this[int index] => list[index];
+
         public int Count => list.Count;
 
         public bool IsReadOnly => false;

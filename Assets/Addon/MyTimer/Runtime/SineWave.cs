@@ -1,10 +1,7 @@
-using UnityEngine;
-
 namespace MyTimer
 {
     public class SineWave : Repetition<float, Sine>
     {
-        public float Amplitude => (Target - Origin) / 2;
         public float Angle
         {
             get => Percent * 360f;
@@ -17,6 +14,12 @@ namespace MyTimer
             }
 
         }
-        public float Phase => Angle * Mathf.Deg2Rad;
+
+        public new void Initialize(float minValue, float maxValue, float duration, bool start = true)
+        {
+            (Lerp as Sine).amplitude = (maxValue - minValue) / 2;
+            float origin = (maxValue + minValue) / 2;
+            base.Initialize(origin, origin, duration, start);
+        }
     }
 }

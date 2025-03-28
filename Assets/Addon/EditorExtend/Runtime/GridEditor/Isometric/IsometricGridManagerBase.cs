@@ -1,4 +1,6 @@
+using Services;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace EditorExtend.GridEditor
@@ -10,6 +12,9 @@ namespace EditorExtend.GridEditor
         public Dictionary<Vector2Int, int> MaxLayerDict => maxLayerDict;
         public int maxLayer;
 
+        public bool Contains(Vector2Int position)
+            => maxLayerDict.ContainsKey(position);
+
         public override Vector3 CellToWorld(Vector3 cellPosition)
             => IsometricGridUtility.CellToWorld(cellPosition, Grid.cellSize);
 
@@ -19,7 +24,7 @@ namespace EditorExtend.GridEditor
             return Mathf.RoundToInt(10f * (-cell.x - cell.y + cell.z));
         }
 
-        public float LayerToWorldZ(int layer)
+        public float LayerToWorldZ(float layer)
         {
             return layer * Grid.cellSize.z;
         }
@@ -32,26 +37,6 @@ namespace EditorExtend.GridEditor
             float cellZf = deltaWorldY / Grid.cellSize.y / Grid.cellSize.z * 2f;
             int cellZ = Mathf.Max(0, Mathf.FloorToInt(cellZf));  //0层以下禁止绘制
             return xy.ResetZ(cellZ);
-        }
-
-        /// <summary>
-        /// 根据世界坐标（忽略z）确定一系列网格坐标，判断这些网格坐标上是否有物体，若有则返回其中的最高层数
-        /// </summary>
-        public bool MatchMaxLayer(Vector3 worldPosition, out int layer)
-        {
-            for (int currentLayer = maxLayer; currentLayer >= 0; currentLayer--)
-            {
-                float z = LayerToWorldZ(currentLayer);
-                worldPosition = worldPosition.ResetZ(z);
-                Vector3Int temp = WorldToCell(worldPosition);
-                if (GetObject(temp) != null)
-                {
-                    layer = currentLayer;
-                    return true;
-                }
-            }
-            layer = 0;
-            return false;
         }
 
         public override void Clear()
@@ -152,33 +137,51 @@ namespace EditorExtend.GridEditor
         /// </summary>
         public int AboveGroundLayer(Vector2Int xy)
         {
-            int ret = 0;
             GridObject gridObject = GetObjectXY(xy);
             if (gridObject != null)
-                ret = gridObject.CellPosition.z + gridObject.GroundHeight;
-            return ret;
+                return gridObject.CellPosition.z + gridObject.GroundHeight;
+            return 0;
+        }
+        /// <summary>
+        /// xy坐标上，地面上方的第一个位置
+        /// </summary>
+        public Vector3Int AboveGroundPosition(Vector2Int xy)
+        {
+            return xy.AddZ(AboveGroundLayer(xy));
+        }
+
+        /// <summary>
+        /// 吸附到外表面(将所有GridObject视为网格坐标系下边长为1的正方体)
+        /// </summary>
+        public virtual Vector3Int AbsorbSurfaceOfCube(Vector3 worldPosition)
+        {
+            Vector3 from = WorldToCell(worldPosition.ResetZ(LayerToWorldZ(maxLayer)));
+            Vector3 to = WorldToCell(worldPosition.ResetZ(LayerToWorldZ(0)));
+            List<Vector2Int> xys = maxLayerDict.Keys.ToList();
+            xys.Sort((a, b) => (a.x + a.y).CompareTo(b.x + b.y));   //x+y较小的在前，才能确保正确吸附
+            List<Vector3Int> positions = new();
+            for (int i = 0; i < xys.Count; i++)
+            {
+                GridObject gridObject = GetObjectXY(xys[i]);
+                if (gridObject == null)
+                    continue;
+                if (GridPhysics.LineSegmentCastBox(gridObject.CellPosition - Vector3Int.forward, Vector3Int.one + Vector3Int.forward, ref from, ref to))
+                    return gridObject.CellPosition;
+            }
+            return WorldToCell(worldPosition.ResetZ(LayerToWorldZ(0)));
         }
 
         public override bool CanPlaceAt(Vector3Int cellPosition)
         {
             if (!base.CanPlaceAt(cellPosition))
                 return false;
-            if (!maxLayerDict.ContainsKey((Vector2Int)cellPosition))
-                return true;
-            if (cellPosition.z > maxLayerDict[(Vector2Int)cellPosition])
-                return cellPosition.z >= AboveGroundLayer((Vector2Int)cellPosition);
-            
-            for (int layer = cellPosition.z; layer >= 0; layer--)
+
+            List<GridObject> objects = new();
+            GetObjectsXY((Vector2Int)cellPosition, objects);
+            for (int i = 0; i < objects.Count; i++)
             {
-                Vector3Int temp = cellPosition.ResetZ(layer);
-                GridObject obj = GetObject(temp);
-                if (obj != null)
-                {
-                    if (cellPosition.z < obj.GroundHeight + obj.CellPosition.z)
-                        return false;
-                    if (obj.Overlap(temp))
-                        return false;
-                }
+                if (objects[i].Overlap(cellPosition))
+                    return false;
             }
             return true;
         }

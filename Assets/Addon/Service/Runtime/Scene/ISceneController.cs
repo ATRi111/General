@@ -24,6 +24,14 @@ namespace Services.SceneManagement
         /// </summary>
         void LoadScene(string name, LoadSceneMode mode = LoadSceneMode.Single);
         /// <summary>
+        /// 卸载指定索引号的场景
+        /// </summary>
+        void UnloadScene(int index, UnloadSceneOptions options = UnloadSceneOptions.None);
+        /// <summary>
+        /// 卸载指定名称的场景
+        /// </summary>
+        void UnloadScene(string name, UnloadSceneOptions options = UnloadSceneOptions.None);
+        /// <summary>
         /// 结束游戏
         /// </summary>
         void Quit();

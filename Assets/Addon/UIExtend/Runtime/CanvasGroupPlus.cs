@@ -9,12 +9,12 @@ namespace UIExtend
     {
         protected CanvasGroup canvasGroup;
         private LinearTransformation linear;
-        protected float alpha_default;
+        public float alpha_default;
 
         [SerializeField]
         protected float fadeTime = 0.2f;
-        [SerializeField]
-        private float threshold_blockRaycast = 0.5f;
+
+        public float threshold_blockRaycast = 0.5f;
 
         /// <summary>
         /// 下一次显示/隐藏是否立即完成
@@ -51,12 +51,22 @@ namespace UIExtend
         {
             canvasGroup = GetComponent<CanvasGroup>();
             linear = new LinearTransformation();
-            linear.OnTick += SetAlpha;
-            linear.AfterComplete += SetAlpha;
             alpha_default = canvasGroup.alpha;
             immediate_next = true;
+        }
+
+        private void OnEnable()
+        {
+            linear.OnTick += SetAlpha;
+            linear.AfterComplete += SetAlpha;
             visible = !visibleOnAwake;
             Visible = visibleOnAwake;
+        }
+
+        private void OnDisable()
+        {
+            linear.OnTick -= SetAlpha;
+            linear.AfterComplete -= SetAlpha;
         }
 
         protected void SetVisibleAndActive()
@@ -73,7 +83,7 @@ namespace UIExtend
 
         private void Update()
         {
-            canvasGroup.blocksRaycasts = canvasGroup.alpha > threshold_blockRaycast;
+            canvasGroup.blocksRaycasts = canvasGroup.alpha > threshold_blockRaycast || threshold_blockRaycast == 0f; 
         }
 
         private void SetAlpha(float alpha)

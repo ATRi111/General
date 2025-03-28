@@ -1,5 +1,6 @@
 ﻿using Services;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using UnityEditor;
@@ -21,6 +22,33 @@ namespace MyTool
                     return obj as GameObject;
             }
             return null;
+        }
+
+        /// <summary>
+        /// 获取一个Transform的所有子Transform
+        /// </summary>
+        public static void GetAllChildren(Transform transform, List<Transform> ret)
+        {
+            ret.Add(transform);
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                Transform temp = transform.GetChild(i);
+                GetAllChildren(temp, ret);
+            }
+        }
+
+        /// <summary>
+        /// 获取一个Transform的所有子Transform中的T组件
+        /// </summary>
+        public static void GetComponentsInAllChildren<T>(Transform transform, List<T> ret) where T : Component
+        {
+            if (transform.TryGetComponent(out T t))
+                ret.Add(t);
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                Transform temp = transform.GetChild(i);
+                GetComponentsInAllChildren(temp, ret);
+            }
         }
 
         /// <summary>
@@ -47,6 +75,9 @@ namespace MyTool
             return ret;
         }
 
+        /// <summary>
+        /// 修改了带有UI组件的游戏物体的parent后，重设其lossyScale可避免大小变动
+        /// </summary>
         public static void SetLossyScale(this Transform transform,Vector3 lossyScale)
         {
             if (transform.parent == null)
@@ -60,6 +91,7 @@ namespace MyTool
             }
         }
 
+#if UNITY_EDITOR
         /// <summary>
         /// 根据CreateAssetMenuAttribute自动创建ScriptableObject
         /// </summary>
@@ -85,6 +117,7 @@ namespace MyTool
             AssetDatabase.SaveAssets();
             return so;
         }
+#endif
     }
 }
 

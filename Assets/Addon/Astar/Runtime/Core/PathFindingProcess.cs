@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace AStar
 {
@@ -26,27 +27,20 @@ namespace AStar
         /// </summary>
         internal Node GetNode(Vector2Int pos)
         {
+            countOfQuery++;
             if (discoveredNodes.ContainsKey(pos))
                 return discoveredNodes[pos];
             Node node = settings.GenerateNode(this, pos);
             discoveredNodes.Add(pos, node);
-            countOfQuery++;
             return node;
         }
 
         /// <summary>
-        /// 获取与一个节点相邻的节点(过滤不可通行节点)
+        /// 获取与一个节点相邻的可达节点
         /// </summary>
-        internal void GetFilteredAdjoinNodes(Node from)
+        internal void GetMovableNodes(Node from)
         {
-            adjoins.Clear();
-            adjoins_filtered.Clear();
-            settings.GetAdjoinNodes.Invoke(this, from, adjoins);
-            foreach (Node to in adjoins)
-            {
-                if (mover.MoveCheck(from, to))
-                    adjoins_filtered.Add(to);
-            }
+            settings.GetAdjoinNodes.Invoke(this, from, mover.MoveCheck, adjoins);
         }
 
         public Node[] GetAllNodes()
@@ -81,7 +75,6 @@ namespace AStar
         internal Dictionary<Vector2, Node> discoveredNodes;
 
         private List<Node> adjoins;
-        private List<Node> adjoins_filtered;
         /// <summary>
         /// 待访问节点表
         /// </summary>
@@ -120,7 +113,6 @@ namespace AStar
 
             discoveredNodes = new();
             adjoins = new();
-            adjoins_filtered = new();
             output = new();
             available = new();
             open = new Heap<Node>(settings.capacity, new Comparer_Cost());
@@ -150,7 +142,7 @@ namespace AStar
 
             from = GetNode(fromPos);
             From.Parent = null;
-            From.HCost = From.CostTo(To);
+            From.HCost = From.PredictCostTo(To);
 
             open.Push(From);
             nearest = From;
@@ -171,10 +163,12 @@ namespace AStar
         /// </summary>
         public bool NextStep()
         {
+            Profiler.BeginSample("Step");
             if (!CheckNextStep())
             {
                 if (isRunning)
                     Stop();
+                Profiler.EndSample();
                 return false;
             }
 
@@ -192,18 +186,19 @@ namespace AStar
             if (currentNode == To)
             {
                 Stop();     //移动力受限的情况下，如果权重系数超过1，有可能在没有找到更短可行路径的情况下提前退出
+                Profiler.EndSample();
                 return false;
             }
 
-            GetFilteredAdjoinNodes(currentNode);
+            GetMovableNodes(currentNode);
 
-            foreach (Node node in adjoins_filtered)
+            foreach (Node node in adjoins)
             {
                 switch (node.state)
                 {
                     case ENodeState.Blank:
-                        node.HCost = node.CostTo(To);
-                        node.Parent = currentNode;      //一开始得到的GCost不一定是最小的，故不在这里进行MoveAbilityCheck
+                        node.HCost = node.PredictCostTo(To);
+                        node.Parent = currentNode;
                         node.state = ENodeState.Open;
                         open.Push(node);
                         break;
@@ -212,6 +207,8 @@ namespace AStar
                         break;
                 }
             }
+
+            Profiler.EndSample();
             return true;
         }
         /// <summary>
@@ -232,7 +229,7 @@ namespace AStar
             }
             if (countOfCloseNode > settings.maxDepth)
             {
-                Debug.LogWarning("超出搜索深度限制");
+                Debug.LogWarning($"超出搜索深度限制,最大深度为{settings.maxDepth}");
                 return false;
             }
             if (open.IsEmpty)

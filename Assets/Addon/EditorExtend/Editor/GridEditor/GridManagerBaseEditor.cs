@@ -1,5 +1,7 @@
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace EditorExtend.GridEditor
 {
@@ -13,7 +15,6 @@ namespace EditorExtend.GridEditor
 
         protected override void MyOnInspectorGUI()
         {
-            RefreshObjects();
             EditorGUI.BeginDisabledGroup(true);
             EditorGUILayout.IntField("物体总数", GridManager.ObjectDict.Count);
             EditorGUI.EndDisabledGroup();
@@ -28,6 +29,9 @@ namespace EditorExtend.GridEditor
                 {
                     gridObjects[i].Refresh();
                 }
+                GridManager.AddAllObjects();
+                if (!Application.isPlaying)
+                    EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
             }
             if (GUILayout.Button("全部Z不变对齐"))
             {
@@ -39,6 +43,9 @@ namespace EditorExtend.GridEditor
                     cellPosition.vector3IntValue = gridObjects[i].AlignXY();
                     temp.ApplyModifiedProperties();
                 }
+                GridManager.AddAllObjects();
+                if (!Application.isPlaying)
+                    EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
             }
             if (GUILayout.Button("全部XY不变对齐"))
             {
@@ -50,22 +57,9 @@ namespace EditorExtend.GridEditor
                     cellPosition.vector3IntValue = gridObjects[i].AlignZ();
                     temp.ApplyModifiedProperties();
                 }
-            }
-        }
-
-        protected override void MyOnSceneGUI()
-        {
-            base.MyOnSceneGUI();
-            RefreshObjects();
-        }
-
-        protected void RefreshObjects()
-        {
-            if(!Application.isPlaying)
-            {
-                GridObject[] objects = GridManager.GetComponentsInChildren<GridObject>();
-                if (GridManager.ObjectDict.Count != objects.Length)
-                    GridManager.AddAllObjects();
+                GridManager.AddAllObjects();
+                if (!Application.isPlaying)
+                    EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
             }
         }
     }

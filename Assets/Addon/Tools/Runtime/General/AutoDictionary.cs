@@ -26,6 +26,12 @@ namespace MyTool
             if (!dict.ContainsKey(key))
                 dict.Add(key, default);
         }
+
+        public void Clear()
+        {
+            dict.Clear();
+        }
+
     }
 
     [System.Serializable]

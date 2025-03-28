@@ -24,9 +24,17 @@ namespace Services.ObjectPools
             return obj;
         }
 
+        internal IMyObject Peek(string identifier)
+        {
+            if (!objectPools.ContainsKey(identifier))
+                CreatePool(identifier);
+            IMyObject obj = objectPools[identifier].Peek();
+            return obj;
+        }
+
         internal void CreatePool(string identifier)
         {
-            GameObject obj_pool = new GameObject($"Pool:{identifier}");
+            GameObject obj_pool = new($"Pool:{identifier}");
             obj_pool.transform.parent = mono.transform;
             ObjectPool pool = obj_pool.AddComponent<ObjectPool>();
             GameObject prefab = locator.Locate(identifier);

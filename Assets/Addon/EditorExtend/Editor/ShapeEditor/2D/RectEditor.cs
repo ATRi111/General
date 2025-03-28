@@ -43,7 +43,7 @@ namespace EditorExtend.ShapeEditor
             vertices[3] = new Vector2(rect.xMax, rect.yMin);
             vertices[4] = rect.min;
             Handles.color = settings.LineColor;
-            HandleUI.DrawLines(vertices, settings.DefaultLineThickness);
+            HandleUI.DrawLineStrip(vertices, settings.DefaultLineThickness);
 
             int index = GetIndex();
             for (int i = 0; i < vertices.Length - 1; i++)

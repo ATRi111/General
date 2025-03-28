@@ -20,7 +20,7 @@ namespace UIExtend
         }
 
         /// <summary>
-        /// 获取rectTransform的四边界
+        /// 获取rectTransform的四边界（世界坐标系）
         /// </summary>
         public static void GetBorder(RectTransform rectTransform, out float left, out float right, out float bottom, out float top)
         {

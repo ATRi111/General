@@ -4,7 +4,7 @@ namespace MyTool
 {
     public static partial class GeneralTool
     {
-        public static Color SetAlpha(this Color color, float alpha) => new Color(color.r, color.g, color.b, alpha);
+        public static Color SetAlpha(this Color color, float alpha) => new(color.r, color.g, color.b, alpha);
 
         public static string ToHRGB(this Color32 color)
         {

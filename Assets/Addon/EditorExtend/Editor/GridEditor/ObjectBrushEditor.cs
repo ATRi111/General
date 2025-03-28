@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,17 +8,24 @@ namespace EditorExtend.GridEditor
     public class ObjectBrushEditor : InteractiveEditor
     {
         public ObjectBrush ObjectBrush => target as ObjectBrush;
+        protected GridManagerBase manager;
 
         private string[] displayOptions;
         [AutoProperty]
-        public SerializedProperty prefab, mountIndex;
+        public SerializedProperty prefab, mountIndex, overrideMode;
         private string prefabName;
+
+        protected bool isEditting;
+        protected Vector3Int lockedPosition;
+
+        protected List<Vector3> editorPoints;
 
         protected override void OnEnable()
         {
             base.OnEnable();
             editorModeOnly = true;
             ObjectBrush.MountPoints = null;
+            manager = ObjectBrush.GetComponent<GridManagerBase>();
             int n = ObjectBrush.MountPoints.Count;
             displayOptions = new string[n];
             prefabName = string.Empty;
@@ -25,6 +33,8 @@ namespace EditorExtend.GridEditor
             {
                 displayOptions[i] = ObjectBrush.MountPoints[i].gameObject.name;
             }
+            editorPoints = new();
+            isEditting = false;
         }
 
         protected override void MyOnInspectorGUI()
@@ -33,13 +43,30 @@ namespace EditorExtend.GridEditor
             if (Application.isPlaying)
                 return;
 
-            prefab.PropertyField("笔刷");
-            if (prefabName != prefab.objectReferenceValue.name)
+            if(isEditting)
             {
-                prefabName = prefab.objectReferenceValue.name;
-                UpdateMountPoint(prefabName);
+                if (GUILayout.Button("停止编辑"))
+                {
+                    isEditting = false;
+                }
+
+                prefab.PropertyField("笔刷");
+                if (prefab.objectReferenceValue != null && prefabName != prefab.objectReferenceValue.name)
+                {
+                    prefabName = prefab.objectReferenceValue.name;
+                    UpdateMountPoint(prefabName);
+                }
+                mountIndex.intValue = EditorGUILayout.Popup("挂载点", mountIndex.intValue, displayOptions);
+                overrideMode.BoolField("强制覆盖模式");
+
             }
-            mountIndex.intValue = EditorGUILayout.Popup("挂载点", mountIndex.intValue, displayOptions);
+            else
+            {
+                if (GUILayout.Button("开始编辑"))
+                {
+                    isEditting = true;
+                }
+            }
         }
 
         protected void UpdateMountPoint(string prefabName)
@@ -63,13 +90,40 @@ namespace EditorExtend.GridEditor
 
         protected override void MyOnSceneGUI()
         {
-            base.MyOnSceneGUI();
-            if (Application.isPlaying)
+            if (Application.isPlaying || !isEditting)
                 return;
 
             HandleKeyInput();
             UpdateCellPosition();
             HandleMouseInput();
+            if (currentEvent.type == EventType.Repaint)
+                Paint();
+        }
+
+        protected override void Paint()
+        {
+            base.Paint();
+            Handles.color = Color.red;
+            GameObject obj = prefab.objectReferenceValue as GameObject;
+            if (obj == null)
+            {
+                IGridShape.GetStrip_Default(editorPoints);
+            }
+            else
+            {
+                GridCollider collider = obj.GetComponentInChildren<GridCollider>();
+                if (collider == null)
+                    IGridShape.GetStrip_Default(editorPoints);
+                else
+                    collider.GetStrip(editorPoints);
+            }
+            Vector3[] temp = new Vector3[editorPoints.Count];
+            for (int i = 0; i < editorPoints.Count; i++)
+            {
+                temp[i] = manager.CellToWorld(editorPoints[i] + ObjectBrush.cellPosition);
+                temp[i] = new Vector3(temp[i].x, temp[i].y);
+            }
+            HandleUI.DrawLineStrip(temp, 1f, false);
         }
 
         protected override void HandleMouseInput()
@@ -108,39 +162,66 @@ namespace EditorExtend.GridEditor
         protected virtual void UpdateCellPosition()
         {
             Vector3 world = SceneViewUtility.SceneToWorld(mousePosition);
-            ObjectBrush.cellPosition = ObjectBrush.CalculateCellPosition(world);
-            SceneView.RepaintAll();
+            Vector3Int temp = ObjectBrush.CalculateCellPosition(world, lockedPosition);
+            if(ObjectBrush.cellPosition != temp)
+            {
+                ObjectBrush.cellPosition = temp;
+                Paint();
+                SceneView.RepaintAll();
+            }
+        }
+
+        protected virtual GridObject TryBrushAt(Vector3Int position)
+        {
+            if (ObjectBrush.prefab == null)
+                return null;
+
+            if (!ObjectBrush.Manager.CanPlaceAt(position))
+            {
+                if(overrideMode.boolValue)
+                    TryEraseAt(position);
+                else
+                    return null;
+            }
+
+            GameObject obj = PrefabUtility.InstantiatePrefab(ObjectBrush.prefab, ObjectBrush.MountPoint) as GameObject;
+            Undo.RegisterCreatedObjectUndo(obj, "Create " + obj.name);
+            GridObject gridObject = obj.GetComponent<GridObject>();
+
+            //立即更新位置数据
+            SerializedObject temp = new(gridObject);
+            SerializedProperty cellPosition = temp.FindProperty(nameof(cellPosition));
+            cellPosition.vector3IntValue = position;
+            gridObject.CellPosition = position;
+            temp.ApplyModifiedProperties();
+
+            return gridObject;
         }
 
         protected virtual void Brush()
         {
             currentEvent.Use();
-            if (!ObjectBrush.Manager.CanPlaceAt(ObjectBrush.cellPosition))
-                return;
+            TryBrushAt(ObjectBrush.cellPosition);
+        }
 
-            if (ObjectBrush.prefab != null)
+        protected virtual bool TryEraseAt(Vector3Int position)
+        {
+            if (ObjectBrush.Manager.ObjectDict.ContainsKey(position))
             {
-                GameObject obj = PrefabUtility.InstantiatePrefab(ObjectBrush.prefab, ObjectBrush.MountPoint) as GameObject;
-                Undo.RegisterCreatedObjectUndo(obj, "Create " + obj.name);
-                GridObject gridObject = obj.GetComponent<GridObject>();
-
-                SerializedObject temp = new(gridObject);
-                SerializedProperty cellPosition = temp.FindProperty(nameof(cellPosition));
-                cellPosition.vector3IntValue = ObjectBrush.cellPosition;
-                gridObject.CellPosition = ObjectBrush.cellPosition;
-                temp.ApplyModifiedProperties();
-                //ObjectBrush.Manager.AddObject(gridObject);   //Editor模式下GridManager会自动刷新以获取新的GridObject
+                GridObject gridObject = ObjectBrush.Manager.TryRemoveObject(position);
+                if(gridObject != null)
+                {
+                    ExternalTool.Destroy(gridObject.gameObject);
+                    return true;
+                }
             }
+            return false;
         }
 
         protected virtual void Erase()
         {
-            if(ObjectBrush.Manager.ObjectDict.ContainsKey(ObjectBrush.cellPosition))
-            {
-                GridObject gridObject = ObjectBrush.Manager.TryRemoveObject(ObjectBrush.cellPosition);
-                ExternalTool.Destroy(gridObject.gameObject);
-            }
             currentEvent.Use();
+            TryEraseAt(ObjectBrush.cellPosition);
         }
     }
 }

@@ -3,15 +3,8 @@ using UnityEngine;
 
 namespace EditorExtend
 {
-    public enum EFocusMode
-    {
-        Default,
-        Lock
-    }
-
     public abstract class AutoEditor : Editor
     {
-        protected EFocusMode focusMode;
         protected Event currentEvent;
         protected Ray mouseRay;
         protected Vector2 mousePosition;
@@ -58,7 +51,7 @@ namespace EditorExtend
                 base.OnInspectorGUI();
             serializedObject.Update();
             EditorGUILayout.BeginVertical();
-            if (monoScript != null)
+            if (monoScript != null && !appendInspector)
             {
                 EditorGUI.BeginDisabledGroup(true);
                 EditorGUILayout.ObjectField("Script", monoScript, targetType, false);
@@ -77,19 +70,6 @@ namespace EditorExtend
             currentEvent = Event.current;
             mousePosition = Event.current.mousePosition;
             mouseRay = HandleUtility.GUIPointToWorldRay(currentEvent.mousePosition);
-            switch (currentEvent.type)
-            {
-                case EventType.Layout:
-                    switch (focusMode)
-                    {
-                        case EFocusMode.Default:
-                            break;
-                        case EFocusMode.Lock:
-                            HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
-                            break;
-                    }
-                    break;
-            }
             MyOnSceneGUI();
             serializedObject.ApplyModifiedProperties();
         }

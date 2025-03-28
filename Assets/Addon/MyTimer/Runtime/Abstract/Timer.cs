@@ -16,7 +16,11 @@ namespace MyTimer
         /// <summary>
         /// 经过的时间
         /// </summary>
-        public float Time => time;
+        public float Time
+        {
+            get => time;
+            set => time = value;
+        }
         [SerializeField]
         protected float duration;
         /// <summary>

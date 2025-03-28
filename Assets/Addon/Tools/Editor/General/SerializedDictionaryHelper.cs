@@ -39,10 +39,10 @@ namespace MyTool
             switch (property.propertyType)
             {
                 case SerializedPropertyType.Integer:
-                    EditorGUI.IntField(rect, label, property.intValue);
+                    property.intValue = EditorGUI.IntField(rect, label, property.intValue);
                     break;
                 case SerializedPropertyType.Float:
-                    EditorGUI.FloatField(rect, label, property.floatValue);
+                    property.floatValue = EditorGUI.FloatField(rect, label, property.floatValue);
                     break;
                 case SerializedPropertyType.Boolean:
                     property.boolValue = EditorGUI.Toggle(rect, label, property.boolValue);

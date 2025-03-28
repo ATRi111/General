@@ -20,7 +20,7 @@ namespace Services.Audio
 
         internal AudioSource CreateAudioByClip(AudioClip clip, Vector3 position, Transform parent, EControlOption option, float time)
         {
-            GameObject obj = new GameObject(clip.name);
+            GameObject obj = new(clip.name);
             obj.transform.SetParent(parent);
             obj.transform.position = position;
             AudioSource audioSource = obj.AddComponent<AudioSource>();

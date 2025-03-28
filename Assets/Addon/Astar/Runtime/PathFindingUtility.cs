@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
@@ -35,12 +36,15 @@ namespace AStar
         /// <summary>
         /// 获取某节点周围的四个节点
         /// </summary>
-        public static void GetAdjoinNodes_Four(PathFindingProcess process, Node node, List<Node> ret)
+        public static void GetAdjoinNodes_Four(PathFindingProcess process, Node from, Func<Node, Node, bool> moveCheck, List<Node> ret)
         {
             ret.Clear();
+            Node to;
             foreach (Vector2Int direction in FourDirections)
             {
-                ret.Add(process.GetNode(node.Position + direction));
+                to = process.GetNode(from.Position + direction);
+                if (moveCheck(from, to))
+                    ret.Add(to);
             }
         }
 
@@ -64,12 +68,15 @@ namespace AStar
         /// <summary>
         /// 获取某节点周围的八个节点
         /// </summary>
-        public static void GetAdjoinNodes_Eight(PathFindingProcess process, Node node, List<Node> ret)
+        public static void GetAdjoinNodes_Eight(PathFindingProcess process, Node from, Func<Node, Node, bool> moveCheck, List<Node> ret)
         {
             ret.Clear();
+            Node to;
             foreach (Vector2Int direction in EightDirections)
             {
-                ret.Add(process.GetNode(node.Position + direction));
+                to = process.GetNode(from.Position + direction);
+                if (moveCheck(from, to))
+                    ret.Add(to);
             }
         }
         #endregion

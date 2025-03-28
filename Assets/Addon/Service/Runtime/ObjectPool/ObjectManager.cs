@@ -19,6 +19,9 @@ namespace Services.ObjectPools
 
         public void PreCreate(string identifier, int count)
             => core.PreCreate(identifier, count);
+
+        public IMyObject Peek(string identifier)
+            => core.Peek(identifier);
     }
 }
 

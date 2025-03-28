@@ -17,9 +17,9 @@ namespace Services.Save
             return null;
         }
 
-        protected internal override void Init()
+        protected override void Awake()
         {
-            base.Init();
+            base.Awake();
             SaveGroupController[] temp = GetComponentsInChildren<SaveGroupController>();
             for (int i = 0; i < temp.Length; i++)
             {

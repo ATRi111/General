@@ -21,10 +21,10 @@ namespace AStar
         public float hCostWeight = 1;
 
         /// <summary>
-        /// 获取相邻节点的方法
+        /// 获取相邻可达节点的方法
         /// </summary>
-        public Action<PathFindingProcess, Node, List<Node>> GetAdjoinNodes;
-        public GetAdjoinedNodesSO getAdjoinedNodesSO;
+        public Action<PathFindingProcess, Node, Func<Node, Node, bool>, List<Node>> GetAdjoinNodes;
+        public GetMovableNodesSO getAdjoinedNodesSO;
 
         /// <summary>
         /// 计算两点间距离的方法
@@ -43,7 +43,7 @@ namespace AStar
             if (GetAdjoinNodes == null)
             {
                 if (getAdjoinedNodesSO != null)
-                    GetAdjoinNodes = getAdjoinedNodesSO.GetAdjoinedNodes;
+                    GetAdjoinNodes = getAdjoinedNodesSO.GetMovableNodes;
                 else
                     GetAdjoinNodes = PathFindingUtility.GetAdjoinNodes_Four;
             }

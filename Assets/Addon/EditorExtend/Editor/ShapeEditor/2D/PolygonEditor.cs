@@ -38,10 +38,10 @@ namespace EditorExtend.ShapeEditor
             switch (polygonEditor.style)
             {
                 case EPolygonStyle.PolyLine:
-                    HandleUI.DrawLines(worldPoints, settings.DefaultLineThickness, false);
+                    HandleUI.DrawLineStrip(worldPoints, settings.DefaultLineThickness, false);
                     break;
                 case EPolygonStyle.ClosedPolyLine:
-                    HandleUI.DrawLines(worldPoints, settings.DefaultLineThickness, true);
+                    HandleUI.DrawLineStrip(worldPoints, settings.DefaultLineThickness, true);
                     break;
             }
 

@@ -7,21 +7,21 @@ namespace Services.Save
     /// <summary>
     /// 控制特定对象正确地与SaveData绑定
     /// </summary>
-    public class SaveTargetController : MonoBehaviour
+    public sealed class SaveTargetController : MonoBehaviour
     {
-        public SaveGroupController Group { get; protected set; }
+        public SaveGroupController Group { get; private set; }
         [SerializeField]
-        protected int groupId;
+        private int groupId;
 
         [SerializeField]
-        protected UnityEngine.Object obj;
+        private UnityEngine.Object obj;
         [SerializeField]
-        protected string saveDataType;
+        private string saveDataType;
         [SerializeField]
-        protected EIdentifier eIdentifier;
+        private EIdentifier eIdentifier;
         [SerializeField]
-        protected string customIdentifier;
-        public virtual string Identifier
+        private string customIdentifier;
+        public string Identifier
         {
             get
             {
@@ -34,13 +34,13 @@ namespace Services.Save
             }
         }
 
-        protected virtual void Awake()
+        private void Start()
         {
             Group = ServiceLocator.Get<ISaveManager>().GetGroup(groupId);
             Bind(Identifier, obj);
         }
 
-        protected virtual void Bind(string identifier, UnityEngine.Object obj)
+        private void Bind(string identifier, UnityEngine.Object obj)
         {
             Type type = Type.GetType(saveDataType);
             MethodInfo method = Group.GetType().GetMethod("Bind").MakeGenericMethod(type);

@@ -31,6 +31,14 @@ namespace Services.ObjectPools
             return ret;
         }
 
+        internal IMyObject Peek()
+        {
+            if (myObjects.Count == 0)
+                Create();
+
+            return myObjects.Peek();
+        }
+
         internal void Recycle(MyObject myObject)
         {
             myObjects.Enqueue(myObject);

@@ -8,6 +8,9 @@ namespace MyTool
             => $"<color={color.ToLower()}>{s}</color>";
         public static string FontSize(this object s, int size)
             => $"<size={size}>{s}</size>";
+
+        public static string Underline(this object s)
+            => $"<u>{s}</u>";
     }
 }
 

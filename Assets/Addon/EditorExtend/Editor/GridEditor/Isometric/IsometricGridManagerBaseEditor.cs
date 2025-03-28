@@ -11,7 +11,9 @@ namespace EditorExtend.GridEditor
         protected override void MyOnInspectorGUI()
         {
             base.MyOnInspectorGUI();
+            EditorGUI.BeginDisabledGroup(true);
             maxLayer.IntField("×î¸ß²ãÊý");
+            EditorGUI.EndDisabledGroup();
         }
     }
 }

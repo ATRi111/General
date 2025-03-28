@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Character
 {
+    [RequireComponent(typeof(Animator))]
     public class CharacterAnimatorBase : CharacterComponentBase
     {
         [AutoComponent(EComponentPosition.Indeterminate)]

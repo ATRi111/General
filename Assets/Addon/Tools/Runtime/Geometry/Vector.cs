@@ -5,7 +5,7 @@ namespace MyTool
 {
     public static partial class GeometryTool
     {
-        private readonly static List<Vector3> circlePoints = new List<Vector3>();
+        private readonly static List<Vector3> circlePoints = new();
 
         static GeometryTool()
         {

@@ -30,10 +30,12 @@ namespace EditorExtend.GridEditor
             if (GUILayout.Button("Z不变对齐"))
             {
                 cellPosition.vector3IntValue = GridObject.AlignXY();
+                EditorUtility.SetDirty(target);
             }
             if (GUILayout.Button("XY不变对齐"))
             {
                 cellPosition.vector3IntValue = GridObject.AlignZ();
+                EditorUtility.SetDirty(target);
             }
             EditorGUI.BeginDisabledGroup(true);
             EditorGUILayout.IntField("引用次数", GridObject.referenceCount);
