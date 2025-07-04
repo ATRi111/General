@@ -33,7 +33,7 @@ namespace EditorExtend.GridEditor
         {
             return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) + Mathf.Abs(a.z - b.z);
         }
-        public static float ProjectManhattanDistance(Vector2 a,Vector2 b)
+        public static float ProjectManhattanDistance(Vector2 a, Vector2 b)
         {
             return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
         }
@@ -60,7 +60,7 @@ namespace EditorExtend.GridEditor
                 {
                     temp.Add(new Vector2Int(-layerNum + i, i));
                     temp.Add(new Vector2Int(i, layerNum - i));
-                    temp.Add(new Vector2Int(layerNum - i,  - i));
+                    temp.Add(new Vector2Int(layerNum - i, -i));
                     temp.Add(new Vector2Int(-i, -layerNum + i));
                 }
                 layer.AddRange(temp);

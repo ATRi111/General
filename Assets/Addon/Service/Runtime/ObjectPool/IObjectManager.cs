@@ -17,7 +17,7 @@ namespace Services.ObjectPools
         /// <summary>
         /// 获取一个带有IMyObject的游戏物体，但不激活（可能获得未被激活的物体）
         /// </summary>
-        IMyObject Peek(string  identifier);
+        IMyObject Peek(string identifier);
 
         /// <summary>
         /// 预创建某种游戏物体若干个，并将其设为未激活状态（这会被安排在一帧中完成）

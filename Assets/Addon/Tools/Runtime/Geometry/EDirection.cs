@@ -142,8 +142,8 @@ namespace MyTool
                     Add(y);
                 return;
             }
-            
-            if(v.y == 0)
+
+            if (v.y == 0)
             {
                 x = new(deltaX / absx, 0);
                 for (int i = 0; i < absx; i++)
@@ -165,7 +165,7 @@ namespace MyTool
             x = new(deltaX / absx, 0);
             y = new(0, deltaY / absy);
             Vector2Int[] bases = new Vector2Int[] { x, y };
-            if((absx & 1) == 0 || (absy & 1) == 0)
+            if ((absx & 1) == 0 || (absy & 1) == 0)
             {
                 List<int> mix = MathTool.MixList(absx, absy);
                 for (int i = 0; i < mix.Count; i++)

@@ -28,7 +28,7 @@ namespace EditorExtend.ShapeEditor
         protected override void OnMouseDrag(int button)
         {
             base.OnMouseDrag(button);
-            switch(button)
+            switch (button)
             {
                 case 0:
                     Drag();

@@ -21,16 +21,16 @@ namespace Character
             AutoPropertyField("作用属性", so);
             method.EnumField<EModifyMethod>("修改方式", NextRectRelative());
 
-            if(Percent(temp) && !Percent(method.enumValueIndex))
+            if (Percent(temp) && !Percent(method.enumValueIndex))
             {
                 value.floatValue *= 100f;
             }
-            else if(!Percent(temp) && Percent(method.enumValueIndex))
+            else if (!Percent(temp) && Percent(method.enumValueIndex))
             {
                 value.floatValue /= 100f;
             }
 
-            switch((EModifyMethod)method.enumValueIndex)
+            switch ((EModifyMethod)method.enumValueIndex)
             {
                 case EModifyMethod.DirectAdd:
                 case EModifyMethod.FinalAdd:

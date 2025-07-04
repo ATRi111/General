@@ -18,7 +18,7 @@ namespace AStar
             maxDepth.IntField("最大Closed节点数", NextRectRelative());
             hCostWeight.FloatField("HCost权重", NextRectRelative());
             AutoPropertyField("获取相邻节点的方法", getAdjoinedNodesSO);
-            AutoPropertyField("计算两点间距离的方法", calculateDistanceSO);   
+            AutoPropertyField("计算两点间距离的方法", calculateDistanceSO);
             AutoPropertyField("生成新节点的方法", generateNodeSO);
         }
     }

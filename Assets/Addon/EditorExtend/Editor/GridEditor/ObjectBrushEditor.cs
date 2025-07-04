@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace EditorExtend.GridEditor
 {
-    [CustomEditor(typeof(ObjectBrush),true)]
+    [CustomEditor(typeof(ObjectBrush), true)]
     public class ObjectBrushEditor : InteractiveEditor
     {
         public ObjectBrush ObjectBrush => target as ObjectBrush;
@@ -37,13 +37,23 @@ namespace EditorExtend.GridEditor
             isEditting = false;
         }
 
+        //确保聚焦到Scene窗口
+        public void Focus()
+        {
+            if (SceneView.currentDrawingSceneView == null && SceneView.lastActiveSceneView != null)
+            {
+                SceneView.lastActiveSceneView.Focus();
+                SceneView.RepaintAll();
+            }
+        }
+
         protected override void MyOnInspectorGUI()
         {
             base.MyOnInspectorGUI();
             if (Application.isPlaying)
                 return;
 
-            if(isEditting)
+            if (isEditting)
             {
                 if (GUILayout.Button("停止编辑"))
                 {
@@ -65,6 +75,7 @@ namespace EditorExtend.GridEditor
                 if (GUILayout.Button("开始编辑"))
                 {
                     isEditting = true;
+                    Focus();
                 }
             }
         }
@@ -135,7 +146,7 @@ namespace EditorExtend.GridEditor
         protected override void OnMouseDown(int button)
         {
             base.OnMouseDown(button);
-            switch(button)
+            switch (button)
             {
                 case 0:
                     Brush();
@@ -163,7 +174,7 @@ namespace EditorExtend.GridEditor
         {
             Vector3 world = SceneViewUtility.SceneToWorld(mousePosition);
             Vector3Int temp = ObjectBrush.CalculateCellPosition(world, lockedPosition);
-            if(ObjectBrush.cellPosition != temp)
+            if (ObjectBrush.cellPosition != temp)
             {
                 ObjectBrush.cellPosition = temp;
                 Paint();
@@ -178,7 +189,7 @@ namespace EditorExtend.GridEditor
 
             if (!ObjectBrush.Manager.CanPlaceAt(position))
             {
-                if(overrideMode.boolValue)
+                if (overrideMode.boolValue)
                     TryEraseAt(position);
                 else
                     return null;
@@ -187,13 +198,7 @@ namespace EditorExtend.GridEditor
             GameObject obj = PrefabUtility.InstantiatePrefab(ObjectBrush.prefab, ObjectBrush.MountPoint) as GameObject;
             Undo.RegisterCreatedObjectUndo(obj, "Create " + obj.name);
             GridObject gridObject = obj.GetComponent<GridObject>();
-
-            //立即更新位置数据
-            SerializedObject temp = new(gridObject);
-            SerializedProperty cellPosition = temp.FindProperty(nameof(cellPosition));
-            cellPosition.vector3IntValue = position;
             gridObject.CellPosition = position;
-            temp.ApplyModifiedProperties();
 
             return gridObject;
         }
@@ -209,7 +214,7 @@ namespace EditorExtend.GridEditor
             if (ObjectBrush.Manager.ObjectDict.ContainsKey(position))
             {
                 GridObject gridObject = ObjectBrush.Manager.TryRemoveObject(position);
-                if(gridObject != null)
+                if (gridObject != null)
                 {
                     ExternalTool.Destroy(gridObject.gameObject);
                     return true;

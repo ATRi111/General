@@ -69,11 +69,11 @@ namespace EditorExtend.GridEditor
 
         public virtual void Clear()
         {
-            foreach (GridObject obj in objectDict.Values)
+            foreach (GridObject obj in ObjectDict.Values)
             {
                 obj.referenceCount = 0;
             }
-            objectDict.Clear();
+            ObjectDict.Clear();
         }
 
         public virtual void AddAllObjects()
@@ -82,6 +82,7 @@ namespace EditorExtend.GridEditor
             GridObject[] objects = GetComponentsInChildren<GridObject>();
             for (int i = 0; i < objects.Length; i++)
             {
+                objects[i].cellPosition = ClosestCell(objects[i].transform.position);
                 TryAddObject(objects[i]);
             }
         }
@@ -101,7 +102,7 @@ namespace EditorExtend.GridEditor
                 return false;
             }
 
-            if(!ObjectDict.ContainsKey(gridObject.CellPosition))
+            if (!ObjectDict.ContainsKey(gridObject.CellPosition))
             {
                 ObjectDict.Add(gridObject.CellPosition, gridObject);
                 gridObject.referenceCount++;
@@ -135,12 +136,12 @@ namespace EditorExtend.GridEditor
             return gridObject;
         }
 
-        public virtual void RelocateObject(GridObject gridObject,Vector3Int prevPosition)
+        public virtual void RelocateObject(GridObject gridObject, Vector3Int prevPosition)
         {
             if (gridObject.referenceCount != 1)
                 throw new InvalidOperationException();
 
-            TryRemoveObject(prevPosition); 
+            TryRemoveObject(prevPosition);
             TryAddObject(gridObject);
         }
 

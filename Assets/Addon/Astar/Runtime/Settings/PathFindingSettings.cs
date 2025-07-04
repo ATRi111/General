@@ -47,9 +47,9 @@ namespace AStar
                 else
                     GetAdjoinNodes = PathFindingUtility.GetAdjoinNodes_Four;
             }
-            if (CalculateDistance == null )
+            if (CalculateDistance == null)
             {
-                if(calculateDistanceSO != null)
+                if (calculateDistanceSO != null)
                     CalculateDistance = calculateDistanceSO.CalculateDistance;
                 else
                     CalculateDistance = PathFindingUtility.ManhattanDistance;

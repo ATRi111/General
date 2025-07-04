@@ -37,6 +37,6 @@ namespace MyTool
     [System.Serializable]
     public class CounterDictionary : AutoDictionary<string, int>
     {
-        
+
     }
 }

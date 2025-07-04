@@ -16,7 +16,7 @@ namespace AStar.Sample
 
         public override bool StayCheck(Node node)
         {
-            if(!base.StayCheck(node))
+            if (!base.StayCheck(node))
                 return false;
 
             Vector3 world = sample.NodeToWorld(node.Position);

@@ -62,7 +62,7 @@ namespace Character
                         ret = mono.GetComponentInParent(type);
                     break;
             }
-            if(ret == null)
+            if (ret == null)
                 Debug.LogWarning($"无法从{mono.gameObject.name}的{position}获取到类型为{type}的组件");
             return ret;
         }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace EditorExtend.GridEditor
 {
-    public abstract class GridCollider : MonoBehaviour,IGridShape
+    public abstract class GridCollider : MonoBehaviour, IGridShape
     {
         private GridObject gridObject;
         protected GridObject GridObject

@@ -5,13 +5,16 @@ namespace AStar
 {
     public class MoverBase
     {
+        /// <summary>
+        /// 用于计算移动力的方法，非必需
+        /// </summary>
         public Func<float> GetMoveAbility;
         public float moveAbility = 5;
         public float Movability
         {
             get
             {
-                if(GetMoveAbility != null) 
+                if (GetMoveAbility != null)
                     return GetMoveAbility();
                 return moveAbility;
             }

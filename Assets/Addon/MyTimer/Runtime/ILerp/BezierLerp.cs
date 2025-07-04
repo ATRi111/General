@@ -11,7 +11,7 @@ namespace MyTimer
         public void Initialize(Vector3[] points)
         {
             int length = points.Length;
-            if(length < 2)
+            if (length < 2)
                 throw new ArgumentException("Bezier曲线至少应当有两个点");
             this.points = new Vector3[length];
             copy = new Vector3[length];

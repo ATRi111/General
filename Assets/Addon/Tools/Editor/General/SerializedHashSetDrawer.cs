@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MyTool
 {
-    [CustomPropertyDrawer(typeof(SerializedHashSetBase),true)]
+    [CustomPropertyDrawer(typeof(SerializedHashSetBase), true)]
     public class SerializedHashSetDrawer : AutoPropertyDrawer
     {
         public override bool NoLabel => true;

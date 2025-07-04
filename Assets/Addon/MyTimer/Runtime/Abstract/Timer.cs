@@ -38,7 +38,7 @@ namespace MyTimer
         }
     }
 
-    //Timer类用于代替部分协程,适合代替规律性强的,或需要反复启动关闭的协程
+    //Timer类的功能类似DoTween（通过继承来实现各种不同的功能），可用于代替部分协程
 
     /// <summary>
     /// 描述一段随时间的变化
@@ -46,12 +46,12 @@ namespace MyTimer
     /// <typeparam name="TValue">变化过程中的返回值类型</typeparam>
     /// <typeparam name="TLerp">计算返回值的方法</typeparam>
     [System.Serializable]
-    public class Timer<TValue, TLerp> : TimerBase,ITimer where TLerp : ILerp<TValue>, new()
+    public class Timer<TValue, TLerp> : TimerBase, ITimer where TLerp : ILerp<TValue>, new()
     {
         protected GameCycle gameCycle;
 
         /// <summary>
-        /// 是否暂停，弃用Timer前，一定要确保其Paused==true
+        /// 是否暂停；持有Timer的游戏物体被摧毁前，一定要确Timer的Paused==true
         /// </summary>
         public bool Paused
         {
@@ -118,7 +118,7 @@ namespace MyTimer
         /// </summary>
         public event UnityAction<TValue> BeforeResume;
         /// <summary>
-        /// 到时间时触发;参数:Target（为了确保最终值精确）
+        /// 到时间时触发;参数:Target
         /// </summary>
         public event UnityAction<TValue> AfterComplete;
         /// <summary>
@@ -127,7 +127,7 @@ namespace MyTimer
         public event UnityAction<TValue> OnTick;
 
         public Timer()
-            :base()
+            : base()
         {
             Lerp = new TLerp();
         }

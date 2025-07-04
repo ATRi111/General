@@ -78,7 +78,7 @@ namespace MyTool
         /// <summary>
         /// 修改了带有UI组件的游戏物体的parent后，重设其lossyScale可避免大小变动
         /// </summary>
-        public static void SetLossyScale(this Transform transform,Vector3 lossyScale)
+        public static void SetLossyScale(this Transform transform, Vector3 lossyScale)
         {
             if (transform.parent == null)
             {

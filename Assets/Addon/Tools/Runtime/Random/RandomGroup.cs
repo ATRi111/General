@@ -1,8 +1,9 @@
-using System;
+ï»¿using System;
 using UnityEngine;
 
 namespace MyTool
 {
+    //ä¸€ä¸ªç‹¬ç«‹çš„éšæœºæ•°ç”Ÿæˆå™¨ï¼Œå¯ä»¥åŒæ—¶ä½¿ç”¨å¤šä¸ªæ­¤ç±»ç¤ºä¾‹ï¼Œå°¤å…¶æ˜¯éœ€è¦ç¡®ä¿ä¼ªéšæœºæ—¶
     public class RandomGroup
     {
         public const int MaxSeed = 1000000007;
@@ -25,19 +26,19 @@ namespace MyTool
         }
 
         /// <summary>
-        /// ·µ»Ø[min,max£©¼äµÄËæ»úÕûÊı
+        /// è¿”å›[min,maxï¼‰é—´çš„éšæœºæ•´æ•°
         /// </summary>
-        public int NextInt(int min, int max)
+        public int RandomInt(int min, int max)
             => random.Next(min, max);
 
         /// <summary>
-        /// ·µ»Ø[min,max£©¼äµÄËæ»ú¸¡µãÊı
+        /// è¿”å›[min,maxï¼‰é—´çš„éšæœºæµ®ç‚¹æ•°
         /// </summary>
         public float RandomFloat(float min, float max)
             => (float)(random.NextDouble()) * (max - min) + min;
 
         /// <summary>
-        /// Éú³ÉËæ»úµ¥Î»¶şÎ¬ÏòÁ¿£¨Ê¹ÓÃ¶à¸öËæ»úÊı£©
+        /// ç”Ÿæˆéšæœºå•ä½äºŒç»´å‘é‡ï¼ˆä½¿ç”¨éšæœºæ•°çš„æ¬¡æ•°ä¸ç¡®å®šï¼‰
         /// </summary>
         public Vector2 RandomVector2()
         {
@@ -52,7 +53,7 @@ namespace MyTool
         }
 
         /// <summary>
-        /// Éú³ÉËæ»úµ¥Î»ÈıÎ¬ÏòÁ¿£¨Ê¹ÓÃ¶à¸öËæ»úÊı£©
+        /// ç”Ÿæˆéšæœºå•ä½ä¸‰ç»´å‘é‡ï¼ˆä½¿ç”¨éšæœºæ•°çš„æ¬¡æ•°ä¸ç¡®å®šï¼‰
         /// </summary>
         public Vector3 RandomVector3()
         {
@@ -67,9 +68,9 @@ namespace MyTool
             return new Vector2((float)x, (float)y).normalized;
         }
 
-        private static double spare;    //¶àÓàµÄÕıÌ¬·Ö²¼Ëæ»úÊı
+        private static double spare;    //å¤šä½™çš„æ­£æ€åˆ†å¸ƒéšæœºæ•°
         /// <summary>
-        /// Éú³É·ûºÏ±ê×¼ÕıÌ¬·Ö²¼µÄËæ»úÊı(Ê¹ÓÃ¶à¸öËæ»úÊı)
+        /// ç”Ÿæˆç¬¦åˆæ ‡å‡†æ­£æ€åˆ†å¸ƒçš„éšæœºæ•°(ä½¿ç”¨éšæœºæ•°çš„æ¬¡æ•°ä¸ç¡®å®š)
         /// </summary>
         /// <returns></returns>
         public double RandomNormalDistribution()

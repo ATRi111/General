@@ -19,7 +19,7 @@ namespace AStar.Sample
 
             void TryAdd(Node to)
             {
-                if (to != null && moveCheck(from,to))
+                if (to != null && moveCheck(from, to))
                     ret.Add(to);
             }
 

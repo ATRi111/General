@@ -55,7 +55,7 @@ namespace EditorExtend
         /// <summary>
         /// 获取所有继承某个类的脚本的类型
         /// </summary>
-        public static void FindAllScriptInherit(Type baseType,List<Type> ret)
+        public static void FindAllScriptInherit(Type baseType, List<Type> ret)
         {
             string[] temp = AssetDatabase.FindAssets($"t:MonoScript");
             for (int i = 0; i < temp.Length; i++)
@@ -68,6 +68,37 @@ namespace EditorExtend
                 if (type != null && type.IsSubclassOf(baseType))
                     ret.Add(type);
             }
+        }
+
+        /// <summary>
+        /// 查找所有符合filter的T类型的资源
+        /// </summary>
+        public static void FindAssets<T>(string filter, List<T> ret)
+        {
+            ret.Clear();
+            string[] temp = AssetDatabase.FindAssets(filter);
+            for (int i = 0; i < temp.Length; i++)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(temp[i]);
+                UnityEngine.Object obj = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(path);
+                if (obj is T t)
+                    ret.Add(t);
+            }
+        }
+
+        /// <summary>
+        /// 查找所有符合filter的UnityEngine.Object,并将其名称存放在List中
+        /// </summary>
+        public static List<string> FindAssetsNames(string filter)
+        {
+            List<UnityEngine.Object> temp = new();
+            FindAssets(filter, temp);
+            List<string> ret = new();
+            for (int i = 0; i < temp.Count; i++)
+            {
+                ret.Add(temp[i].name);
+            }
+            return ret;
         }
 
 

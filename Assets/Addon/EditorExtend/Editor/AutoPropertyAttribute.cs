@@ -22,7 +22,7 @@ namespace EditorExtend
                     if (temp != null)
                         info.SetValue(obj, temp);
                     else
-                        Debug.Log($"{serializedObject.targetObject.GetType()}类中找不到名为{name}的字段");
+                        Debug.LogWarning($"{serializedObject.targetObject.GetType()}类中找不到名为{name}的字段");
                 }
             }
         }

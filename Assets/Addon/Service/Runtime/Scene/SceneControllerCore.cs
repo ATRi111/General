@@ -24,8 +24,8 @@ namespace Services.SceneManagement
         internal MonoBehaviour mono;
 
         internal SceneControllerCore(
-            MonoBehaviour mono, 
-            UnityAction<int> BeforeLoadScene, 
+            MonoBehaviour mono,
+            UnityAction<int> BeforeLoadScene,
             UnityAction<int> AfterLoadScene,
             UnityAction<int> BeforeUnLoadScene,
             UnityAction<int> AfterUnLoadScene)

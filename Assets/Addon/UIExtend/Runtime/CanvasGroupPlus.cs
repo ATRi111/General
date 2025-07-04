@@ -83,7 +83,7 @@ namespace UIExtend
 
         private void Update()
         {
-            canvasGroup.blocksRaycasts = canvasGroup.alpha > threshold_blockRaycast || threshold_blockRaycast == 0f; 
+            canvasGroup.blocksRaycasts = canvasGroup.alpha > threshold_blockRaycast || threshold_blockRaycast == 0f;
         }
 
         private void SetAlpha(float alpha)

@@ -61,7 +61,7 @@ namespace EditorExtend.GridEditor
         protected override void Brush()
         {
             base.Brush();
-            if(ObjectBrush.pillarMode)
+            if (ObjectBrush.pillarMode)
             {
                 GridObject gridObject = ObjectBrush.prefab.GetComponent<GridObject>();
                 if (gridObject.IsGround)
@@ -78,17 +78,12 @@ namespace EditorExtend.GridEditor
         protected override GridObject TryBrushAt(Vector3Int position)
         {
             GridObject gridObject = base.TryBrushAt(position);
-            GridSortingOrderControllerBase[] controllers = gridObject.GetComponentsInChildren<GridSortingOrderControllerBase>();
-            for (int i = 0; i < controllers.Length; i++)
-            {
-                controllers[i].RefreshSortingOrder();
-            }
             return gridObject;
         }
 
         protected override void Erase()
         {
-            base.Erase(); 
+            base.Erase();
             if (ObjectBrush.pillarMode && lockLayer.boolValue)
             {
                 GridObject gridObject = ObjectBrush.prefab.GetComponent<GridObject>();
@@ -108,19 +103,23 @@ namespace EditorExtend.GridEditor
             if (keyCode == KeyCode.LeftControl || keyCode == KeyCode.RightControl)
             {
                 currentEvent.Use();
+                Focus();
                 UpdateCellPosition();
                 lockXY.boolValue = true;
                 lockLayer.boolValue = false;
                 lockedPosition = ObjectBrush.cellPosition;
+                UpdateCellPosition();
             }
             else if (keyCode == KeyCode.LeftShift || keyCode == KeyCode.RightShift)
             {
                 currentEvent.Use();
+                Focus();
                 UpdateCellPosition();
                 lockLayer.boolValue = true;
                 layer.intValue = ObjectBrush.cellPosition.z;
                 lockXY.boolValue = false;
                 lockedPosition = ObjectBrush.cellPosition;
+                UpdateCellPosition();
             }
         }
         protected override void OnKeyUp(KeyCode keyCode)

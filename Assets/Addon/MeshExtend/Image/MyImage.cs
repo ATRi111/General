@@ -1,23 +1,23 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace MeshExtend
 {
     /// <summary>
-    /// ÓÃÓÚ»æÖÆ¾ßÓĞÌØÊâĞÎ×´/uv/ÑÕÉ«µÄUIÍ¼Ïñ
+    /// ç”¨äºç»˜åˆ¶å…·æœ‰ç‰¹æ®Šå½¢çŠ¶/uv/é¢œè‰²çš„UIå›¾åƒ
     /// </summary>
     public class MyImage : Image
     {
-        //×¢Òâ£º²»ÒªÔÚAwakeÖĞµ÷ÓÃmyImage.rectTransform.rect
-        //MeshHelper2DÖĞµÄ×ø±êÓ¦Ê¹ÓÃ´Ë½Å±¾ËùÔÚµÄÓÎÏ·ÎïÌåµÄRectTransform×ø±êÏµÏÂµÄlocalPosition£¬ÓëAnchorÎŞ¹Ø
+        //æ³¨æ„ï¼šä¸è¦åœ¨Awakeä¸­è°ƒç”¨myImage.rectTransform.rect
+        //MeshHelper2Dä¸­çš„åæ ‡åº”ä½¿ç”¨trnasform.localPosition
         public MeshHelper2D helper;
 
         [SerializeField]
         private bool custom;
 
         /// <summary>
-        /// ÊÇ·ñÓ¦ÓÃ×Ô¶¨Òåmesh
+        /// æ˜¯å¦åº”ç”¨è‡ªå®šä¹‰mesh
         /// </summary>
         public bool Custom
         {
@@ -42,9 +42,9 @@ namespace MeshExtend
             };
         }
 
-        //×¢Òâ£ºRectTransform.positionÊÇUIµÄpivotµÄÆÁÄ»×ø±ê
+        //æ³¨æ„ï¼šRectTransform.positionæ˜¯UIçš„pivotçš„å±å¹•åæ ‡
         /// <summary>
-        /// ½«ÊÀ½ç¿Õ¼äÄÚµÄÎïÌåµÄÊÀ½ç×ø±ê×ª»»ÎªMyImage¶¥µãµÄ×ø±ê
+        /// å°†ä¸–ç•Œç©ºé—´å†…çš„ç‰©ä½“çš„ä¸–ç•Œåæ ‡è½¬æ¢ä¸ºMyImageé¡¶ç‚¹çš„åæ ‡
         /// </summary>
         public Vector2 WorldToLocalPoint(Camera camera, Vector3 worldPoint)
         {
@@ -90,13 +90,13 @@ namespace MeshExtend
         public Rect GetRect()
             => rectTransform.rect;
         /// <summary>
-        /// Ä¬ÈÏµÄ¼ÆËãÑÕÉ«µÄ·½·¨
+        /// é»˜è®¤çš„è®¡ç®—é¢œè‰²çš„æ–¹æ³•
         /// </summary>
         public Color DefaultGetColor(Vector3 _)
             => color;
 
         /// <summary>
-        /// Ä¬ÈÏµÄ¼ÆËãuvµÄ·½·¨
+        /// é»˜è®¤çš„è®¡ç®—uvçš„æ–¹æ³•
         /// </summary>
         public Vector2 DefaultGetUV(Vector3 v)
             => helper.DefaultGetUV(v);

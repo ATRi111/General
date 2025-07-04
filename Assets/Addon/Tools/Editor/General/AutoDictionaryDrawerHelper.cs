@@ -5,7 +5,7 @@ namespace MyTool
 {
     public static class AutoDictionaryDrawerHelper
     {
-        public static bool OnInspectorGUI(bool foldout,string label, Dictionary<string, int> dict)
+        public static bool OnInspectorGUI(bool foldout, string label, Dictionary<string, int> dict)
         {
             bool ret = EditorGUILayout.Foldout(foldout, label);
             if (foldout)

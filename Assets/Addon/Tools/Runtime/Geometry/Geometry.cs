@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,11 +6,11 @@ namespace MyTool
 {
     public static partial class GeometryTool
     {
-        //´ËÀàÖĞµÄ½Ç¶ÈµÄº¬Òå£ºÏòÁ¿£¨0£¬1£©¶ÔÓ¦0¡ã£¬ÏòÁ¿(-1,0)¶ÔÓ¦90¡ã
-        //´ËÌõ¼şÏÂ£¬Èç¹ûÎïÌåµÄÄ³¸ö²¿Î»Î´Ğı×ªÊ±³¯ÉÏ£¬Å·À­½ÇºÍÎïÌå¸Ã²¿Î»µÄ³¯Ïò¾ÍÒ»Ò»¶ÔÓ¦
+        //æ­¤ç±»ä¸­çš„è§’åº¦çš„å«ä¹‰ï¼šå‘é‡ï¼ˆ0ï¼Œ1ï¼‰å¯¹åº”0Â°ï¼Œå‘é‡(-1,0)å¯¹åº”90Â°
+        //æ­¤æ¡ä»¶ä¸‹ï¼Œå¦‚æœç‰©ä½“çš„æŸä¸ªéƒ¨ä½æœªæ—‹è½¬æ—¶æœä¸Šï¼Œæ¬§æ‹‰è§’å’Œç‰©ä½“è¯¥éƒ¨ä½çš„æœå‘å°±ä¸€ä¸€å¯¹åº”
 
         /// <summary>
-        /// Ê¹½Ç¶ÈÂäÔÚ[0¡ã,360¡ã)ÄÚ
+        /// ä½¿è§’åº¦è½åœ¨[0Â°,360Â°)å†…
         /// </summary>
         public static float ClampAngle(float angle)
         {
@@ -21,7 +21,7 @@ namespace MyTool
         }
 
         /// <summary>
-        /// Ê¹½Ç¶ÈÂäÔÚ[0¡ã,180¡ã]ÄÚ
+        /// ä½¿è§’åº¦è½åœ¨[0Â°,180Â°]å†…
         /// </summary>
         public static float ClampIncludedAngle(float angle)
         {
@@ -53,53 +53,19 @@ namespace MyTool
         }
 
         /// <summary>
-        /// ÀûÓÃÖĞĞÄ»®·ÖÍ¹¶à±ßĞÎ£¬´Ë·½·¨»áÔö¼ÓÒ»¸ö¶¥µã
+        /// è®¡ç®—é‡å¿ƒåæ ‡
         /// </summary>
-        /// <param name="points">±ß½çµÄµã£¬²»ĞèÒª°´Ë³Ğò´«Èë£¬´Ë·½·¨ÖĞoutline»á±»¸Ä±ä</param>
-        /// <param name="triangles">½ÓÊÕ½á¹ûµÄÈı½ÇĞÎÊı×é£¬Ô­±¾µÄÄÚÈİ²»»á±»Çå³ı</param>
-        /// <param name="index">Èı½ÇĞÎÊı×éµÄÏÂ±ê´Ó¼¸¿ªÊ¼</param>
-        public static void DivideConvexPolygon_Center(List<Vector2> points, List<int> triangles, int index = 0)
+        /// <returns>ä¸‰ä¸ªåˆ†é‡å…ˆåè¡¨ç¤ºAã€Bã€Cçš„æƒé‡</returns>
+        public static Vector3 BarycentricCoordinates(Vector3 A, Vector3 B, Vector3 C, Vector3 P)
         {
-            int n = points.Count;
-            if (n < 3)
-                throw new ArgumentException();
-
-            Vector2 center = CalculateCenter(points.ToArray());
-            Comparer_Vector2_Clockwise comparer = new Comparer_Vector2_Clockwise(center);
-            points.Sort(comparer);
-            points.Add(center);
-            for (int i = 0; i < n - 1; i++)
-            {
-                triangles.Add(i + index);
-                triangles.Add(i + 1 + index);
-                triangles.Add(n + index);
-            }
-            triangles.Add(n - 1 + index);
-            triangles.Add(index);
-            triangles.Add(n + index);
-        }
-
-        /// <summary>
-        /// ÀûÓÃÖĞĞÄ»®·ÖÍ¹¶à±ßĞÎ£¬´Ë·½·¨»áÔö¼ÓÒ»¸ö¶¥µã
-        /// </summary>
-        /// <param name="points">±ß½çµÄµã£¬²»ĞèÒª°´Ë³Ğò´«Èë£¬´Ë·½·¨ÖĞoutline»á±»¸Ä±ä</param>
-        /// <param name="triangles">½ÓÊÕ½á¹û,ÒÀ´Î·µ»ØÃ¿¸öÈı½ÇĞÎ£¨Ë³Ê±Õë·µ»ØÈı½ÇĞÎµÄÈı¸öµã×ø±ê£©</param>
-        public static void DivideConvexPolygon_Center(List<Vector2> points, List<List<Vector2>> triangles)
-        {
-            int n = points.Count;
-            if (n < 3)
-                throw new ArgumentException();
-
-            triangles.Clear();
-            Vector2 center = CalculateCenter(points.ToArray());
-            Comparer_Vector2_Clockwise comparer = new Comparer_Vector2_Clockwise(center);
-            points.Sort(comparer);
-            points.Add(center);
-            for (int i = 0; i < n - 1; i++)
-            {
-                triangles.Add(new List<Vector2> { points[i], points[i + 1], points[n] });
-            }
-            triangles.Add(new List<Vector2> { points[n - 1], points[0], points[n] });
+            float alpha, beta, gamma;
+            float x, xa, xb, xc, y, ya, yb, yc;
+            x = P.x; xa = A.x; xb = B.x; xc = C.x;
+            y = P.y; ya = A.y; yb = B.y; yc = C.y;
+            gamma = (ya * x - yb * x + xb * y - xa * y + xa * yb - xb * ya) / (ya * xc - yb * xc + xb * yc - xa * yc + xa * yb - xb * ya);
+            beta = (ya * x - yc * x + xc * y - xa * y + xa * yc - xc * ya) / (ya * xb - yc * xb + xc * yb - xa * yb + xa * yc - xc * ya);
+            alpha = 1 - gamma - beta;
+            return new Vector3(alpha, beta, gamma);
         }
     }
 }

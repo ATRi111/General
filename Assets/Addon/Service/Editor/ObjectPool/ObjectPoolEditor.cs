@@ -9,7 +9,7 @@ namespace Services.ObjectPools
     {
         private ObjectPool ObjectPool => target as ObjectPool;
         [AutoProperty]
-        public SerializedProperty prefab, accumulateCount;
+        public SerializedProperty prefab;
 
         protected override void MyOnInspectorGUI()
         {
@@ -21,7 +21,6 @@ namespace Services.ObjectPools
             }
             EditorGUI.BeginDisabledGroup(true);
             prefab.PropertyField("预制体");
-            EditorGUILayout.IntField("累积创建物体数", accumulateCount.intValue);
             EditorGUILayout.IntField("当前可用物体数", ObjectPool.Count);
             EditorGUI.EndDisabledGroup();
         }

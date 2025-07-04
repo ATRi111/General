@@ -46,7 +46,7 @@ namespace Services.Audio
         public void SetVolume(AudioMixer audioMixer, string parameter, float volume)
         {
             volume = Mathf.Clamp(volume, 0.01f, 1f);
-            core.SetVolume(audioMixer, name, volume);
+            core.SetVolume(audioMixer, parameter, volume);
         }
     }
 }

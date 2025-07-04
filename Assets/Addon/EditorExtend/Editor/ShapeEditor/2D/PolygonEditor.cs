@@ -65,7 +65,7 @@ namespace EditorExtend.ShapeEditor
         protected override void OnMouseDown(int button)
         {
             base.OnMouseDown(button);
-            switch(button)
+            switch (button)
             {
                 case 0:
                     Add();

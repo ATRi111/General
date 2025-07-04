@@ -1,9 +1,9 @@
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace MyTool
 {
-    [CustomPropertyDrawer(typeof(SerializedKeyValueBase),true)]
+    [CustomPropertyDrawer(typeof(SerializedKeyValueBase), true)]
     public class SerializedKeyValuePairDrawer : PropertyDrawer
     {
         protected bool foldout;

@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.Audio;
 
 namespace Services.Audio
@@ -31,7 +31,7 @@ namespace Services.Audio
 
         private void ControlDestroy(GameObject obj, AudioSource audioSource, EControlOption option, float time)
         {
-            if (time == 0f)
+            if (time <= 0f)
                 time = audioSource.clip.length;
             switch (option)
             {
@@ -47,7 +47,7 @@ namespace Services.Audio
             }
         }
 
-        //dB = 10 * lg(p/p0) => dB = k*lg(percent + ¦¤) + C
+        //dB = 10 * lg(p/p0) => dB = k*lg(percent + Î”) + C
         internal void SetVolume(AudioMixer mixer, string name, float percent)
         {
             percent = Mathf.Clamp(percent, 0.01f, 1f);

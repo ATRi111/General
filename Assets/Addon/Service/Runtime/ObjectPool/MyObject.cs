@@ -30,6 +30,22 @@ namespace Services.ObjectPools
             }
         }
 
+        [SerializeField]
+        internal int recycleCount;
+        /// <summary>
+        /// 此计数变为0时，回收物体（可以不使用此计数，而是手动回收）
+        /// </summary>
+        public int RecycleCount
+        {
+            get => recycleCount;
+            set
+            {
+                recycleCount = value;
+                if (value == 0)
+                    Recycle();
+            }
+        }
+
         /// <summary>
         /// 激活物体
         /// </summary>
@@ -54,6 +70,11 @@ namespace Services.ObjectPools
             {
                 transform.SetParent(objectPoolAttached.transform, false);
                 OnRecycle?.Invoke();
+                if (recycleCount != 0)
+                {
+                    Debug.LogWarning($"{gameObject.name}被回收时，引用计数为{recycleCount}");
+                    recycleCount = 0;
+                }
                 Active = false;
                 objectPoolAttached.Recycle(this);
             }

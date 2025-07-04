@@ -2,7 +2,6 @@ using Services;
 using System.IO;
 using System.Text;
 using UnityEditor;
-using UnityEditor.VersionControl;
 using UnityEngine;
 
 namespace EditorExtend

@@ -7,7 +7,7 @@ namespace MyTool
 {
     public abstract class SerializedKeyValueBase
     {
-        
+
     }
 
     [Serializable]
@@ -43,9 +43,9 @@ namespace MyTool
 
         public override bool Equals(object obj)
         {
-            if(obj == null)
+            if (obj == null)
                 return false;
-            if(obj is not SerializedKeyValuePair<TKey, TValue> pair)
+            if (obj is not SerializedKeyValuePair<TKey, TValue> pair)
                 return false;
             return key.Equals(pair.key) && value.Equals(pair.value);
         }
@@ -89,7 +89,6 @@ namespace MyTool
         public SerializedDictionary()
         {
             dict = new();
-            list = new();
         }
 
         public void Refresh()

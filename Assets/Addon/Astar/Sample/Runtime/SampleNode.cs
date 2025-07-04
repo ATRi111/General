@@ -5,7 +5,7 @@ namespace AStar.Sample
 {
     public class SampleNode : Node
     {
-        internal SampleNode(PathFindingProcess process, Vector2Int position) 
+        internal SampleNode(PathFindingProcess process, Vector2Int position)
             : base(process, position)
         {
 
@@ -19,7 +19,7 @@ namespace AStar.Sample
         {
             get
             {
-                if(map == null)
+                if (map == null)
                 {
                     isObstacle = false;
                     map = process.mountPoint.GetComponentInChildren<Tilemap>();

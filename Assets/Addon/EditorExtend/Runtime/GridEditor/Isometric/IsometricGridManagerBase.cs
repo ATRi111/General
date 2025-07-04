@@ -1,4 +1,3 @@
-using Services;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -48,7 +47,7 @@ namespace EditorExtend.GridEditor
 
         public override bool TryAddObject(GridObject gridObject)
         {
-            if(!base.TryAddObject(gridObject))
+            if (!base.TryAddObject(gridObject))
                 return false;
 
             Vector2Int xy = (Vector2Int)gridObject.CellPosition;
@@ -68,7 +67,7 @@ namespace EditorExtend.GridEditor
         public override GridObject TryRemoveObject(Vector3Int cellPosition)
         {
             GridObject gridObject = base.TryRemoveObject(cellPosition);
-            if(gridObject != null)
+            if (gridObject != null)
                 UpdateMaxLayerXY((Vector2Int)gridObject.CellPosition);
             return gridObject;
         }
@@ -84,7 +83,7 @@ namespace EditorExtend.GridEditor
                     maxLayerDict[xy] = gridObject.CellPosition.z;
                 else
                     maxLayerDict[xy] = 0;
-            }    
+            }
         }
 
         /// <summary>
@@ -95,7 +94,7 @@ namespace EditorExtend.GridEditor
             objects.Clear();
             if (!maxLayerDict.ContainsKey(xy))
                 return;
-            if(top_down)
+            if (top_down)
             {
                 for (int layer = maxLayerDict[xy]; layer >= 0; layer--)
                 {

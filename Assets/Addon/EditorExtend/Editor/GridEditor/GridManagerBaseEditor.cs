@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace EditorExtend.GridEditor
 {
-    [CustomEditor(typeof(GridManagerBase),true)]
+    [CustomEditor(typeof(GridManagerBase), true)]
     public class GridManagerBaseEditor : AutoEditor
     {
         public GridManagerBase GridManager => target as GridManagerBase;

@@ -1,14 +1,16 @@
+ï»¿using System;
 using UnityEngine;
 
 namespace Services.Audio
 {
     /// <summary>
-    /// ¿ØÖÆÒôÆµ²¥·Åµ½Ä³Ò»Ê±¿Ìºó×Ô»Ù£¬½ûÓÃ»ò´İ»Ù´Ë½Å±¾¼´ÖĞÖ¹×Ô»Ù
+    /// æ§åˆ¶éŸ³é¢‘æ’­æ”¾åˆ°æŸä¸€æ—¶åˆ»åè‡ªæ¯ï¼Œç¦ç”¨æˆ–æ‘§æ¯æ­¤è„šæœ¬å³ä¸­æ­¢è‡ªæ¯
     /// </summary>
     public class SelfDestructiveAudio : MonoBehaviour
     {
-        private AudioSource audioSource;
+        public AudioSource audioSource;
         public float timing;
+        public Action BeforeDestroy;
 
         private void Awake()
         {
@@ -17,8 +19,16 @@ namespace Services.Audio
 
         private void Update()
         {
-            if (audioSource.time >= timing)
+            if (audioSource.time >= timing || audioSource.time == 0 && audioSource.isPlaying == false)
+            {
                 Destroy(gameObject);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            BeforeDestroy?.Invoke();
+            BeforeDestroy = null;
         }
     }
 }

@@ -37,7 +37,7 @@ namespace EditorExtend.GridEditor
                     ret.Add(center + radius * r);
                 }
             }
-            
+
             ret.Clear();
             Vector3 center = new(0.5f, 0.5f, height);
             Vector3 vertical = new(0, 0, height);

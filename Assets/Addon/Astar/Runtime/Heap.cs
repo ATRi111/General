@@ -97,7 +97,7 @@ namespace AStar
             while (startIndex > 0)
             {
                 int parent = (startIndex - 1) / 2;
-                if(comparer.Compare(datas[startIndex], datas[parent]) >= 0)
+                if (comparer.Compare(datas[startIndex], datas[parent]) >= 0)
                     break;
 
                 (datas[parent], datas[startIndex]) = (datas[startIndex], datas[parent]);

@@ -31,7 +31,7 @@ namespace EditorExtend.GridEditor
             set => mountPoints = value;
             get
             {
-                if(mountPoints == null)
+                if (mountPoints == null)
                 {
                     mountPoints = new()
                     {
@@ -51,7 +51,7 @@ namespace EditorExtend.GridEditor
         {
             get
             {
-                if(mountIndex >=  0 && mountIndex < mountPoints.Count)
+                if (mountIndex >= 0 && mountIndex < mountPoints.Count)
                     return mountPoints[mountIndex];
                 return transform;
             }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AStar
 {
-    [CustomPropertyDrawer(typeof(PathFindingProcess),true)]
+    [CustomPropertyDrawer(typeof(PathFindingProcess), true)]
     public class PathFindingProcessDrawer : AutoPropertyDrawer
     {
         [AutoProperty]

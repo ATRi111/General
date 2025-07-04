@@ -30,7 +30,7 @@ namespace EditorExtend.GridEditor
                 temp += delta;
                 ret.Add(temp);
             }
-            
+
             ret.Clear();
             Vector3 vz = height * Vector3.forward;
             ret.Clear();

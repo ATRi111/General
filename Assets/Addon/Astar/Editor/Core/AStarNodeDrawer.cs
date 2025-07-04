@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AStar
 {
-    [CustomPropertyDrawer(typeof(Node),true)]
+    [CustomPropertyDrawer(typeof(Node), true)]
     public class AStarNodeDrawer : AutoPropertyDrawer
     {
         [AutoProperty]

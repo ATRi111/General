@@ -10,7 +10,7 @@ namespace Services
         {
             get
             {
-                if(settings == null)
+                if (settings == null)
                 {
                     try
                     {

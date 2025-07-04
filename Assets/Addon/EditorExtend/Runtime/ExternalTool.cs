@@ -37,10 +37,10 @@ namespace EditorExtend
             return ret;
         }
 
-        public static void Log<TKey,TValue>(Dictionary<TKey,TValue> dict)
+        public static void Log<TKey, TValue>(Dictionary<TKey, TValue> dict)
         {
             StringBuilder s = new StringBuilder();
-            foreach(var pair in dict)
+            foreach (var pair in dict)
             {
                 s.Append(pair.Key.ToString());
                 s.Append(": ");

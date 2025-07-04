@@ -18,7 +18,7 @@ namespace UIExtend
             if (!immediate.boolValue)
             {
                 immediate_next.BoolField("跳过渐变(仅一次)");
-                fadeTime.Slider("渐变时间", 0.1f, 10f);
+                fadeTime.FloatField("渐变时间");
             }
             if (Application.isPlaying)
             {
