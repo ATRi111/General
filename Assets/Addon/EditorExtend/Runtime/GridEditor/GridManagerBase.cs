@@ -1,10 +1,10 @@
-using System;
+锘縰sing System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace EditorExtend.GridEditor
 {
-    //此脚本所在的游戏物体不可平移/缩放/旋转
+    //姝よ剼鏈墍鍦ㄧ殑娓告垙鐗╀綋涓嶅彲骞崇Щ/缂╂斁/鏃嬭浆
     [SelectionBase]
     [RequireComponent(typeof(Grid))]
     public abstract class GridManagerBase : MonoBehaviour
@@ -55,7 +55,7 @@ namespace EditorExtend.GridEditor
             return WorldToCell(worldPosition);
         }
         /// <summary>
-        /// 给定xy,确定一个z,使cellPositoin最接近worldPosition
+        /// 缁欏畾xy,纭畾涓�涓獄,浣縞ellPositoin鏈�鎺ヨ繎worldPosition
         /// </summary>
         public virtual Vector3Int ClosestZ(Vector3Int xy, Vector3 worldPosition)
         {
@@ -63,7 +63,7 @@ namespace EditorExtend.GridEditor
         }
 
         /// <summary>
-        /// 根据CellPosition自动计算SortingOrder
+        /// 鏍规嵁CellPosition鑷姩璁＄畻SortingOrder
         /// </summary>
         public abstract int CellToSortingOrder(Vector3 position);
 
@@ -98,7 +98,7 @@ namespace EditorExtend.GridEditor
         {
             if (gridObject.referenceCount != 0)
             {
-                Debug.LogWarning($"试图添加{gridObject.gameObject.name},但referenceCount={gridObject.referenceCount}");
+                Debug.LogWarning($"璇曞浘娣诲姞{gridObject.gameObject.name},浣唕eferenceCount={gridObject.referenceCount}");
                 return false;
             }
 
@@ -110,10 +110,6 @@ namespace EditorExtend.GridEditor
             }
             else
             {
-#if UNITY_EDITOR
-                if (!Application.isPlaying)
-                    DestroyImmediate(gridObject.gameObject);
-#endif
                 return false;
             }
         }
@@ -127,7 +123,7 @@ namespace EditorExtend.GridEditor
 
             if (gridObject.referenceCount != 1)
             {
-                Debug.LogWarning($"试图移除{gridObject.gameObject.name},但referenceCount={gridObject.referenceCount}");
+                Debug.LogWarning($"璇曞浘绉婚櫎{gridObject.gameObject.name},浣唕eferenceCount={gridObject.referenceCount}");
                 return null;
             }
 
