@@ -1,19 +1,17 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Character
 {
     [RequireComponent(typeof(Animator))]
-    public class CharacterAnimatorBase : CharacterComponentBase
+    public class CharacterAnimatorBase : MonoBehaviour
     {
-        [AutoComponent(EComponentPosition.Indeterminate)]
         protected Animator animator;
         public AnimatorStateInfo CurrentInfo => animator.GetCurrentAnimatorStateInfo(0);
         public int CurrentID => CurrentInfo.shortNameHash;
 
-        protected override void Awake()
+        protected virtual void Awake()
         {
-            base.Awake();
-            AutoHashAttribute.Apply(this);
+            animator = GetComponentInChildren<Animator>();
         }
     }
 }

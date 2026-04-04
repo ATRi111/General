@@ -1,4 +1,4 @@
-using EditorExtend;
+Ôªøusing EditorExtend;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,37 +8,21 @@ namespace Character
     public class PropertyModifierDrawer : AutoPropertyDrawer
     {
         [AutoProperty]
-        public SerializedProperty value, so, method;
+        public SerializedProperty value, so, bucket;
 
         protected override void MyOnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            static bool Percent(int timing)
-            {
-                return timing == (int)EModifyMethod.DirectMultiply || timing == (int)EModifyMethod.FinalMultiply;
-            }
+            AutoPropertyField("‰ΩúÁî®Â±ûÊÄß", so);
+            EModifierType type = ModifierBucket.BucketToType((EModifierBucket)bucket.enumValueIndex);
 
-            int temp = method.enumValueIndex;
-            AutoPropertyField("◊˜”√ Ù–‘", so);
-            method.EnumField<EModifyMethod>("–ﬁ∏ƒ∑Ω Ω", NextRectRelative());
-
-            if (Percent(temp) && !Percent(method.enumValueIndex))
+            bucket.EnumField<EModifierBucket>("‰ΩúÁî®Âå∫", NextRectRelative());
+            switch (type)
             {
-                value.floatValue *= 100f;
-            }
-            else if (!Percent(temp) && Percent(method.enumValueIndex))
-            {
-                value.floatValue /= 100f;
-            }
-
-            switch ((EModifyMethod)method.enumValueIndex)
-            {
-                case EModifyMethod.DirectAdd:
-                case EModifyMethod.FinalAdd:
-                    value.FloatField("±‰ªØ¡ø", NextRectRelative());
+                case EModifierType.Add:
+                    value.FloatField("Â¢ûÈáè", NextRectRelative());
                     break;
-                case EModifyMethod.DirectMultiply:
-                case EModifyMethod.FinalMultiply:
-                    value.floatValue = EditorGUI.FloatField(NextRectRelative(), "±‰ªØ∞Ÿ∑÷±»", value.floatValue * 100f) / 100f;
+                case EModifierType.Multiply:
+                    value.FloatField("Â¢ûÂπÖ(Â∞èÊï∞)", NextRectRelative());
                     break;
             }
         }

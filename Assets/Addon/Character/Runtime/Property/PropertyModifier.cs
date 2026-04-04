@@ -1,80 +1,23 @@
-namespace Character
+ï»¿namespace Character
 {
-    public enum EModifyMethod
-    {
-        DirectAdd,
-        DirectMultiply,
-        FinalAdd,
-        FinalMultiply,
-    }
-
     /// <summary>
-    /// Ó°ÏìÊôĞÔµÄ´ÊÌõ
+    /// å½±å“å±æ€§çš„è¯æ¡
     /// </summary>
     [System.Serializable]
-    public class PropertyModifier
+    public struct PropertyModifier
     {
         /// <summary>
-        /// ±ä»¯Á¿
+        /// å˜åŒ–é‡
         /// </summary>
         public float value;
         /// <summary>
-        /// Ìá¹©"»ñÈ¡ÊôĞÔÒıÓÃµÄ·½·¨"µÄSO
+        /// æä¾›"è·å–å±æ€§å¼•ç”¨çš„æ–¹æ³•"çš„SO
         /// </summary>
         public FindPropertySO so;
         /// <summary>
-        /// ±ä»¯·½Ê½
+        /// å˜åŒ–æ–¹å¼
         /// </summary>
-        public EModifyMethod method;
-
-        public void Register(CharacterProperty property)
-        {
-            switch (method)
-            {
-                case EModifyMethod.DirectAdd:
-                    property.DirectAdd += Add;
-                    break;
-                case EModifyMethod.DirectMultiply:
-                    property.DirectMultiply += Multiply;
-                    break;
-                case EModifyMethod.FinalAdd:
-                    property.FinalAdd += Add;
-                    break;
-                case EModifyMethod.FinalMultiply:
-                    property.FinalMultiply += Multiply;
-                    break;
-            }
-
-        }
-
-        public void Unregister(CharacterProperty property)
-        {
-            switch (method)
-            {
-                case EModifyMethod.DirectAdd:
-                    property.DirectAdd -= Add;
-                    break;
-                case EModifyMethod.DirectMultiply:
-                    property.DirectMultiply -= Multiply;
-                    break;
-                case EModifyMethod.FinalAdd:
-                    property.FinalAdd -= Add;
-                    break;
-                case EModifyMethod.FinalMultiply:
-                    property.FinalMultiply -= Multiply;
-                    break;
-            }
-        }
-
-        private void Add(CharacterProperty property)
-        {
-            property.Add(value);
-        }
-
-        private void Multiply(CharacterProperty property)
-        {
-            property.Multiply(1f + value);
-        }
+        public EModifierBucket bucket;
     }
 }
 
