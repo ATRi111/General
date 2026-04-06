@@ -25,7 +25,7 @@ public static class TextureTool
     /// <summary>
     /// 加载一张图片，以原像素数显示（此方法只能用于运行时）
     /// </summary>
-    public static Sprite LoadSptite(Texture2D texture)
+    public static Sprite LoadSprite(Texture2D texture)
     {
         Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), CenterOffset);
         sprite.name = texture.name;

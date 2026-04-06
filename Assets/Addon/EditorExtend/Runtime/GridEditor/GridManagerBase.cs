@@ -94,6 +94,12 @@ namespace EditorExtend.GridEditor
             return null;
         }
 
+        public virtual GridObject GetObjectXY(Vector2Int xy)
+        {
+            Vector3Int cellPosition = new(xy.x, xy.y, 0);
+            return GetObject(cellPosition);
+        }
+
         public virtual bool TryAddObject(GridObject gridObject)
         {
             if (gridObject.referenceCount != 0)

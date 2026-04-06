@@ -1,4 +1,4 @@
-using MyTool;
+锘縰sing MyTool;
 using UnityEditor;
 using UnityEngine;
 
@@ -28,16 +28,16 @@ namespace EditorExtend.GridEditor
         protected override void MyOnInspectorGUI()
         {
             base.MyOnInspectorGUI();
-            if (isEditting)
+            if (isEditing)
             {
-                pillarMode.BoolField("柱形绘制模式");
-                lockXY.BoolField("锁定XY");
-                lockLayer.BoolField("锁定层数");
+                pillarMode.BoolField("鏌卞舰缁樺埗妯″紡");
+                lockXY.BoolField("閿佸畾XY");
+                lockLayer.BoolField("閿佸畾灞傛暟");
                 if (lockLayer.boolValue)
                 {
-                    layer.IntField("层数");
+                    layer.IntField("灞傛暟");
                 }
-                EditorGUILayout.HelpBox("按住Ctrl锁定XY;按住Shift锁定层数", MessageType.Info);
+                EditorGUILayout.HelpBox("鎸変綇Ctrl閿佸畾XY;鎸変綇Shift閿佸畾灞傛暟", MessageType.Info);
             }
         }
 

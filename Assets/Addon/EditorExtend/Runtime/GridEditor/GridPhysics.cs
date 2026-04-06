@@ -13,12 +13,28 @@ namespace EditorExtend.GridEditor
         }
 
         #region 点求交
+
+        /// <summary>
+        /// 判断轴对齐矩形是否覆盖某点(Z分量被忽略)
+        /// </summary>
+        public static bool RectangleOverlap(Vector3 min, Vector3 extend, Vector3 p)
+        {
+            return p.x >= min.x && p.x < min.x + extend.x
+                && p.y >= min.y && p.y < min.y + extend.y;
+        }
+
+        /// <summary>
+        /// 判断轴对齐包围盒是否覆盖某点
+        /// </summary>
         public static bool BoxOverlap(Vector3 min, Vector3 extend, Vector3 p)
         {
             return p.x >= min.x && p.x < min.x + extend.x
                 && p.y >= min.y && p.y < min.y + extend.y
                 && p.z >= min.z && p.z < min.z + extend.z;
         }
+        /// <summary>
+        /// 判断圆柱体是否覆盖某点(母线与Z轴平行)
+        /// </summary>
         public static bool CylinderOverlap(Vector3 bottomCenter, float height, float radius, Vector3 p)
         {
             if (p.z < bottomCenter.z || p.z >= bottomCenter.z + height)
@@ -27,6 +43,10 @@ namespace EditorExtend.GridEditor
             return projSqrDistance < radius * radius;
         }
 
+        /// <summary>
+        /// 求点序列中首个进入轴对齐包围盒和首个离开轴对齐包围盒的点
+        /// </summary>
+        /// <returns>点序列是否确实离开了轴对齐包围盒</returns>
         public static bool PointsCastBox(Vector3 min, Vector3 extend, List<Vector3> points, out Vector3 enter, out Vector3 exit)
         {
             enter = exit = Vector3.zero;
@@ -53,6 +73,43 @@ namespace EditorExtend.GridEditor
         #endregion
 
         #region 线段求交
+
+
+        /// <summary>
+        /// 线段与轴对齐矩形求交(to的Z分量将被强制设为与from的Z分量一致)
+        /// </summary>
+        /// <returns>如果有交点，返回true，并将from和to修改为两个交点；否则返回false</returns>
+        public static bool LineSegmentCastRectangle(Vector3 min, Vector3 extend, ref Vector3 from, ref Vector3 to)
+        {
+            float uIn = 0, uOut = 1;
+            float u1, u2;
+            to = to.ResetZ();
+            Vector3 v = to - from;
+
+            bool IntersectAndCheck(float p1, float p2, float p0, float q)
+            {
+                if (q == 0)
+                    return p0 >= p1 && p0 <= p2;
+
+                u1 = (p1 - p0) / q;
+                u2 = (p2 - p0) / q;
+                if (u1 > u2)
+                    (u1, u2) = (u2, u1);
+                uIn = Mathf.Max(uIn, u1);
+                uOut = Mathf.Min(uOut, u2);
+                return uIn < uOut;
+            }
+
+            if (IntersectAndCheck(min.x, min.x + extend.x, from.x, v.x)
+                && IntersectAndCheck(min.y, min.y + extend.y, from.y, v.y))
+            {
+                to = from + uOut * v;
+                from += uIn * v;
+                return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// 线段与轴对齐包围盒求交
         /// </summary>

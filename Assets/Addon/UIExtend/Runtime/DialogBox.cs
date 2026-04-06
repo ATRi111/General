@@ -1,4 +1,4 @@
-using MyTimer;
+﻿using MyTimer;
 using TMPro;
 using UnityEngine;
 
@@ -8,7 +8,7 @@ namespace UIExtend
     public class DialogBox : TextBase
     {
         [SerializeField]
-        private int letterPerSceond = 15;
+        private int letterPerSecond = 15;
         [SerializeField]
         private float interval = 0.5f;
 
@@ -29,7 +29,7 @@ namespace UIExtend
         {
             if (string.IsNullOrEmpty(text))
                 TextUI.text = string.Empty;
-            TypeWriter.Initialize(text, letterPerSceond);
+            TypeWriter.Initialize(text, letterPerSecond);
             if (immediate)
                 TypeWriter.ForceComplete();
         }

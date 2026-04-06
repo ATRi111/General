@@ -1,9 +1,9 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 namespace MyTool
 {
-    public class MoveChecker
+    public class MoveDetector
     {
         private readonly MonoBehaviour mono;
         private readonly Transform m_transform;
@@ -23,7 +23,7 @@ namespace MyTool
                 if (active != value)
                 {
                     if (value)
-                        co = mono.StartCoroutine(AfterFixeddUpdate());
+                        co = mono.StartCoroutine(AfterFixedUpdate());
                     else
                         mono.StopCoroutine(co);
                     active = value;
@@ -36,14 +36,14 @@ namespace MyTool
 
         public Vector3 InstantaneousVelocity => DeltaPosition / Time.fixedDeltaTime;
 
-        public MoveChecker(MonoBehaviour mono)
+        public MoveDetector(MonoBehaviour mono)
         {
             this.mono = mono;
             m_transform = mono.transform;
             Active = true;
         }
 
-        private IEnumerator AfterFixeddUpdate()
+        private IEnumerator AfterFixedUpdate()
         {
             for (; ; )
             {

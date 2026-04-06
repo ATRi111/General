@@ -185,7 +185,7 @@ namespace AStar
 
             if (currentNode == To)
             {
-                Stop();     //移动力受限的情况下，如果权重系数超过1，有可能在没有找到更短可行路径的情况下提前退出
+                Stop();     //如果权重系数超过1，有可能在没有找到更短可行路径的情况下提前退出
                 Profiler.EndSample();
                 return false;
             }

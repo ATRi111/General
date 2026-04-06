@@ -19,15 +19,11 @@
 - 此模块依赖EditorExtend模块
 
 
-### MeshExtend
-
-- Mesh工具类，主要用于在C#代码中控制Mesh的形状等参数
-
-
 ### EditorExtend
 
 - 用于简化自定义编辑器的工作流
 - 还包含一些常用的编辑器工具
+- 此模块依赖MyTimer模块
 
 
 ### MyTimer

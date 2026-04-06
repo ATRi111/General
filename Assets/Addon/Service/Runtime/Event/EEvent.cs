@@ -17,6 +17,10 @@ namespace Services.Event
         /// <summary>
         /// 卸载场景后（至少一帧以后），参数：刚卸载完的场景号
         /// </summary>
-        AfterUnLoadScene
+        AfterUnLoadScene,
+        /// <summary>
+        /// 印料改变时，参数：旧印料数，新印料数
+        /// </summary>
+        OnPrintingSupplyChange
     }
 }
