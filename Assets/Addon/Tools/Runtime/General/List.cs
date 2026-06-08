@@ -30,12 +30,7 @@ namespace MyTool
 
         public static void Log<T>(this List<T> list)
         {
-            string s = null;
-            foreach (T item in list)
-            {
-                s += item.ToString() + "|";
-            }
-            Debug.Log(s);
+            Debug.Log(string.Join("|", list));
         }
     }
 }

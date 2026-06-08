@@ -1,10 +1,10 @@
-namespace MyTool
+ï»¿namespace MyTool
 {
-    public enum ERandomGrounp
+    public enum ERandomGroup
     {
         Default,
         /// <summary>
-        /// Õ½¶·ÄÚ
+        /// æˆ˜æ–—å†…
         /// </summary>
         Battle,
     }

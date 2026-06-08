@@ -4,11 +4,11 @@ namespace Services
 {
     public interface IGlobalGameCycle : IService
     {
-        void AttachToGameCycle(EInvokeMode mode, UnityAction callBack);
-        void RemoveFromGameCycle(EInvokeMode mode, UnityAction callBack);
+        void AttachToGameCycle(TickGroup tickGroup, UnityAction callBack);
+        void RemoveFromGameCycle(TickGroup tickGroup, UnityAction callBack);
     }
 
-    public enum EInvokeMode
+    public enum TickGroup
     {
         /// <summary>
         /// 每次FixedUpdate调用

@@ -46,7 +46,7 @@ namespace EditorExtend
         public static bool TryGetPropertyName(FieldInfo info, out string ret)
         {
             ret = null;
-            AutoPropertyAttribute attribute = EditorExtendUtility.GetAttribute<AutoPropertyAttribute>(info);
+            AutoPropertyAttribute attribute = info.GetCustomAttribute<AutoPropertyAttribute>();
             if (attribute == null)
                 return false;
             if (info.FieldType != typeof(SerializedProperty))

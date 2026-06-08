@@ -19,11 +19,11 @@ namespace Services
         public virtual Type RegisterType => IService.GetSubInterfaceOfIService(GetType());
         protected virtual EConflictSolution Solution => EConflictSolution.DestroyNew;
 
-        public string Informantion { get; protected set; }
+        public string Information { get; protected set; }
 
         protected virtual void Awake()
         {
-            Informantion = $"服务类型:{RegisterType},所在游戏物体:{gameObject.name}";
+            Information = $"服务类型:{RegisterType},所在游戏物体:{gameObject.name}";
             ServiceLocator.Register(this, Solution);
         }
 
@@ -44,7 +44,7 @@ namespace Services
 
         public override string ToString()
         {
-            return Informantion;
+            return Information;
         }
     }
 

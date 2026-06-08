@@ -47,7 +47,7 @@ namespace Services
         {
             if (TryGet(type, out Service ret))
                 return ret;
-            return ret;
+            throw new InvalidOperationException($"服务{type}未注册");
         }
 
         internal static void Register(Service service, EConflictSolution solution = EConflictSolution.DestroyNew)
@@ -114,7 +114,7 @@ namespace Services
                 return false;
 
             bool ret = false;
-            Debugger.LogWarning($"服务发生冲突,旧服务{oldService.Informantion};\n新服务{newService.Informantion};解决方式为{solution}", EMessageType.Service);
+            Debugger.LogWarning($"服务发生冲突,旧服务{oldService.Information};\n新服务{newService.Information};解决方式为{solution}", EMessageType.Service);
             switch (solution)
             {
                 case EConflictSolution.DestroyOld:

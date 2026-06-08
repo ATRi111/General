@@ -101,18 +101,6 @@ namespace EditorExtend
             return ret;
         }
 
-
-        public static bool HasAttribute<T>(MemberInfo member, bool inherit = false) where T : Attribute
-        {
-            return member.GetCustomAttributes(typeof(T), inherit).Length > 0;
-        }
-
-        public static T GetAttribute<T>(MemberInfo member, bool inherit = false) where T : Attribute
-        {
-            object[] ret = member.GetCustomAttributes(typeof(T), inherit);
-            return ret.Length > 0 ? ret[0] as T : null;
-        }
-
         public static T ToEnum<T>(this int enumIndex) where T : Enum
             => (T)Enum.ToObject(typeof(T), enumIndex);
         public static int ToInt(this Enum e)

@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 namespace MyStateMachine
 {
-    public enum EInvokeMode
+    public enum TickGroup
     {
         FixedUpdate,
         Update,
@@ -14,6 +14,9 @@ namespace MyStateMachine
 
     public class GameCycle : MonoBehaviour
     {
+        private static readonly TickGroup[] tickGroups = (TickGroup[])System.Enum.GetValues(typeof(TickGroup));
+        private readonly WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
+
         private static GameCycle instance;
 
         internal static GameCycle Instance
@@ -29,56 +32,56 @@ namespace MyStateMachine
             }
         }
 
-        private readonly Dictionary<EInvokeMode, UnityAction> cycle = new Dictionary<EInvokeMode, UnityAction>();
-        private readonly Dictionary<EInvokeMode, UnityAction> temp = new Dictionary<EInvokeMode, UnityAction>();
+        private readonly Dictionary<TickGroup, UnityAction> cycle = new Dictionary<TickGroup, UnityAction>();
+        private readonly Dictionary<TickGroup, UnityAction> temp = new Dictionary<TickGroup, UnityAction>();
 
         private void Awake()
         {
             DontDestroyOnLoad(gameObject);
-            foreach (EInvokeMode mode in System.Enum.GetValues(typeof(EInvokeMode)))
+            foreach (TickGroup tickGroup in tickGroups)
             {
-                cycle.Add(mode, null);
-                temp.Add(mode, null);
+                cycle.Add(tickGroup, null);
+                temp.Add(tickGroup, null);
             }
             StartCoroutine(DelayAttach());
         }
 
-        public void AttachToGameCycle(EInvokeMode mode, UnityAction callBack)
+        public void AttachToGameCycle(TickGroup tickGroup, UnityAction callBack)
         {
-            temp[mode] += callBack;
+            temp[tickGroup] += callBack;
         }
 
-        public void RemoveFromGameCycle(EInvokeMode mode, UnityAction callBack)
+        public void RemoveFromGameCycle(TickGroup tickGroup, UnityAction callBack)
         {
-            cycle[mode] -= callBack;
-            temp[mode] -= callBack;
+            cycle[tickGroup] -= callBack;
+            temp[tickGroup] -= callBack;
         }
 
         private void Update()
         {
-            cycle[EInvokeMode.Update]?.Invoke();
+            cycle[TickGroup.Update]?.Invoke();
         }
 
         private void FixedUpdate()
         {
-            cycle[EInvokeMode.FixedUpdate]?.Invoke();
+            cycle[TickGroup.FixedUpdate]?.Invoke();
         }
 
         private void LateUpdate()
         {
-            cycle[EInvokeMode.LateUpdate]?.Invoke();
+            cycle[TickGroup.LateUpdate]?.Invoke();
         }
 
         private IEnumerator DelayAttach()
         {
             for (; ; )
             {
-                foreach (EInvokeMode mode in System.Enum.GetValues(typeof(EInvokeMode)))
+                foreach (TickGroup tickGroup in tickGroups)
                 {
-                    cycle[mode] += temp[mode];
-                    temp[mode] = null;
+                    cycle[tickGroup] += temp[tickGroup];
+                    temp[tickGroup] = null;
                 }
-                yield return new WaitForEndOfFrame();
+                yield return waitForEndOfFrame;
             }
         }
     }

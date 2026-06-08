@@ -5,18 +5,18 @@ namespace MyTool
 {
     public static class RandomTool
     {
-        private static readonly Dictionary<ERandomGrounp, RandomGroup> groupDict;
+        private static readonly Dictionary<ERandomGroup, RandomGroup> groupDict;
 
         static RandomTool()
         {
             groupDict = new();
-            foreach (ERandomGrounp key in Enum.GetValues(typeof(ERandomGrounp)))
+            foreach (ERandomGroup key in Enum.GetValues(typeof(ERandomGroup)))
             {
                 groupDict.Add(key, new RandomGroup());
             }
         }
 
-        public static RandomGroup GetGroup(ERandomGrounp key)
+        public static RandomGroup GetGroup(ERandomGroup key)
         {
             return groupDict[key];
         }

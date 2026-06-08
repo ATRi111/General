@@ -6,7 +6,7 @@ namespace MyTool
 {
     public static partial class MathTool
     {
-        public const float DIAGNOL = 1.414214f;
+        public const float DIAGONAL = 1.414214f;
 
         public static Vector3 ResetZ(this Vector3 v, float z = 0f)
             => new(v.x, v.y, z);

@@ -6,7 +6,7 @@ namespace MyTimer
     {
         public Quaternion Value(Quaternion origin, Quaternion target, float percent, float time, float duration)
         {
-            return Quaternion.Lerp(origin, target, duration);
+            return Quaternion.Lerp(origin, target, percent);
         }
     }
 }

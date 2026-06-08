@@ -14,7 +14,7 @@ namespace MyTool
         /// <param name="maxLine">最大读取行数</param>
         public static string GetParagraph(StreamReader reader, int maxLine)
         {
-            StringBuilder ret = null;
+            StringBuilder ret = new StringBuilder();
             string line;
             try
             {
@@ -71,16 +71,17 @@ namespace MyTool
                 if (!string.IsNullOrEmpty(str))
                     processed.Add(str);
             }
-            string prev, post = null;
+            string prev;
             for (int i = 0; i < processed.Count - 1; i++)
             {
                 prev = processed[i];
-                post = processed[i + 1];
+                string post = processed[i + 1];
                 sb.Append(prev);
                 if (prev[prev.Length - 1] != '\n' && post[0] != '\n')
                     sb.Append('\n');
             }
-            sb.Append(post);
+            if (processed.Count > 0)
+                sb.Append(processed[^1]);
             return sb.ToString();
         }
     }

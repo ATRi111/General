@@ -24,9 +24,7 @@ namespace MyStateMachine
         /// <param name="enumIndex">上一个状态</param>
         protected internal virtual void OnEnter(int enumIndex)
         {
-            gameCycle.AttachToGameCycle(EInvokeMode.Update, Update);
-            gameCycle.AttachToGameCycle(EInvokeMode.FixedUpdate, FixedUpdate);
-            gameCycle.AttachToGameCycle(EInvokeMode.LateUpdate, LateUpdate);
+            gameCycle.AttachToGameCycle(TickGroup.Update, Update);
         }
 
         /// <summary>
@@ -35,9 +33,7 @@ namespace MyStateMachine
         /// <param name="enumIndex">下一个状态</param>
         protected internal virtual void OnExit(int enumIndex)
         {
-            gameCycle.RemoveFromGameCycle(EInvokeMode.Update, Update);
-            gameCycle.RemoveFromGameCycle(EInvokeMode.FixedUpdate, FixedUpdate);
-            gameCycle.RemoveFromGameCycle(EInvokeMode.LateUpdate, LateUpdate);
+            gameCycle.RemoveFromGameCycle(TickGroup.Update, Update);
         }
 
         /// <summary>

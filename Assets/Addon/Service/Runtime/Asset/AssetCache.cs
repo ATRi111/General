@@ -38,8 +38,10 @@ namespace Services.Asset
         internal void Release(Type type, string address)
         {
             AssetIdentifier id = new AssetIdentifier(type, address);
+            if (!cache.ContainsKey(id))
+                return;
             cache[id].count--;
-            if (cache[id].count == 0)
+            if (cache[id].count <= 0)
             {
                 cache[id].Release();
                 cache.Remove(id);

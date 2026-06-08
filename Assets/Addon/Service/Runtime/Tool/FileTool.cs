@@ -10,24 +10,8 @@ namespace Services
 
         public static string CombinePath(params string[] paths)
         {
-            StringBuilder sb = new();
-            List<string> processed = new();
-            for (int i = 0; i < paths.Length; i++)
-            {
-                if (!string.IsNullOrEmpty(paths[i]))
-                    processed.Add(paths[i]);
-            }
-            string current, next;
-            for (int i = 0; i < processed.Count - 1; i++)
-            {
-                current = processed[i];
-                next = processed[i + 1];
-                sb.Append(current);
-                if (!current[^1].IsPathSeparator() && !next[0].IsPathSeparator())
-                    sb.Append('/');
-            }
-            sb.Append(processed[^1]);
-            return sb.ToString().Replace('\\', '/');
+            string result = Path.Combine(paths);
+            return result.Replace('\\', '/');
         }
 
         public static string CombinePath_Windows(params string[] strs)

@@ -39,7 +39,10 @@ namespace Services.Save
             searcher ??= new Dictionary<string, SaveData>();
             for (int i = 0; i < dataList.Count; i++)
             {
-                searcher.Add(dataList[i].identifier, dataList[i]);
+                string id = dataList[i].identifier;
+                if (searcher.ContainsKey(id))
+                    Debugger.LogWarning($"存档标识符{id}重复", EMessageType.Save);
+                searcher[id] = dataList[i];
             }
         }
 

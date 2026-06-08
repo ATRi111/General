@@ -95,17 +95,17 @@ namespace MyTool
         /// <summary>
         /// 返回八个方向中与所给方向最接近的
         /// </summary>
-        public static Vector2Int NearestDirection(Vector2 direciton)
+        public static Vector2Int NearestDirection(Vector2 direction)
         {
-            int sign = Mathf.RoundToInt(direciton.ToAngle() / 45f) % 8;
+            int sign = (Mathf.RoundToInt(direction.ToAngle() / 45f) % 8 + 8) % 8;
             return Vectors[sign];
         }
         /// <summary>
         /// 返回四个方向中与所给方向最接近的
         /// </summary>
-        public static Vector2Int NearestDirection4(Vector2 direciton)
+        public static Vector2Int NearestDirection4(Vector2 direction)
         {
-            int sign = Mathf.RoundToInt(direciton.ToAngle() / 90f) % 4 * 2;
+            int sign = ((Mathf.RoundToInt(direction.ToAngle() / 90f) % 4 + 4) % 4) * 2;
             return Vectors[sign];
         }
 

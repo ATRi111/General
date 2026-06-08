@@ -64,12 +64,12 @@ namespace MyTimer
                     if (value)
                     {
                         BeforePause?.Invoke(Current);
-                        gameCycle.RemoveFromGameCycle(EInvokeMode.Update, Update);
+                        gameCycle.RemoveFromGameCycle(TickGroup.Update, Update);
                     }
                     else
                     {
                         BeforeResume?.Invoke(Current);
-                        gameCycle.AttachToGameCycle(EInvokeMode.Update, Update);
+                        gameCycle.AttachToGameCycle(TickGroup.Update, Update);
                     }
                 }
             }

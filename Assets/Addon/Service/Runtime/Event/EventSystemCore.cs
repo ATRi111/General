@@ -15,18 +15,27 @@ namespace Services.Event
             eventDict = new Dictionary<EEvent, Delegate>();
         }
 
-        private bool Check(EEvent eEvent, Type methodType)
+        private bool Check(EEvent eEvent, Type methodType, bool logIfMissing = true)
         {
             if (!typeDict.ContainsKey(eEvent))
             {
-                CreateEvent(eEvent, methodType);
-                return true;
+                if (logIfMissing)
+                    Debugger.LogWarning($"不存在名为{eEvent}的事件", EMessageType.System);
+                return false;
             }
             if (typeDict[eEvent] != methodType)
             {
                 Debugger.LogWarning($"响应方法的类型不符合事件所要求的类型,事件名为{eEvent}", EMessageType.System);
                 return false;
             }
+            return true;
+        }
+
+        private bool CheckOrCreate(EEvent eEvent, Type methodType)
+        {
+            if (typeDict.ContainsKey(eEvent))
+                return Check(eEvent, methodType, false);
+            CreateEvent(eEvent, methodType);
             return true;
         }
 
@@ -48,22 +57,22 @@ namespace Services.Event
 
         public void AddListener(EEvent eEvent, UnityAction callBack)
         {
-            if (Check(eEvent, callBack.GetType()))
+            if (CheckOrCreate(eEvent, callBack.GetType()))
                 eventDict[eEvent] = eventDict[eEvent] as UnityAction + callBack;
         }
         public void AddListener<T1>(EEvent eEvent, UnityAction<T1> callBack)
         {
-            if (Check(eEvent, callBack.GetType()))
+            if (CheckOrCreate(eEvent, callBack.GetType()))
                 eventDict[eEvent] = eventDict[eEvent] as UnityAction<T1> + callBack;
         }
         public void AddListener<T1, T2>(EEvent eEvent, UnityAction<T1, T2> callBack)
         {
-            if (Check(eEvent, callBack.GetType()))
+            if (CheckOrCreate(eEvent, callBack.GetType()))
                 eventDict[eEvent] = eventDict[eEvent] as UnityAction<T1, T2> + callBack;
         }
         public void AddListener<T1, T2, T3>(EEvent eEvent, UnityAction<T1, T2, T3> callBack)
         {
-            if (Check(eEvent, callBack.GetType()))
+            if (CheckOrCreate(eEvent, callBack.GetType()))
                 eventDict[eEvent] = eventDict[eEvent] as UnityAction<T1, T2, T3> + callBack;
         }
 

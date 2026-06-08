@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace MyTool
 {
@@ -14,7 +14,7 @@ namespace MyTool
             float deltaY = Mathf.Abs(a.y - b.y);
             float max = Mathf.Max(deltaX, deltaY);
             float min = Mathf.Min(deltaX, deltaY);
-            return min * MathTool.DIAGNOL + max - min;
+            return min * MathTool.DIAGONAL + max - min;
         }
         public static int ChebyshevDistanceInt(Vector2Int a, Vector2Int b, int side = 100, int diagnol = 141)
         {
