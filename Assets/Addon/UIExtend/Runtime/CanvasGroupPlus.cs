@@ -1,4 +1,4 @@
-using MyTimer;
+﻿using MyTimer;
 using UnityEngine;
 
 namespace UIExtend

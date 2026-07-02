@@ -1,4 +1,4 @@
-using UnityEditor;
+锘縰sing UnityEditor;
 using UnityEngine;
 
 namespace EditorExtend.GridEditor
@@ -22,25 +22,25 @@ namespace EditorExtend.GridEditor
 
         protected override void MyOnInspectorGUI()
         {
-            cellPosition.Vector3IntField("网格坐标");
-            groundHeight.IntField("地面高度");
+            cellPosition.Vector3IntField("缃戞牸鍧愭爣");
+            groundHeight.IntField("鍦伴潰楂樺害");
             if (cellPosition.vector3IntValue != prev)
             {
                 prev = cellPosition.vector3IntValue;
                 GridObject.CellPosition = cellPosition.vector3IntValue;
             }
-            if (GUILayout.Button("Z不变对齐"))
+            if (GUILayout.Button("Z涓嶅彉瀵归綈"))
             {
                 cellPosition.vector3IntValue = GridObject.AlignXY();
                 EditorUtility.SetDirty(target);
             }
-            if (GUILayout.Button("XY不变对齐"))
+            if (GUILayout.Button("XY涓嶅彉瀵归綈"))
             {
                 cellPosition.vector3IntValue = GridObject.AlignZ();
                 EditorUtility.SetDirty(target);
             }
             EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.IntField("引用次数", GridObject.referenceCount);
+            EditorGUILayout.IntField("寮曠敤娆℃暟", GridObject.referenceCount);
             EditorGUI.EndDisabledGroup();
         }
     }

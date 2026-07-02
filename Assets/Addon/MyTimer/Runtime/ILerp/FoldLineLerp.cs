@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using UnityEngine;
 
 namespace MyTimer
@@ -6,13 +6,13 @@ namespace MyTimer
     public class FoldLineLerp : ILerp<Vector3>
     {
         private Vector3[] points;
-        private float[] ps;     //µ½´ï¸÷µãµÄÊ±µÄ½ø¶È°Ù·Ö±È
+        private float[] ps;     //åˆ°è¾¾å„ç‚¹çš„æ—¶çš„è¿›åº¦ç™¾åˆ†æ¯”
 
         public void Initialize(Vector3[] points, float length)
         {
             int count = points.Length;
             if (count < 2)
-                throw new ArgumentException("ÕÛÏß¶ÎÖÁÉÙÓ¦µ±ÓĞÁ½¸öµã");
+                throw new ArgumentException("æŠ˜çº¿æ®µè‡³å°‘åº”å½“æœ‰ä¸¤ä¸ªç‚¹");
             this.points = new Vector3[count];
             ps = new float[count];
             float sum = 0f;

@@ -1,4 +1,4 @@
-using System;
+锘縰sing System;
 using UnityEngine;
 
 namespace MyTimer
@@ -6,13 +6,13 @@ namespace MyTimer
     public class BezierLerp : ILerp<Vector3>
     {
         private Vector3[] points;
-        private Vector3[] copy;     //计算时修改copy,不修改points
+        private Vector3[] copy;     //璁＄畻鏃朵慨鏀筩opy,涓嶄慨鏀筽oints
 
         public void Initialize(Vector3[] points)
         {
             int length = points.Length;
             if (length < 2)
-                throw new ArgumentException("Bezier曲线至少应当有两个点");
+                throw new ArgumentException("Bezier鏇茬嚎鑷冲皯搴斿綋鏈変袱涓偣");
             this.points = new Vector3[length];
             copy = new Vector3[length];
             Array.Copy(points, this.points, length);

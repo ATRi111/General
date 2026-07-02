@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
 namespace Services.SceneManagement
@@ -27,7 +27,7 @@ namespace Services.SceneManagement
         {
             if (sceneIndexDict.TryGetValue(sceneName, out int index))
                 return index;
-            Debugger.LogWarning($"BuildSettingsÖĞÃ»ÓĞÃûÎª{sceneName}µÄ³¡¾° ", EMessageType.System);
+            Debugger.LogWarning($"BuildSettingsä¸­æ²¡æœ‰åä¸º{sceneName}çš„åœºæ™¯ ", EMessageType.System);
             return -1;
         }
 
@@ -35,7 +35,7 @@ namespace Services.SceneManagement
         {
             if (sceneNameDict.TryGetValue(sceneIndex, out string name))
                 return name;
-            Debugger.LogWarning($"BuildSettingsÖĞÃ»ÓĞË÷ÒıÎª{sceneIndex}µÄ³¡¾° ", EMessageType.System);
+            Debugger.LogWarning($"BuildSettingsä¸­æ²¡æœ‰ç´¢å¼•ä¸º{sceneIndex}çš„åœºæ™¯ ", EMessageType.System);
             return null;
         }
 

@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Reflection;
 using UnityEngine;
 
@@ -6,7 +6,7 @@ namespace Character
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     /// <summary>
-    /// ÓÃÓÚ×Ô¶¯»ñÈ¡Component
+    /// ç”¨äºè‡ªåŠ¨è·å–Component
     /// </summary>
     public class AutoComponentAttribute : Attribute
     {
@@ -63,13 +63,13 @@ namespace Character
                     break;
             }
             if (ret == null)
-                Debug.LogWarning($"ÎŞ·¨´Ó{mono.gameObject.name}µÄ{position}»ñÈ¡µ½ÀàĞÍÎª{type}µÄ×é¼ş");
+                Debug.LogWarning($"æ— æ³•ä»{mono.gameObject.name}çš„{position}è·å–åˆ°ç±»å‹ä¸º{type}çš„ç»„ä»¶");
             return ret;
         }
     }
 
     /// <summary>
-    /// ÃèÊö×é¼ş¼äµÄÏà¶ÔÎ»ÖÃ
+    /// æè¿°ç»„ä»¶é—´çš„ç›¸å¯¹ä½ç½®
     /// </summary>
     public enum EComponentPosition
     {

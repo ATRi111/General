@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 namespace EditorExtend.GridEditor
 {
@@ -16,7 +16,7 @@ namespace EditorExtend.GridEditor
             IsometricGridManagerBase igm = Manager as IsometricGridManagerBase;
             if (lockXY)
             {
-                Vector3Int temp = igm.ClosestZ(lockedPosition.ResetZ(cellPosition.z), worldPosition);  //Ëø¶¨ºó£¬XºÍY²»ÄÜ±ä»¯
+                Vector3Int temp = igm.ClosestZ(lockedPosition.ResetZ(cellPosition.z), worldPosition);  //é”å®šåŽï¼ŒXå’ŒYä¸èƒ½å˜åŒ–
                 return temp;
             }
 
@@ -26,7 +26,7 @@ namespace EditorExtend.GridEditor
                 Vector3Int temp = Manager.WorldToCell(worldPosition.ResetZ(z));
                 //int deltaX = Mathf.Abs(temp.x - lockedPosition.x);
                 //int deltaY = Mathf.Abs(temp.y - lockedPosition.y);
-                //if(deltaX > 0 && deltaY != 0)       //Ëø¶¨ºó£¬XºÍYÖ»ÄÜÓÐÒ»¸ö±ä»¯
+                //if(deltaX > 0 && deltaY != 0)       //é”å®šåŽï¼ŒXå’ŒYåªèƒ½æœ‰ä¸€ä¸ªå˜åŒ–
                 //{
                 //    if(deltaX >= deltaY)
                 //        temp.y = lockedPosition.y;

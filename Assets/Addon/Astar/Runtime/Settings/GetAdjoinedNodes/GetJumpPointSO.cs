@@ -1,11 +1,11 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 namespace AStar.Sample
 {
-    [CreateAssetMenu(fileName = "Ìøµã", menuName = "AStar/»ñÈ¡ÏàÁÚ¿É´ï½ÚµãµÄ·½·¨/Ìøµã")]
+    [CreateAssetMenu(fileName = "è·³ç‚¹", menuName = "AStar/è·å–ç›¸é‚»å¯è¾¾èŠ‚ç‚¹çš„æ–¹æ³•/è·³ç‚¹")]
     public class GetJumpPointSO : GetMovableNodesSO
     {
         public int depthOnDirection;

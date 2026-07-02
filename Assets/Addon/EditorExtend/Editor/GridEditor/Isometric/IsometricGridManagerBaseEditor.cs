@@ -1,4 +1,4 @@
-using UnityEditor;
+ï»¿using UnityEditor;
 
 namespace EditorExtend.GridEditor
 {
@@ -12,7 +12,7 @@ namespace EditorExtend.GridEditor
         {
             base.MyOnInspectorGUI();
             EditorGUI.BeginDisabledGroup(true);
-            maxLayer.IntField("×î¸ß²ãÊý");
+            maxLayer.IntField("æœ€é«˜å±‚æ•°");
             EditorGUI.EndDisabledGroup();
         }
     }

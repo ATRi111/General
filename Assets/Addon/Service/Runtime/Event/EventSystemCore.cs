@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using UnityEngine.Events;
 
@@ -20,12 +20,12 @@ namespace Services.Event
             if (!typeDict.ContainsKey(eEvent))
             {
                 if (logIfMissing)
-                    Debugger.LogWarning($"²»´æÔÚÃûÎª{eEvent}µÄÊÂ¼ş", EMessageType.System);
+                    Debugger.LogWarning($"ä¸å­˜åœ¨åä¸º{eEvent}çš„äº‹ä»¶", EMessageType.System);
                 return false;
             }
             if (typeDict[eEvent] != methodType)
             {
-                Debugger.LogWarning($"ÏìÓ¦·½·¨µÄÀàĞÍ²»·ûºÏÊÂ¼şËùÒªÇóµÄÀàĞÍ,ÊÂ¼şÃûÎª{eEvent}", EMessageType.System);
+                Debugger.LogWarning($"å“åº”æ–¹æ³•çš„ç±»å‹ä¸ç¬¦åˆäº‹ä»¶æ‰€è¦æ±‚çš„ç±»å‹,äº‹ä»¶åä¸º{eEvent}", EMessageType.System);
                 return false;
             }
             return true;
@@ -43,12 +43,12 @@ namespace Services.Event
         {
             if (!type.IsSubclassOf(typeof(Delegate)))
             {
-                Debugger.LogWarning($"{type}²»ÊÇDelegateµÄ×ÓÀà", EMessageType.System);
+                Debugger.LogWarning($"{type}ä¸æ˜¯Delegateçš„å­ç±»", EMessageType.System);
                 return;
             }
             if (eventDict.ContainsKey(eEvent))
             {
-                Debugger.LogWarning($"ÃûÎª{eEvent}µÄÊÂ¼şÒÑ´æÔÚ", EMessageType.System);
+                Debugger.LogWarning($"åä¸º{eEvent}çš„äº‹ä»¶å·²å­˜åœ¨", EMessageType.System);
                 return;
             }
             typeDict.Add(eEvent, type);

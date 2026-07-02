@@ -1,4 +1,4 @@
-namespace MyTimer
+﻿namespace MyTimer
 {
     [System.Serializable]
     /// <summary>

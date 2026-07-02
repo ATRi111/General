@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace Services.Asset
 {
@@ -21,7 +21,7 @@ namespace Services.Asset
             catch (Exception e)
             {
                 Debugger.LogError(e.ToString(), EMessageType.System);
-                Debugger.LogError($"�޷�������Դ����Դ��ַΪ{address}", EMessageType.System);
+                Debugger.LogError($"无法加载资源，资源地址为{address}", EMessageType.System);
                 return null;
             }
         }
@@ -35,7 +35,7 @@ namespace Services.Asset
             catch (Exception e)
             {
                 Debugger.LogException(e, EMessageType.System);
-                Debugger.LogError($"�޷�������Դ����Դ��ַΪ{address}", EMessageType.System);
+                Debugger.LogError($"无法加载资源，资源地址为{address}", EMessageType.System);
             }
         }
 
@@ -48,7 +48,7 @@ namespace Services.Asset
             catch (Exception e)
             {
                 Debugger.LogException(e, EMessageType.System);
-                Debugger.LogError($"�޷��ͷ���Դ����Դ��ַΪ{address}", EMessageType.System);
+                Debugger.LogError($"无法释放资源，资源地址为{address}", EMessageType.System);
             }
         }
     }

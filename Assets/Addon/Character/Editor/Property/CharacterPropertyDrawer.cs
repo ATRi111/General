@@ -1,4 +1,4 @@
-using EditorExtend;
+﻿using EditorExtend;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,11 +13,11 @@ namespace Character
 
         protected override void MyOnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            defaultValue.FloatField("Ĭ��ֵ", NextRectRelative());
+            defaultValue.FloatField("默认值", NextRectRelative());
             if (Application.isPlaying)
             {
                 EditorGUI.BeginDisabledGroup(true);
-                currentValue.FloatField("��ǰֵ", NextRectRelative());
+                currentValue.FloatField("当前值", NextRectRelative());
                 EditorGUI.EndDisabledGroup();
             }
         }

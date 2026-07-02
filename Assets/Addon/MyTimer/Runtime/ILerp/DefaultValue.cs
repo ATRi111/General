@@ -1,4 +1,4 @@
-namespace MyTimer
+﻿namespace MyTimer
 {
     public class DefaultValue<T> : ILerp<T>
     {

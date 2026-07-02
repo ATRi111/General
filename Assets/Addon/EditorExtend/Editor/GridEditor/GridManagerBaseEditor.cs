@@ -1,4 +1,4 @@
-using UnityEditor;
+锘縰sing UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -16,13 +16,13 @@ namespace EditorExtend.GridEditor
         protected override void MyOnInspectorGUI()
         {
             EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.IntField("物体总数", GridManager.ObjectDict.Count);
+            EditorGUILayout.IntField("鐗╀綋鎬绘暟", GridManager.ObjectDict.Count);
             EditorGUI.EndDisabledGroup();
             if (Application.isPlaying)
                 return;
 
-            centerOffset.Vector2Field("中心偏移");
-            if (GUILayout.Button("全部刷新"))
+            centerOffset.Vector2Field("涓績鍋忕Щ");
+            if (GUILayout.Button("鍏ㄩ儴鍒锋柊"))
             {
                 GridObject[] gridObjects = GridManager.GetComponentsInChildren<GridObject>();
                 for (int i = 0; i < gridObjects.Length; i++)
@@ -33,7 +33,7 @@ namespace EditorExtend.GridEditor
                 if (!Application.isPlaying)
                     EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
             }
-            if (GUILayout.Button("全部Z不变对齐"))
+            if (GUILayout.Button("鍏ㄩ儴Z涓嶅彉瀵归綈"))
             {
                 GridObject[] gridObjects = GridManager.GetComponentsInChildren<GridObject>();
                 for (int i = 0; i < gridObjects.Length; i++)
@@ -47,7 +47,7 @@ namespace EditorExtend.GridEditor
                 if (!Application.isPlaying)
                     EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
             }
-            if (GUILayout.Button("全部XY不变对齐"))
+            if (GUILayout.Button("鍏ㄩ儴XY涓嶅彉瀵归綈"))
             {
                 GridObject[] gridObjects = GridManager.GetComponentsInChildren<GridObject>();
                 for (int i = 0; i < gridObjects.Length; i++)

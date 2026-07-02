@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,32 +8,32 @@ namespace AStar
     public class PathFindingSettings
     {
         /// <summary>
-        /// ¶ÑÈİÁ¿
+        /// å †å®¹é‡
         /// </summary>
         public int capacity = 1000;
         /// <summary>
-        /// ×î´óClosed½ÚµãÊı
+        /// æœ€å¤§ClosedèŠ‚ç‚¹æ•°
         /// </summary>
         public int maxDepth = 2000;
         /// <summary>
-        /// HCostÈ¨ÖØ
+        /// HCostæƒé‡
         /// </summary>
         public float hCostWeight = 1;
 
         /// <summary>
-        /// »ñÈ¡ÏàÁÚ¿É´ï½ÚµãµÄ·½·¨
+        /// è·å–ç›¸é‚»å¯è¾¾èŠ‚ç‚¹çš„æ–¹æ³•
         /// </summary>
         public Action<PathFindingProcess, Node, Func<Node, Node, bool>, List<Node>> GetAdjoinNodes;
         public GetMovableNodesSO getAdjoinedNodesSO;
 
         /// <summary>
-        /// ¼ÆËãÁ½µã¼ä¾àÀëµÄ·½·¨
+        /// è®¡ç®—ä¸¤ç‚¹é—´è·ç¦»çš„æ–¹æ³•
         /// </summary>
         public Func<Vector2Int, Vector2Int, float> CalculateDistance;
         public CalculateDistanceSO calculateDistanceSO;
 
         /// <summary>
-        /// Éú³ÉĞÂ½ÚµãµÄ·½·¨
+        /// ç”Ÿæˆæ–°èŠ‚ç‚¹çš„æ–¹æ³•
         /// </summary>
         public Func<PathFindingProcess, Vector2Int, Node> GenerateNode;
         public GenerateNodeSO generateNodeSO;

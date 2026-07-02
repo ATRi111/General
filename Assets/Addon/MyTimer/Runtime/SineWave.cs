@@ -1,4 +1,4 @@
-namespace MyTimer
+﻿namespace MyTimer
 {
     public class SineWave : Repetition<float, Sine>
     {

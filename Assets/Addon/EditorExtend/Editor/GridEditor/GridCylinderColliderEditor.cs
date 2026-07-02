@@ -1,4 +1,4 @@
-using UnityEditor;
+﻿using UnityEditor;
 
 namespace EditorExtend.GridEditor
 {
@@ -11,8 +11,8 @@ namespace EditorExtend.GridEditor
         protected override void MyOnInspectorGUI()
         {
             base.MyOnInspectorGUI();
-            height.FloatField("�߶�");
-            radius.FloatField("�뾶");
+            height.FloatField("高度");
+            radius.FloatField("半径");
         }
     }
 }

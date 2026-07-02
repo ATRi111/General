@@ -1,4 +1,4 @@
-using EditorExtend;
+ï»¿using EditorExtend;
 using UnityEditor;
 using UnityEngine;
 
@@ -15,20 +15,20 @@ namespace AStar
 
         protected override void MyOnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            AutoPropertyField("ÉèÖÃ", settings);
-            mountPoint.PropertyField("¹ÒÔØµã", NextRectRelative());
+            AutoPropertyField("è®¾ç½®", settings);
+            mountPoint.PropertyField("æŒ‚è½½ç‚¹", NextRectRelative());
             if (Application.isPlaying)
             {
-                AutoPropertyField("Êä³öÂ·¾¶", output);
-                AutoPropertyField("¿É´ïÎ»ÖÃ", available);
+                AutoPropertyField("è¾“å‡ºè·¯å¾„", output);
+                AutoPropertyField("å¯è¾¾ä½ç½®", available);
                 EditorGUI.BeginDisabledGroup(true);
-                isRunning.BoolField("ÔËĞĞÖĞ", NextRectRelative());
-                AutoPropertyField("Æğµã", from);
-                AutoPropertyField("ÖÕµã", to);
-                AutoPropertyField("µ±Ç°È·¶¨Â·¾¶½Úµã", currentNode);
-                AutoPropertyField("ÀëÖÕµã×î½üµÄ¿É´ï½Úµã", nearest);
-                countOfCloseNode.IntField("ÒÑÈ·¶¨Â·¾¶½ÚµãÊı", NextRectRelative());
-                countOfQuery.IntField("²éÑ¯½Úµã´ÎÊı", NextRectRelative());
+                isRunning.BoolField("è¿è¡Œä¸­", NextRectRelative());
+                AutoPropertyField("èµ·ç‚¹", from);
+                AutoPropertyField("ç»ˆç‚¹", to);
+                AutoPropertyField("å½“å‰ç¡®å®šè·¯å¾„èŠ‚ç‚¹", currentNode);
+                AutoPropertyField("ç¦»ç»ˆç‚¹æœ€è¿‘çš„å¯è¾¾èŠ‚ç‚¹", nearest);
+                countOfCloseNode.IntField("å·²ç¡®å®šè·¯å¾„èŠ‚ç‚¹æ•°", NextRectRelative());
+                countOfQuery.IntField("æŸ¥è¯¢èŠ‚ç‚¹æ¬¡æ•°", NextRectRelative());
                 EditorGUI.EndDisabledGroup();
             }
         }

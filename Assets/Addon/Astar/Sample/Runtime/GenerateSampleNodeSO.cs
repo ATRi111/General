@@ -1,8 +1,8 @@
-using UnityEngine;
+锘縰sing UnityEngine;
 
 namespace AStar.Sample
 {
-    [CreateAssetMenu(fileName = "生成SampleNode", menuName = "AStar/生成新节点的方法/生成SampleNode")]
+    [CreateAssetMenu(fileName = "鐢熸垚SampleNode", menuName = "AStar/鐢熸垚鏂拌妭鐐圭殑鏂规硶/鐢熸垚SampleNode")]
     public class GenerateSampleNodeSO : GenerateNodeSO
     {
         public override Node GenerateNode(PathFindingProcess process, Vector2Int position)

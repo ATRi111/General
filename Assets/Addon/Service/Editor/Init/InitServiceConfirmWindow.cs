@@ -1,4 +1,4 @@
-using UnityEditor;
+锘縰sing UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -16,14 +16,14 @@ namespace Services
 
         private void OnGUI()
         {
-            EditorGUILayout.LabelField("将在当前场景进行Service初始化，这一操作无法撤销");
+            EditorGUILayout.LabelField("灏嗗湪褰撳墠鍦烘櫙杩涜Service鍒濆鍖栵紝杩欎竴鎿嶄綔鏃犳硶鎾ら攢");
             EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("确认"))
+            if (GUILayout.Button("纭"))
             {
                 callBack?.Invoke();
                 Close();
             }
-            if (GUILayout.Button("取消"))
+            if (GUILayout.Button("鍙栨秷"))
             {
                 Close();
             }

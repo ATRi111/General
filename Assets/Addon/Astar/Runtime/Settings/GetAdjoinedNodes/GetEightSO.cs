@@ -1,10 +1,10 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace AStar
 {
-    [CreateAssetMenu(fileName = "°ËÏòÒÆ¶¯", menuName = "AStar/»ñÈ¡ÏàÁÚ¿É´ï½ÚµãµÄ·½·¨/°ËÏòÒÆ¶¯")]
+    [CreateAssetMenu(fileName = "å…«å‘ç§»åŠ¨", menuName = "AStar/è·å–ç›¸é‚»å¯è¾¾èŠ‚ç‚¹çš„æ–¹æ³•/å…«å‘ç§»åŠ¨")]
     public class GetEightSO : GetMovableNodesSO
     {
         public override void GetMovableNodes(PathFindingProcess process, Node from, Func<Node, Node, bool> moveCheck, List<Node> ret)

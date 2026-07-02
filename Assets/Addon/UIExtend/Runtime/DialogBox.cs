@@ -13,7 +13,6 @@ namespace UIExtend
         private float interval = 0.5f;
 
         public TypeWriter TypeWriter { get; private set; }
-        public TypeWriterExtend TypeWriterExtend { get; private set; }
 
         protected override void Awake()
         {
@@ -21,15 +20,13 @@ namespace UIExtend
             TypeWriter = new TypeWriter();
             TypeWriter.OnTick += OnUpdate;
             TypeWriter.AfterComplete += OnUpdate;
-            TypeWriterExtend = new TypeWriterExtend();
-            TypeWriterExtend.Initialize(TypeWriter, interval);
         }
 
         public void ShowText(string text, bool immediate = false)
         {
             if (string.IsNullOrEmpty(text))
                 TextUI.text = string.Empty;
-            TypeWriter.Initialize(text, letterPerSecond);
+            TypeWriter.Initialize(text, letterPerSecond, interval);
             if (immediate)
                 TypeWriter.ForceComplete();
         }

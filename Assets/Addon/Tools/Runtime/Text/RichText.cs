@@ -1,4 +1,4 @@
-namespace MyTool
+﻿namespace MyTool
 {
     public static partial class TextTool
     {

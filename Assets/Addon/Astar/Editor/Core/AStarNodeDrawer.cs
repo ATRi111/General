@@ -1,4 +1,4 @@
-using EditorExtend;
+﻿using EditorExtend;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,8 +12,8 @@ namespace AStar
 
         protected override void MyOnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            this.position.Vector2IntField("λ��", NextRectRelative());
-            state.EnumField<ENodeState>("�ڵ�״̬", NextRectRelative());
+            this.position.Vector2IntField("位置", NextRectRelative());
+            state.EnumField<ENodeState>("节点状态", NextRectRelative());
         }
     }
 }

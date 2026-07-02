@@ -1,4 +1,4 @@
-using EditorExtend;
+ï»¿using EditorExtend;
 using UnityEditor;
 using UnityEngine;
 
@@ -19,18 +19,18 @@ namespace AStar.Sample
 
         protected override void MyOnInspectorGUI()
         {
-            prefab.PropertyField("Ô¤ÖÆÌå");
-            moveAbility.IntField("ÒÆ¶¯Á¦");
-            process.PropertyField("Ñ°Â·¹ı³Ì");
+            prefab.PropertyField("é¢„åˆ¶ä½“");
+            moveAbility.IntField("ç§»åŠ¨åŠ›");
+            process.PropertyField("å¯»è·¯è¿‡ç¨‹");
             if (Application.isPlaying)
             {
-                if (GUILayout.Button("¿ªÊ¼Ñ°Â·"))
+                if (GUILayout.Button("å¼€å§‹å¯»è·¯"))
                     sample.StartPathFinding();
-                if (GUILayout.Button("ÏÂÒ»²½"))
+                if (GUILayout.Button("ä¸‹ä¸€æ­¥"))
                     sample.Next();
-                if (GUILayout.Button("Á¢¿ÌÍê³ÉÑ°Â·"))
+                if (GUILayout.Button("ç«‹åˆ»å®Œæˆå¯»è·¯"))
                     sample.Complete();
-                if (GUILayout.Button("Çå¿Õ½á¹û"))
+                if (GUILayout.Button("æ¸…ç©ºç»“æœ"))
                     sample.Clear();
             }
         }

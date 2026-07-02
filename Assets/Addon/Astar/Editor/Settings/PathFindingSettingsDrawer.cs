@@ -1,4 +1,4 @@
-using EditorExtend;
+ï»¿using EditorExtend;
 using UnityEditor;
 using UnityEngine;
 
@@ -14,12 +14,12 @@ namespace AStar
 
         protected override void MyOnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            capacity.IntField("¶ÑÈİÁ¿", NextRectRelative());
-            maxDepth.IntField("×î´óClosed½ÚµãÊı", NextRectRelative());
-            hCostWeight.FloatField("HCostÈ¨ÖØ", NextRectRelative());
-            AutoPropertyField("»ñÈ¡ÏàÁÚ½ÚµãµÄ·½·¨", getAdjoinedNodesSO);
-            AutoPropertyField("¼ÆËãÁ½µã¼ä¾àÀëµÄ·½·¨", calculateDistanceSO);
-            AutoPropertyField("Éú³ÉĞÂ½ÚµãµÄ·½·¨", generateNodeSO);
+            capacity.IntField("å †å®¹é‡", NextRectRelative());
+            maxDepth.IntField("æœ€å¤§ClosedèŠ‚ç‚¹æ•°", NextRectRelative());
+            hCostWeight.FloatField("HCostæƒé‡", NextRectRelative());
+            AutoPropertyField("è·å–ç›¸é‚»èŠ‚ç‚¹çš„æ–¹æ³•", getAdjoinedNodesSO);
+            AutoPropertyField("è®¡ç®—ä¸¤ç‚¹é—´è·ç¦»çš„æ–¹æ³•", calculateDistanceSO);
+            AutoPropertyField("ç”Ÿæˆæ–°èŠ‚ç‚¹çš„æ–¹æ³•", generateNodeSO);
         }
     }
 }

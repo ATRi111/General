@@ -1,4 +1,4 @@
-namespace Services.Event
+﻿namespace Services.Event
 {
     public enum EEvent
     {

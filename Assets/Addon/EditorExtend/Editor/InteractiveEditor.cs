@@ -1,4 +1,4 @@
-using UnityEngine;
+锘縰sing UnityEngine;
 
 namespace EditorExtend
 {
@@ -14,7 +14,7 @@ namespace EditorExtend
             HandleKeyInput();
         }
 
-        //必要时调用currentEvent.Use()
+        //蹇呰鏃惰皟鐢╟urrentEvent.Use()
         protected override void MyOnSceneGUI()
         {
             base.MyOnSceneGUI();

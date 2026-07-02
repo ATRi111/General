@@ -1,9 +1,9 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 namespace MyTimer
 {
     /// <summary>
-    /// ÔÈËÙÖ±ÏßÔË¶¯
+    /// åŒ€é€Ÿç›´çº¿è¿åŠ¨
     /// </summary>
     [System.Serializable]
     public class UniformLinearMotion : Timer<Vector3, Vector3Lerp>
