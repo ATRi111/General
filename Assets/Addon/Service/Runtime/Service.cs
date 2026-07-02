@@ -7,7 +7,6 @@ namespace Services
     /// <summary>
     /// 继承此类表示，具有服务的典型行为，包括登记、取消登记等
     /// </summary>
-    [Serializable]
     public class Service : MonoBehaviour
     {
         /// <summary>
@@ -31,7 +30,8 @@ namespace Services
         {
             AutoServiceAttribute.Apply(this);
             Init();
-            ServiceLocator.ServiceInit?.Invoke(this);
+            // TODO: 作用域设计稳定后重新启用
+            // ServiceLocator.ServiceInit?.Invoke(this);
         }
 
         protected internal virtual void Init() { }

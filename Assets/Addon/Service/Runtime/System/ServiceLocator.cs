@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 namespace Services
 {
@@ -27,111 +28,147 @@ namespace Services
         UnregisterNew,
     }
 
+    /// <summary>
+    /// 服务定位器外观层。
+    /// 内部按"作用域"组织：1 个全局 ServiceManager + 每个加载场景 1 个 SceneServiceManager。
+    /// </summary>
     public static class ServiceLocator
     {
-        /// <summary>
-        /// 服务初始化，参数：刚初始化好的服务
-        /// </summary>
-        public static UnityAction<Service> ServiceInit;
+        // TODO: 作用域设计稳定后，重新引入以下两个事件
+        ///// <summary>
+        ///// 服务初始化（参数：刚初始化好的服务）
+        ///// </summary>
+        //public static event UnityAction<Service> ServiceInit
+        //{
+        //    add { serviceInit += value; }
+        //    remove { serviceInit -= value; }
+        //}
+        //public static event UnityAction<Scene, Service> SceneServiceInit
+        //{
+        //    add { sceneServiceInit += value; }
+        //    remove { sceneServiceInit -= value; }
+        //}
+        //private static UnityAction<Service> serviceInit;
+        //private static UnityAction<Scene, Service> sceneServiceInit;
 
-        internal static readonly Dictionary<Type, Service> serviceDict = new Dictionary<Type, Service>();
+        /// <summary>全局作用域（跨场景持续存在）</summary>
+        internal static readonly ServiceManager Global = new ServiceManager(isGlobal: true, scene: default);
 
-        /// <summary>
-        /// 获取一个类型的服务
-        /// </summary>
-        /// <typeparam name="T">此参数对应Service类的RegisterType</typeparam>
+        /// <summary>各场景作用域，key = Scene.handle</summary>
+        private static readonly Dictionary<int, ServiceManager> scenes = new Dictionary<int, ServiceManager>();
+
+        static ServiceLocator()
+        {
+            // 订阅场景卸载，自动清理对应的 ServiceManager
+            SceneManager.sceneUnloaded += OnSceneUnloaded;
+        }
+
+        /// <summary>获取一个类型的服务（先当前激活场景，再全局）</summary>
         public static T Get<T>() where T : class, IService
             => Get(typeof(T)) as T;
 
         public static Service Get(Type type)
         {
-            if (TryGet(type, out Service ret))
-                return ret;
+            // 1. 先查当前激活场景
+            Scene active = SceneManager.GetActiveScene();
+            if (IsRealScene(active))
+            {
+                if (TryGetSceneManager(active.handle, out var mgr)
+                    && mgr.TryGet(type, out Service ret))
+                    return ret;
+            }
+            // 2. 兜底：全局
+            if (Global.TryGet(type, out Service g))
+                return g;
             throw new InvalidOperationException($"服务{type}未注册");
         }
 
-        internal static void Register(Service service, EConflictSolution solution = EConflictSolution.DestroyNew)
+        /// <summary>显式从指定作用域获取</summary>
+        public static T Get<T>(Scene scope) where T : class, IService
+            => Get(scope, typeof(T)) as T;
+
+        public static Service Get(Scene scope, Type type)
         {
-            Type type = service.RegisterType;
+            ServiceManager mgr = GetManager(scope);
+            return mgr.Get(type);
+        }
 
-            Debugger.Settings.Copy();
-            Debugger.Settings.SetAllowLog(EMessageType.Service, false);
+        /// <summary>显式获取全局服务</summary>
+        public static T GetGlobal<T>() where T : class, IService
+            => Global.Get(typeof(T)) as T;
 
-            bool contain = TryGet(type, out Service oldService);
+        /// <summary>获取 Service.Awake 路由用的 ServiceManager</summary>
+        internal static ServiceManager GetManager(Scene scene)
+        {
+            if (IsGlobalScene(scene))
+                return Global;
+            return GetOrCreateSceneManager(scene);
+        }
 
-            Debugger.Settings.Paste();
-
-            if (contain)
-            {
-                if (SolveConflict(oldService, service, solution))
-                    serviceDict.Add(type, service);
-            }
-            else
-                serviceDict.Add(type, service);
+        internal static void Register(Service service, EConflictSolution solution)
+        {
+            ServiceManager mgr = GetManager(service.gameObject.scene);
+            mgr.Register(service, solution);
         }
 
         internal static void Unregister(Service service)
         {
-            Type type = service.RegisterType;
-            if (!TryGet(type, out Service ret))
-                return;
-            if (ret != service)
-                return;
-
-            serviceDict.Remove(type);
+            // 用 RegisterType 不一定就能反查 manager（同一类型在多个作用域都有时），
+            // 因此优先按 scene 路由；scene 失效则尝试 Global。
+            Scene scene = service.gameObject.scene;
+            ServiceManager mgr = IsGlobalScene(scene) ? Global : GetOrCreateSceneManager(scene);
+            mgr.Unregister(service);
         }
 
-        private static bool TryGet(Type type, out Service ret)
+        public static void Clear()
         {
-            if (!serviceDict.ContainsKey(type))
-            {
-                if (!IService.ExtendsIService(type))
-                {
-                    Type i = IService.GetSubInterfaceOfIService(type);
-                    if (i != null)
-                    {
-                        Debugger.LogWarning($"不存在登记类型为{type}的服务,转而尝试获取登记类型为{i}的服务", EMessageType.Service);
-                        return TryGet(i, out ret);
-                    }
-                }
-
-                Debugger.LogWarning($"不存在登记类型为{type}的服务", EMessageType.Service);
-                ret = null;
-                return false;
-            }
-
-            ret = serviceDict[type];
-            return true;
+            Global.Clear();
+            // 复制避免遍历时修改
+            var allSceneMgrs = new List<ServiceManager>(scenes.Values);
+            scenes.Clear();
+            for (int i = 0; i < allSceneMgrs.Count; i++)
+                allSceneMgrs[i].Clear();
         }
 
-        /// <summary>
-        /// 解决服务冲突
-        /// </summary>
-        /// <returns>是否要将新服务加入字典</returns>
-        private static bool SolveConflict(Service oldService, Service newService, EConflictSolution solution)
-        {
-            if (oldService == newService)
-                return false;
+        // --- 内部辅助 ---
 
-            bool ret = false;
-            Debugger.LogWarning($"服务发生冲突,旧服务{oldService.Information};\n新服务{newService.Information};解决方式为{solution}", EMessageType.Service);
-            switch (solution)
+        private static bool TryGetSceneManager(int handle, out ServiceManager mgr)
+        {
+            if (scenes.TryGetValue(handle, out mgr))
+                return true;
+            mgr = null;
+            return false;
+        }
+
+        private static ServiceManager GetOrCreateSceneManager(Scene scene)
+        {
+            if (!scenes.TryGetValue(scene.handle, out var mgr))
             {
-                case EConflictSolution.DestroyOld:
-                    oldService.Destroy();
-                    ret = true;
-                    break;
-                case EConflictSolution.DestroyNew:
-                    newService.Destroy();
-                    break;
-                case EConflictSolution.UnregisterOld:
-                    Unregister(oldService);
-                    ret = true;
-                    break;
-                case EConflictSolution.UnregisterNew:
-                    break;
+                mgr = new ServiceManager(isGlobal: false, scene: scene);
+                scenes.Add(scene.handle, mgr);
             }
-            return ret;
+            return mgr;
+        }
+
+        private static void OnSceneUnloaded(Scene s)
+        {
+            if (scenes.TryGetValue(s.handle, out var mgr))
+            {
+                scenes.Remove(s.handle);
+                mgr.DisposeAll();
+            }
+        }
+
+        /// <summary>是否属于全局（DontDestroyOnLoad）场景</summary>
+        private static bool IsGlobalScene(Scene s)
+        {
+            return !s.IsValid() || s.name == "DontDestroyOnLoad";
+        }
+
+        /// <summary>是否为一个"真实可查"的场景（非 default、非 DontDestroyOnLoad）</summary>
+        private static bool IsRealScene(Scene s)
+        {
+            return s.IsValid() && s.name != "DontDestroyOnLoad";
         }
     }
 }
