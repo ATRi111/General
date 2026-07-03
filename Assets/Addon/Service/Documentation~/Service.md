@@ -18,11 +18,23 @@
 - 创建新的A时的注意事项：
   - 要实现其初始化逻辑，应当重写`Init`，而不是`Awake`或`Start`
   - A执行完自身的`Start`函数后，初始化才完成；其他脚本如果对A有依赖，必须考虑A的初始化是否已完成
-  - 理论上，只要确保依赖不出问题，可以在任何时候创建和销毁A，这比单例更灵活；不过对于小型项目而言，几乎所有的A都会在游戏开始时创建，生命周期持续整个游戏，所以**通常会专门创建一个场景，用于初始化几乎所有A，等初始化完毕后，再加载下个场景（即游戏的具体内容）**
+  - 理论上，只要确保依赖不出问题，可以在任何时候创建和销毁A，这比单例更灵活；不过对于小型项目而言，几乎所有的A都会在游戏开始时创建，生命周期持续整个游戏（全局服务），所以**通常会专门创建一个场景，用于初始化几乎所有A，等初始化完毕后，再加载下个场景（即游戏的具体内容）**
 
 - **所有实例都可以通过`ServiceLocator.Get`来获取A，而多个A之间可以通过`AutoServiceAttribute`相互获取**
   - 只要了解框架，便能够确定获取A时要提供什么标识符；如果实在不确定，可以使用`RegisterType`属性
   - 如果提供了字典中不存在的标识符，程序会尝试自动修正错误：遍历A直接或间接实现的所有接口，如果找到一个D类接口，就转而以该接口为标识符
+
+## Service的作用域
+
+- Service 按**作用域**分类。作用域决定了 Service 的生命周期，以及从 `ServiceLocator` 获取该 Service 时使用的接口
+  - **全局服务（Global）**：`isGlobal = true`，Awake 时自动调用 `DontDestroyOnLoad`，跨场景持续存在；`Handle = 0`
+  - **场景服务（Scene）**：`isGlobal = false`，生命周期与所在 Scene 绑定；Scene 卸载时随之清理；`Handle = scene.handle`
+  - **默认值**：`isGlobal = true`，即 Service 默认是全局服务。如果只希望 Service 在某个场景中存活，应显式将 `isGlobal` 设为 `false`
+- `Handle` 由 Awake 时计算一次后缓存，之后不再变化；`ServiceLocator` 内部按 `Handle` 分桶存储，相同作用域内的 Service 集中管理
+- `ServiceLocator` 提供多种获取方式，对应不同作用域：
+  - `Get<T>()` ：获取全局服务
+  - `Get<T>(int handle)`：从指定 `Handle` 的作用域获取
+  - `Get<T>(Scene scope)` / `Get(Scene scope, Type)`：从指定 Scene 的作用域获取
 
 ## IService
 

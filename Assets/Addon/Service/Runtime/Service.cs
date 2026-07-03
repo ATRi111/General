@@ -59,13 +59,33 @@ namespace Services
     }
 
     /// <summary>
+    /// <see cref="AutoServiceAttribute"/> 从哪个作用域获取目标 Service
+    /// </summary>
+    public enum EAutoServiceScope
+    {
+        /// <summary>从全局作用域（Handle=0）获取</summary>
+        Global,
+        /// <summary>从当前 Service 所在的作用域（同 Handle）获取；若当前 Service 本身是 Global，则等同 Global</summary>
+        SameScope,
+    }
+
+    /// <summary>
     ///自动获取其他服务
     /// </summary>
     [AttributeUsage(AttributeTargets.Field)]
     internal class AutoServiceAttribute : Attribute
     {
+        public EAutoServiceScope Scope { get; }
+
+        public AutoServiceAttribute(EAutoServiceScope scope = EAutoServiceScope.Global)
+        {
+            Scope = scope;
+        }
+
         public static void Apply(object obj)
         {
+            int handle = (obj is Service service) ? service.Handle : 0;
+
             FieldInfo[] infos = obj.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             foreach (FieldInfo info in infos)
             {
@@ -76,16 +96,14 @@ namespace Services
                     Debugger.Settings.Copy();
                     Debugger.Settings.SetAllowLog(EMessageType.System, false);
 
-                    info.SetValue(obj, ServiceLocator.Get(type));
+                    if (attribute.Scope == EAutoServiceScope.SameScope && handle != 0)
+                        info.SetValue(obj, ServiceLocator.Get(handle, type));
+                    else
+                        info.SetValue(obj, ServiceLocator.Get(type));
 
                     Debugger.Settings.Paste();
-
                 }
             }
-        }
-
-        public AutoServiceAttribute()
-        {
         }
     }
 }
