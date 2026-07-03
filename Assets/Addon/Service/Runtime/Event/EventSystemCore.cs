@@ -15,7 +15,7 @@ namespace Services.Event
             eventDict = new Dictionary<EEvent, Delegate>();
         }
 
-        private bool Check(EEvent eEvent, Type methodType, bool logIfMissing = true)
+        private bool Check(EEvent eEvent, Type methodType, bool logIfMissing = false)
         {
             if (!typeDict.ContainsKey(eEvent))
             {
@@ -34,7 +34,7 @@ namespace Services.Event
         private bool CheckOrCreate(EEvent eEvent, Type methodType)
         {
             if (typeDict.ContainsKey(eEvent))
-                return Check(eEvent, methodType, false);
+                return Check(eEvent, methodType);
             CreateEvent(eEvent, methodType);
             return true;
         }
@@ -78,22 +78,22 @@ namespace Services.Event
 
         public void RemoveListener(EEvent eEvent, UnityAction callBack)
         {
-            if (Check(eEvent, callBack.GetType()))
+            if (Check(eEvent, callBack.GetType(), true))
                 eventDict[eEvent] = eventDict[eEvent] as UnityAction - callBack;
         }
         public void RemoveListener<T1>(EEvent eEvent, UnityAction<T1> callBack)
         {
-            if (Check(eEvent, callBack.GetType()))
+            if (Check(eEvent, callBack.GetType(), true))
                 eventDict[eEvent] = eventDict[eEvent] as UnityAction<T1> - callBack;
         }
         public void RemoveListener<T1, T2>(EEvent eEvent, UnityAction<T1, T2> callBack)
         {
-            if (Check(eEvent, callBack.GetType()))
+            if (Check(eEvent, callBack.GetType(), true))
                 eventDict[eEvent] = eventDict[eEvent] as UnityAction<T1, T2> - callBack;
         }
         public void RemoveListener<T1, T2, T3>(EEvent eEvent, UnityAction<T1, T2, T3> callBack)
         {
-            if (Check(eEvent, callBack.GetType()))
+            if (Check(eEvent, callBack.GetType(), true))
                 eventDict[eEvent] = eventDict[eEvent] as UnityAction<T1, T2, T3> - callBack;
         }
 

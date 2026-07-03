@@ -14,7 +14,7 @@ namespace AStar
         /// </summary>
         public virtual bool MoveAbilityCheck(Node node)
         {
-            return Mathf.RoundToInt(node.GCost) <= Movability;
+            return Mathf.RoundToInt(node.GCost) <= MoveAbility;
         }
 
         /// <summary>

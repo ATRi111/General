@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 10
+  serializedVersion: 9
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -38,12 +38,12 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 12
+  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -66,6 +66,9 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
+    m_FinalGather: 0
+    m_FinalGatherFiltering: 1
+    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -163,6 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01f1217225e6a7c4a8bbede057bafa8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isGlobal: 1
 --- !u!1 &821372878
 GameObject:
   m_ObjectHideFlags: 0
@@ -294,12 +298,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!1 &1075682698
 GameObject:
   m_ObjectHideFlags: 0
@@ -344,6 +348,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38d7c74dcd7f2eb47868b9289b9aee37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isGlobal: 1
 --- !u!1 &1094894498
 GameObject:
   m_ObjectHideFlags: 0
@@ -389,6 +394,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a00c6d3c5b625f489b86672a9f7b911, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isGlobal: 1
 --- !u!114 &1094894501
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -449,6 +455,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc5c709fb333cba48aa208d2042e8f28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isGlobal: 1
   async: 1
   needConfirm: 0
 --- !u!1 &1286429479
@@ -495,6 +502,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 604073a1d35c124408912335dca5cedc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isGlobal: 1
 --- !u!1 &1433321318
 GameObject:
   m_ObjectHideFlags: 0
@@ -539,6 +547,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a149911696ed42a46866c537056d42e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isGlobal: 1
 --- !u!1 &1507558888
 GameObject:
   m_ObjectHideFlags: 0
@@ -592,7 +601,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1582914610}
-  - component: {fileID: 1582914609}
   m_Layer: 0
   m_Name: ServiceLocator
   m_TagString: Untagged
@@ -600,18 +608,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1582914609
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1582914608}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4136956b373fd1a46949358efd29ddce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1582914610
 Transform:
   m_ObjectHideFlags: 0
@@ -659,8 +655,9 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1663163077}
   m_Enabled: 1
-  serializedVersion: 11
+  serializedVersion: 10
   m_Type: 1
+  m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1
   m_Range: 10
@@ -771,6 +768,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41f49b42971d3234488f22998cee71c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isGlobal: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -26,7 +26,7 @@ namespace Services
         }
 
         public static T Get<T>() where T : class, IService
-            => Get(0) as T;
+            => Get<T>(0);
         public static Service Get(Type type)
             => Get(0, type);
         public static T Get<T>(int handle) where T : class, IService

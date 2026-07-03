@@ -32,9 +32,10 @@ namespace Services
         {
             //禁止将服务移动到其他场景，全局服务自动确保不销毁
             if(isGlobal)
-                DontDestroyOnLoad(gameObject);
+                DontDestroyOnLoad(transform.root.gameObject);
             Handle = isGlobal ? 0 : gameObject.scene.handle;
-            Information = $"服务类型:{RegisterType},所在游戏物体:{gameObject.name},作用域:{(isGlobal ? "Global" :  gameObject.scene.name")}";
+            string scope = isGlobal ? "Global" : gameObject.scene.name;
+            Information = $"服务类型:{RegisterType},所在游戏物体:{gameObject.name},作用域:{scope}";
             ServiceLocator.Register(this, ConflictHandler);
         }
 
