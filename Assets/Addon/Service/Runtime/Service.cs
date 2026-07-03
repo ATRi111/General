@@ -23,18 +23,19 @@ namespace Services
 
         public bool isGlobal = true;
 
-        /// <summary>缓存的路由 handle，Awake 时计算一次。0 = Global；正整数 = Scene.handle</summary>
+        /// <summary>服务的作用域按scene划分，以scene的handle为key，其中0表示全局作用域</summary>
         public int Handle { get; private set; }
 
         public string Information { get; protected set; }
 
         protected virtual void Awake()
         {
+            //禁止将服务移动到其他场景，全局服务自动确保不销毁
+            if(isGlobal)
+                DontDestroyOnLoad(gameObject);
             Handle = isGlobal ? 0 : gameObject.scene.handle;
             Information = $"服务类型:{RegisterType},所在游戏物体:{gameObject.name},作用域:{(isGlobal ? "Global" :  gameObject.scene.name")}";
             ServiceLocator.Register(this, ConflictHandler);
-            if(isGlobal)
-                DontDestroyOnLoad(gameObject);
         }
 
         protected virtual void Start()
