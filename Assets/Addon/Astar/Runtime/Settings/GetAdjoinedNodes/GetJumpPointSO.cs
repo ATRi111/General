@@ -67,7 +67,7 @@ namespace AStar.Sample
         {
             Vector2Int current = from;
             Node prev = process.GetNode(from);
-            Node node;
+            Node node = null;
             for (int i = 0; i < depthOnDirection; i++)
             {
                 current += direction;
@@ -78,8 +78,7 @@ namespace AStar.Sample
                 if (IsJumpPoint(process, node, direction))
                     return node;
             }
-            // 走完 depthOnDirection 仍未命中跳点：不返回任何节点
-            return null;
+            return node;
         }
 
         public bool IsJumpPoint(PathFindingProcess process, Node node, Vector2Int direction)
