@@ -4,26 +4,31 @@ using System.Collections.Generic;
 namespace Services
 {
     /// <summary>
-    /// 一个作用域内的服务集合。
-    /// 作用域由外部决定：Global（跨场景） 或 某个 Scene（仅该场景）。
+    /// 一个 handle 作用域内的服务集合。
+    /// handle = 0 表示 Global；正整数表示 Scene.handle。
+    /// 冲突处理由 <see cref="ConflictHandler"/> 委托驱动，外部可按需替换。
     /// </summary>
     internal sealed class ServiceManager
     {
         private readonly Dictionary<Type, Service> serviceDict = new Dictionary<Type, Service>();
 
-        /// <summary>是否为全局作用域</summary>
-        public bool IsGlobal { get; }
+        /// <summary>每个ServiceManager管理一个作用域(场景)，以scene.handle为标识符，handle = 0表示Global</summary>
+        public int Handle { get; private set;}
 
-        /// <summary>所属场景（Global 时为 default(Scene)）</summary>
-        public UnityEngine.SceneManagement.Scene Scene { get; }
+        /// <summary>
+        /// 同一 RegisterType 重复注册时的冲突处理方法。
+        /// <para>签名：(旧服务, 新服务) → 无返回值。</para>
+        /// <para>冲突时只调用本方法做善后（销毁旧组件、注销旧项等），新服务不会进入字典；
+        /// 不冲突时直接注册新服务，不会调用本方法。默认实现 <see cref="DefaultConflictHandler"/>：仅记日志。</para>
+        /// </summary>
+        public Action<Service, Service> ConflictHandler { get; set; } = DefaultConflictHandler;
 
-        public ServiceManager(bool isGlobal, UnityEngine.SceneManagement.Scene scene)
+        public ServiceManager(int handle)
         {
-            IsGlobal = isGlobal;
-            Scene = scene;
+            Handle = handle;
         }
 
-        public void Register(Service service, EConflictSolution solution)
+        public void Register(Service service, Action<Service, Service> conflictHandler)
         {
             Type type = service.RegisterType;
 
@@ -34,13 +39,15 @@ namespace Services
 
             Debugger.Settings.Paste();
 
-            if (contain)
+            // 不冲突：直接注册
+            if (!contain)
             {
-                if (SolveConflict(oldService, service, solution))
-                    serviceDict.Add(type, service);
-            }
-            else
                 serviceDict.Add(type, service);
+                return;
+            }
+
+            Action<Service, Service> handler = conflictHandler ?? ConflictHandler;
+            handler(oldService, service);
         }
 
         public void Unregister(Service service)
@@ -71,7 +78,7 @@ namespace Services
                 if (!IService.ExtendsIService(type))
                 {
                     Type i = IService.GetSubInterfaceOfIService(type);
-                    if (i != null)
+                    if (i != null && i != type)
                     {
                         Debugger.LogWarning($"不存在登记类型为{type}的服务,转而尝试获取登记类型为{i}的服务", EMessageType.Service);
                         return TryGet(i, out ret);
@@ -88,53 +95,11 @@ namespace Services
         }
 
         /// <summary>
-        /// 解决服务冲突
+        /// 默认冲突处理：新服务不会注册，也不会被销毁
         /// </summary>
-        /// <returns>是否要将新服务加入字典</returns>
-        private bool SolveConflict(Service oldService, Service newService, EConflictSolution solution)
+        public static void DefaultConflictHandler(Service oldService, Service newService)
         {
-            if (oldService == newService)
-                return false;
-
-            bool ret = false;
-            Debugger.LogWarning($"服务发生冲突,旧服务{oldService.Information};\n新服务{newService.Information};解决方式为{solution}", EMessageType.Service);
-            switch (solution)
-            {
-                case EConflictSolution.DestroyOld:
-                    oldService.Destroy();
-                    ret = true;
-                    break;
-                case EConflictSolution.DestroyNew:
-                    newService.Destroy();
-                    break;
-                case EConflictSolution.UnregisterOld:
-                    Unregister(oldService);
-                    ret = true;
-                    break;
-                case EConflictSolution.UnregisterNew:
-                    break;
-            }
-            return ret;
-        }
-
-        /// <summary>清空字典（不销毁服务 GameObject）</summary>
-        public void Clear()
-        {
-            serviceDict.Clear();
-        }
-
-        /// <summary>场景卸载时调用：Unregister 所有服务并销毁其 GameObject</summary>
-        public void DisposeAll()
-        {
-            // 复制一份引用，Unregister 会修改字典
-            var services = new List<Service>(serviceDict.Values);
-            serviceDict.Clear();
-            for (int i = 0; i < services.Count; i++)
-            {
-                var s = services[i];
-                if (s != null)
-                    s.Destroy();
-            }
+            Debugger.LogWarning($"服务发生冲突,旧服务{oldService.Information};\n新服务{newService.Information};采用默认策略:不注册也不销毁新服务", EMessageType.Service);
         }
     }
 }

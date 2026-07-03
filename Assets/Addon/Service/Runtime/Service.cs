@@ -10,36 +10,45 @@ namespace Services
     public class Service : MonoBehaviour
     {
         /// <summary>
-        /// <para>登记时使用的类型，具有同一登记类型的实例应当只存在一个</para>
+        /// <para>登记时使用的类型，在每个作用域内，具有同一登记类型的服务应当只存在一个</para>
         /// <para>默认情况下，登记类型应该是一个接口类型；某个类继承Service，又实现该接口类型，该接口类型再继承IService；
-        /// 其他脚本要获取一个服务时，也定义并获取接口类型的字段，这体现了依赖注入</para>
-        /// <para>但是，如果是项目中临时增加的服务类，可能不希望为其定义一个接口；这种情况下，该类继承Service，并直接实现IService，登记类型直接使用该类本身</para>
+        /// <para>但是，如果是项目中临时增加的服务类，可能不希望为其定义一个接口；这种情况下，该类继承Service，直接实现IService，此字段重写为typeof([该类])</para>
         /// </summary>
         public virtual Type RegisterType => IService.GetSubInterfaceOfIService(GetType());
-        protected virtual EConflictSolution Solution => EConflictSolution.DestroyNew;
+
+        /// <summary>
+        /// 当前 Service 的冲突处理方法。为 null 时则沿用 <see cref="ServiceManager"/> 的 <see cref="ServiceManager.ConflictHandler"/>。
+        /// </summary>
+        protected virtual Action<Service, Service> ConflictHandler => null;
+
+        public bool isGlobal = true;
+
+        /// <summary>缓存的路由 handle，Awake 时计算一次。0 = Global；正整数 = Scene.handle</summary>
+        public int Handle { get; private set; }
 
         public string Information { get; protected set; }
 
         protected virtual void Awake()
         {
-            Information = $"服务类型:{RegisterType},所在游戏物体:{gameObject.name}";
-            ServiceLocator.Register(this, Solution);
+            Handle = isGlobal ? 0 : gameObject.scene.handle;
+            Information = $"服务类型:{RegisterType},所在游戏物体:{gameObject.name},作用域:{(isGlobal ? "Global" :  gameObject.scene.name")}";
+            ServiceLocator.Register(this, ConflictHandler);
+            if(isGlobal)
+                DontDestroyOnLoad(gameObject);
         }
 
         protected virtual void Start()
         {
             AutoServiceAttribute.Apply(this);
             Init();
-            // TODO: 作用域设计稳定后重新启用
-            // ServiceLocator.ServiceInit?.Invoke(this);
         }
 
+        /// <summary>执行到此函数时，必然已经获取所需服务</summary>
         protected internal virtual void Init() { }
 
-        public virtual void Destroy()
+        public virtual void OnDestroy()
         {
             ServiceLocator.Unregister(this);
-            Destroy(this);
         }
 
         public override string ToString()

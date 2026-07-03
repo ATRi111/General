@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 
 namespace Services
 {
+    //游戏从不含 ServiceLocator 的场景启动时，自动切换到0场景
     //此类禁止访问ServiceLocator类
     [DefaultExecutionOrder(-1000)]
     internal class GameLaunchHelper : MonoBehaviour
