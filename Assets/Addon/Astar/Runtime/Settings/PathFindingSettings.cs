@@ -20,47 +20,42 @@ namespace AStar
         /// </summary>
         public float hCostWeight = 1;
 
-        /// <summary>
-        /// 获取相邻可达节点的方法
-        /// </summary>
-        public Action<PathFindingProcess, Node, Func<Node, Node, bool>, List<Node>> GetAdjoinNodes;
-        public GetMovableNodesSO getAdjoinedNodesSO;
+        [SerializeField]
+        private GetMovableNodesSO getAdjoinedNodesSO;
+        [SerializeField]
+        private CalculateDistanceSO calculateDistanceSO;
+        [SerializeField]
+        private GenerateNodeSO generateNodeSO;
 
         /// <summary>
-        /// 计算两点间距离的方法
+        /// 获取相邻可达节点
         /// </summary>
-        public Func<Vector2Int, Vector2Int, float> CalculateDistance;
-        public CalculateDistanceSO calculateDistanceSO;
-
-        /// <summary>
-        /// 生成新节点的方法
-        /// </summary>
-        public Func<PathFindingProcess, Vector2Int, Node> GenerateNode;
-        public GenerateNodeSO generateNodeSO;
-
-        public void Refresh()
+        public void GetAdjoinNodes(PathFindingProcess process, Node from, Func<Node, Node, bool> moveCheck, List<Node> adjoins)
         {
-            if (GetAdjoinNodes == null)
-            {
-                if (getAdjoinedNodesSO != null)
-                    GetAdjoinNodes = getAdjoinedNodesSO.GetMovableNodes;
-                else
-                    GetAdjoinNodes = PathFindingUtility.GetAdjoinNodes_Four;
-            }
-            if (CalculateDistance == null)
-            {
-                if (calculateDistanceSO != null)
-                    CalculateDistance = calculateDistanceSO.CalculateDistance;
-                else
-                    CalculateDistance = PathFindingUtility.ManhattanDistance;
-            }
-            if (GenerateNode == null)
-            {
-                if (generateNodeSO != null)
-                    GenerateNode = generateNodeSO.GenerateNode;
-                else
-                    GenerateNode = PathFindingUtility.GenerateNode_Default;
-            }
+            if (getAdjoinedNodesSO != null)
+                getAdjoinedNodesSO.GetMovableNodes(process, from, moveCheck, adjoins);
+            else
+                PathFindingUtility.GetAdjoinNodes_Four(process, from, moveCheck, adjoins);
+        }
+
+        /// <summary>
+        /// 计算两点间距离
+        /// </summary>
+        public float CalculateDistance(Vector2Int from, Vector2Int to)
+        {
+            return calculateDistanceSO != null
+                ? calculateDistanceSO.CalculateDistance(from, to)
+                : PathFindingUtility.ManhattanDistance(from, to);
+        }
+
+        /// <summary>
+        /// 生成新节点
+        /// </summary>
+        public Node GenerateNode(PathFindingProcess process, Vector2Int position)
+        {
+            return generateNodeSO != null
+                ? generateNodeSO.GenerateNode(process, position)
+                : PathFindingUtility.GenerateNode_Default(process, position);
         }
     }
 }

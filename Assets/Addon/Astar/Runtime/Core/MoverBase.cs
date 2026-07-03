@@ -3,22 +3,11 @@ using UnityEngine;
 
 namespace AStar
 {
+    [Serializable]
     public class MoverBase
     {
-        /// <summary>
-        /// 用于计算移动力的方法，非必需
-        /// </summary>
-        public Func<float> GetMoveAbility;
         public float moveAbility = 5;
-        public float Movability
-        {
-            get
-            {
-                if (GetMoveAbility != null)
-                    return GetMoveAbility();
-                return moveAbility;
-            }
-        }
+        public float MoveAbility => moveAbility;
 
         /// <summary>
         /// 判断移动力是否足以到达某节点

@@ -82,9 +82,14 @@ namespace AStar
         /// </summary>
         public void Recall(List<Node> ret = null)
         {
-            Parent?.Recall(ret);
-            if (process.mover.MoveAbilityCheck(this))
-                ret?.Add(this);
+            if (ret == null) 
+                return;
+            List<Node> stack = new();
+            for (Node n = this; n != null; n = n.Parent)
+                if (process.mover.MoveAbilityCheck(n))
+                    stack.Add(n);
+            for (int i = stack.Count - 1; i >= 0; i--)
+                ret.Add(stack[i]);
         }
 
         public override string ToString()
@@ -97,7 +102,10 @@ namespace AStar
     {
         public int Compare(Node x, Node y)
         {
-            return (int)Mathf.Sign(x.WeightedFCost - y.WeightedFCost);
+            int c = x.WeightedFCost.CompareTo(y.WeightedFCost);
+            if (c != 0) 
+                return c;
+            return y.HCost.CompareTo(x.HCost);  //FCost相等时，优先选择HCost更小的
         }
     }
 }

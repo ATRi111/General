@@ -40,7 +40,7 @@ namespace AStar
         /// </summary>
         internal void GetMovableNodes(Node from)
         {
-            settings.GetAdjoinNodes.Invoke(this, from, mover.MoveCheck, adjoins);
+            settings.GetAdjoinNodes(this, from, mover.MoveCheck, adjoins);
         }
 
         public Node[] GetAllNodes()
@@ -72,7 +72,7 @@ namespace AStar
         /// <summary>
         /// 所有已发现节点
         /// </summary>
-        internal Dictionary<Vector2, Node> discoveredNodes;
+        internal Dictionary<Vector2Int, Node> discoveredNodes;
 
         private List<Node> adjoins;
         /// <summary>
@@ -108,7 +108,6 @@ namespace AStar
 
         public void Initialize()
         {
-            settings.Refresh();
             mover ??= new MoverBase();
 
             discoveredNodes = new();
@@ -203,6 +202,7 @@ namespace AStar
                         open.Push(node);
                         break;
                     case ENodeState.Open:
+                        //节点的值改变，理论上在堆中的位置需要改变，但目前忽略
                         node.UpdateParent(currentNode);
                         break;
                 }
