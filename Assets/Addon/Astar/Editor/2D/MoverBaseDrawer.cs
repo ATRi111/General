@@ -1,6 +1,7 @@
 ﻿using EditorExtend;
 using UnityEditor;
 using UnityEngine;
+using AStar;
 
 namespace AStar.TwoD
 {

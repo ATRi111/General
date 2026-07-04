@@ -5,7 +5,7 @@ using AStar;
 
 namespace AStar.TwoD
 {
-    [CustomPropertyDrawer(typeof(Node), true)]
+    [CustomPropertyDrawer(typeof(Node2D), true)]
     public class AStarNodeDrawer : AutoPropertyDrawer
     {
         [AutoProperty]

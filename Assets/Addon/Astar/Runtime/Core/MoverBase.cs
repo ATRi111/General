@@ -1,11 +1,13 @@
 ﻿using System;
 using UnityEngine;
 
-namespace AStar.TwoD
+namespace AStar
 {
     [Serializable]
     public class MoverBase
     {
+        public const float Epsilon = 1e-6f;
+
         public float moveAbility = 5;
         public float MoveAbility => moveAbility;
 
@@ -39,7 +41,7 @@ namespace AStar.TwoD
         public virtual float CalculateCost(Node from, Node to, float primitiveCost)
         {
             if (!StayCheck(to))
-                primitiveCost += PathFinding2DUtility.Epsilon;    //优先选择经过可以停留的节点
+                primitiveCost += Epsilon;    //优先选择经过可以停留的节点
             return primitiveCost;
         }
     }

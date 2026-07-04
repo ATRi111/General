@@ -4,7 +4,7 @@ using AStar.TwoD;
 
 namespace AStar.Sample
 {
-    public class SampleNode : Node
+    public class SampleNode : Node2D
     {
         internal SampleNode(PathFindingProcess process, Vector2Int position)
             : base(process, position)

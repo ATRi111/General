@@ -19,9 +19,9 @@ namespace AStar.TwoD
         {
             return true;
         }
-        public static Node GenerateNode_Default(PathFindingProcess process, Vector2Int position)
+        public static Node2D GenerateNode_Default(PathFindingProcess process, Vector2Int position)
         {
-            return new Node(process, position);
+            return new Node2D(process, position);
         }
 
         #region 四向寻路
@@ -36,10 +36,10 @@ namespace AStar.TwoD
         /// <summary>
         /// 获取某节点周围的四个节点
         /// </summary>
-        public static void GetAdjoinNodes_Four(PathFindingProcess process, Node from, Func<Node, Node, bool> moveCheck, List<Node> ret)
+        public static void GetAdjoinNodes_Four(PathFindingProcess process, Node2D from, Func<Node2D, Node2D, bool> moveCheck, List<Node2D> ret)
         {
             ret.Clear();
-            Node to;
+            Node2D to;
             foreach (Vector2Int direction in FourDirections)
             {
                 to = process.GetNode(from.Position + direction);
@@ -68,10 +68,10 @@ namespace AStar.TwoD
         /// <summary>
         /// 获取某节点周围的八个节点
         /// </summary>
-        public static void GetAdjoinNodes_Eight(PathFindingProcess process, Node from, Func<Node, Node, bool> moveCheck, List<Node> ret)
+        public static void GetAdjoinNodes_Eight(PathFindingProcess process, Node2D from, Func<Node2D, Node2D, bool> moveCheck, List<Node2D> ret)
         {
             ret.Clear();
-            Node to;
+            Node2D to;
             foreach (Vector2Int direction in EightDirections)
             {
                 to = process.GetNode(from.Position + direction);

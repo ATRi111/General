@@ -47,7 +47,7 @@ namespace AStar.Sample
             Clear();
             GameObject obj = new("debug");
 
-            Node[] allNodes = process.GetAllNodes();
+            Node2D[] allNodes = process.GetAllNodes();
             for (int i = 0; i < allNodes.Length; i++)
             {
                 PaintNode(allNodes[i], obj.transform);
@@ -60,7 +60,7 @@ namespace AStar.Sample
             Destroy(obj);
         }
 
-        private void PaintNode(Node node, Transform parent)
+        private void PaintNode(Node2D node, Transform parent)
         {
             GameObject obj = Instantiate(prefab);
             obj.name = node.state.ToString();

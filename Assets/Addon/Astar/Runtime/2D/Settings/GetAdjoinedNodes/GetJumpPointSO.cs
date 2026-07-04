@@ -10,7 +10,7 @@ namespace AStar.TwoD
     {
         public int depthOnDirection;
 
-        public override void GetMovableNodes(PathFindingProcess process, Node from, Func<Node, Node, bool> moveCheck, List<Node> ret)
+        public override void GetMovableNodes(PathFindingProcess process, Node2D from, Func<Node2D, Node2D, bool> moveCheck, List<Node2D> ret)
         {
             // 沿 from 的"穿不过"判定，统一走 mover.MoveCheck 的语义
             // 这样 Pawn 之类 IsObstacle=false 但 StayCheck 不通过的节点也能被正确处理
@@ -19,7 +19,7 @@ namespace AStar.TwoD
                 return !moveCheck(from, process.GetNode(from.Position + delta));
             }
 
-            void TryAdd(Node to)
+            void TryAdd(Node2D to)
             {
                 if (to != null && moveCheck(from, to))
                     ret.Add(to);
@@ -63,11 +63,11 @@ namespace AStar.TwoD
             }
         }
 
-        public Node FindJumpPointOnDirection(PathFindingProcess process, Vector2Int from, Vector2Int direction)
+        public Node2D FindJumpPointOnDirection(PathFindingProcess process, Vector2Int from, Vector2Int direction)
         {
             Vector2Int current = from;
-            Node prev = process.GetNode(from);
-            Node node = null;
+            Node2D prev = process.GetNode(from);
+            Node2D node = null;
             for (int i = 0; i < depthOnDirection; i++)
             {
                 current += direction;
@@ -81,7 +81,7 @@ namespace AStar.TwoD
             return node;
         }
 
-        public bool IsJumpPoint(PathFindingProcess process, Node node, Vector2Int direction)
+        public bool IsJumpPoint(PathFindingProcess process, Node2D node, Vector2Int direction)
         {
             bool CantPass(Vector2Int delta)
             {

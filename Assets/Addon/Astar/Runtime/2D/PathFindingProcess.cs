@@ -18,20 +18,20 @@ namespace AStar.TwoD
         public MoverBase mover;
         public Transform mountPoint;
 
-        public List<Node> output;
-        public List<Node> available;
+        public List<Node2D> output;
+        public List<Node2D> available;
 
         #region 基础方法
 
         /// <summary>
         /// 获取地图上某个位置的节点，必要时创建新节点
         /// </summary>
-        internal Node GetNode(Vector2Int pos)
+        internal Node2D GetNode(Vector2Int pos)
         {
             countOfQuery++;
             if (discoveredNodes.ContainsKey(pos))
                 return discoveredNodes[pos];
-            Node node = settings.GenerateNode(this, pos);
+            Node2D node = settings.GenerateNode(this, pos);
             discoveredNodes.Add(pos, node);
             return node;
         }
@@ -39,12 +39,12 @@ namespace AStar.TwoD
         /// <summary>
         /// 获取与一个节点相邻的可达节点
         /// </summary>
-        internal void GetMovableNodes(Node from)
+        internal void GetMovableNodes(Node2D from)
         {
             settings.GetAdjoinNodes(this, from, mover.MoveCheck, adjoins);
         }
 
-        public Node[] GetAllNodes()
+        public Node2D[] GetAllNodes()
         {
             return discoveredNodes.Values.ToArray();
         }
@@ -59,36 +59,36 @@ namespace AStar.TwoD
         public bool IsRunning => isRunning;
 
         [SerializeField]
-        private Node from;
+        private Node2D from;
         /// <summary>
         /// 起点
         /// </summary>
-        public Node From => from;
+        public Node2D From => from;
         [SerializeField]
-        private Node to;
+        private Node2D to;
         /// <summary>
         /// 终点
         /// </summary>
-        public Node To => to;
+        public Node2D To => to;
         /// <summary>
         /// 所有已发现节点
         /// </summary>
-        internal Dictionary<Vector2Int, Node> discoveredNodes;
+        internal Dictionary<Vector2Int, Node2D> discoveredNodes;
 
-        private List<Node> adjoins;
+        private List<Node2D> adjoins;
         /// <summary>
         /// 待访问节点表
         /// </summary>
-        internal Heap<Node> open;
+        internal Heap<Node2D> open;
 
         /// <summary>
         /// 当前经过的节点
         /// </summary>
-        public Node currentNode;
+        public Node2D currentNode;
         /// <summary>
         /// 在可计算的范围内，到终点距离最近的节点
         /// </summary>
-        public Node nearest;
+        public Node2D nearest;
 
         [SerializeField]
         internal int countOfCloseNode;
@@ -115,7 +115,7 @@ namespace AStar.TwoD
             adjoins = new();
             output = new();
             available = new();
-            open = new Heap<Node>(settings.capacity, new Comparer_Cost());
+            open = new Heap<Node2D>(settings.capacity, new Comparer_Cost());
             countOfQuery = 0;
             countOfCloseNode = 0;
         }
@@ -192,7 +192,7 @@ namespace AStar.TwoD
 
             GetMovableNodes(currentNode);
 
-            foreach (Node node in adjoins)
+            foreach (Node2D node in adjoins)
             {
                 switch (node.state)
                 {
@@ -218,7 +218,7 @@ namespace AStar.TwoD
         public void Stop()
         {
             isRunning = false;
-            nearest.Recall(output);
+            nearest.Recall(n => output.Add((Node2D)n));
         }
 
         private bool CheckNextStep()

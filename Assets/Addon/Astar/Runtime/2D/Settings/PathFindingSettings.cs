@@ -30,7 +30,7 @@ namespace AStar.TwoD
         /// <summary>
         /// 获取相邻可达节点
         /// </summary>
-        public void GetAdjoinNodes(PathFindingProcess process, Node from, Func<Node, Node, bool> moveCheck, List<Node> adjoins)
+        public void GetAdjoinNodes(PathFindingProcess process, Node2D from, Func<Node2D, Node2D, bool> moveCheck, List<Node2D> adjoins)
         {
             if (getAdjoinedNodesSO != null)
                 getAdjoinedNodesSO.GetMovableNodes(process, from, moveCheck, adjoins);
@@ -51,7 +51,7 @@ namespace AStar.TwoD
         /// <summary>
         /// 生成新节点
         /// </summary>
-        public Node GenerateNode(PathFindingProcess process, Vector2Int position)
+        public Node2D GenerateNode(PathFindingProcess process, Vector2Int position)
         {
             return generateNodeSO != null
                 ? generateNodeSO.GenerateNode(process, position)

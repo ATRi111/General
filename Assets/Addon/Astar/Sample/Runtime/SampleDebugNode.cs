@@ -29,7 +29,7 @@ namespace AStar.Sample
             textbox = GetComponentInChildren<TextMeshProUGUI>();
         }
 
-        public void Initialize(Node node)
+        public void Initialize(Node2D node)
         {
             if (node.IsObstacle)
             {

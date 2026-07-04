@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Tilemaps;
+using AStar;
 using AStar.TwoD;
 
 namespace AStar.Sample
@@ -20,7 +21,8 @@ namespace AStar.Sample
             if (!base.StayCheck(node))
                 return false;
 
-            Vector3 world = sample.NodeToWorld(node.Position);
+            Node2D node2D = (Node2D)node;
+            Vector3 world = sample.NodeToWorld(node2D.Position);
             Vector3Int tilePos = map.WorldToCell(world);
             RuleTile tile = map.GetTile(tilePos) as RuleTile;
             if (tile != null)

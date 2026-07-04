@@ -1,24 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
-using AStar;
 
-namespace AStar.TwoD
+namespace AStar
 {
+    /// <summary>
+    /// 寻路节点的公共基类，不涉及具体的空间位置表示（2D网格 / 稀疏八叉树等）
+    /// </summary>
     [System.Serializable]
-    public class Node
+    public abstract class Node
     {
-        protected internal readonly PathFindingProcess process;
-        [SerializeField]
-        protected Vector2Int position;
-        public Vector2Int Position => position;
-
         [SerializeField]
         public ENodeState state;
 
-        public virtual bool IsObstacle
-        {
-            get => false;
-        }
+        public virtual bool IsObstacle => false;
 
         /// <summary>
         /// 起点到该点的距离（路径已确定）
@@ -30,7 +25,8 @@ namespace AStar.TwoD
         /// </summary>
         public float HCost;
 
-        public float WeightedFCost => process.HCostWeight * HCost + GCost;
+        protected abstract float HCostWeight { get; }
+        public float WeightedFCost => HCostWeight * HCost + GCost;
         public float FCost => HCost + GCost;
 
         private Node parent;
@@ -40,23 +36,24 @@ namespace AStar.TwoD
             set
             {
                 parent = value;
-                GCost = value == null ? 0 : Parent.GCost + value.CostTo(this);
+                GCost = value == null ? 0 : parent.GCost + value.CostTo(this);
             }
         }
 
-        public Node(PathFindingProcess process, Vector2Int position)
+        protected internal abstract MoverBase Mover { get; }
+
+        protected Node()
         {
-            this.process = process;
-            this.position = position;
             state = ENodeState.Blank;
         }
+
         /// <summary>
         /// 当前节点能直接到达到目标节点时,计算两点间距离
         /// </summary>
         public virtual float CostTo(Node to)
         {
             float primitiveCost = PrimitiveCostTo(to);
-            return process.mover.CalculateCost(this, to, primitiveCost);
+            return Mover.CalculateCost(this, to, primitiveCost);
         }
         /// <summary>
         /// 当前节点不能直接到达目标节点时,预测两点间距离
@@ -64,13 +61,14 @@ namespace AStar.TwoD
         public virtual float PredictCostTo(Node to)
         {
             float primitiveCost = PrimitiveCostTo(to);
-            return process.mover.CalculateCost(this, to, primitiveCost);
+            return Mover.CalculateCost(this, to, primitiveCost);
         }
-        protected internal virtual float PrimitiveCostTo(Node to)
-        {
-            float distance = process.settings.CalculateDistance(Position, to.Position);
-            return distance;
-        }
+
+        /// <summary>
+        /// 计算与另一节点间的原始距离（不考虑移动规则），由具体空间表示实现
+        /// </summary>
+        protected internal abstract float PrimitiveCostTo(Node to);
+
         public void UpdateParent(Node node)
         {
             float g = node.GCost + node.CostTo(this);
@@ -81,21 +79,17 @@ namespace AStar.TwoD
         /// <summary>
         /// 回溯路径（会考虑移动力，但不会考虑能否停留）
         /// </summary>
-        public void Recall(List<Node> ret = null)
+        /// <param name="onNode">对回溯路径上依次经过的节点（从起点到当前节点）执行的操作</param>
+        public void Recall(Action<Node> onNode = null)
         {
-            if (ret == null) 
+            if (onNode == null)
                 return;
             List<Node> stack = new();
             for (Node n = this; n != null; n = n.Parent)
-                if (process.mover.MoveAbilityCheck(n))
+                if (n.Mover.MoveAbilityCheck(n))
                     stack.Add(n);
             for (int i = stack.Count - 1; i >= 0; i--)
-                ret.Add(stack[i]);
-        }
-
-        public override string ToString()
-        {
-            return Position.ToString();
+                onNode(stack[i]);
         }
     }
 
@@ -104,10 +98,9 @@ namespace AStar.TwoD
         public int Compare(Node x, Node y)
         {
             int c = x.WeightedFCost.CompareTo(y.WeightedFCost);
-            if (c != 0) 
+            if (c != 0)
                 return c;
             return y.HCost.CompareTo(x.HCost);  //FCost相等时，优先选择HCost更小的
         }
     }
 }
-
