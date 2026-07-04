@@ -2,12 +2,11 @@ using UnityEngine;
 
 namespace AStar.SVO
 {
+    /// <summary>
+    /// 稀疏体素八叉树寻路使用的距离计算方法
+    /// </summary>
     public static class PathFindingSVOUtility
     {
-        public const float Diagonal2D = 1.41421356f; // √2
-        public const float Diagonal3D = 1.73205081f; // √3
-        public const float Epsilon = 1e-6f;
-
         /// <summary>
         /// 曼哈顿距离
         /// </summary>
@@ -31,7 +30,7 @@ namespace AStar.SVO
             float dmax = Mathf.Max(dx, Mathf.Max(dy, dz));
             float dmin = Mathf.Min(dx, Mathf.Min(dy, dz));
             float dmid = dx + dy + dz - dmax - dmin;
-            return (dmax - dmid) + dmid * Diagonal2D + dmin * Diagonal3D;
+            return (dmax - dmid) + dmid * AStar.PathFindingUtility.Diagonal2D + dmin * AStar.PathFindingUtility.Diagonal3D;
         }
     }
 }

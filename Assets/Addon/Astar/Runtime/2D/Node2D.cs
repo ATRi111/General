@@ -11,7 +11,12 @@ namespace AStar.TwoD
         protected Vector2Int position;
         public Vector2Int Position => position;
 
-        protected override float HCostWeight => process.HCostWeight;
+        /// <summary>
+        /// 网格坐标在三维空间中的表示（z 恒为 0），仅用于跨空间表示的通用场景
+        /// </summary>
+        public override Vector3 Position3D => new(position.x, position.y, 0);
+
+        public override float WeightedFCost => process.HCostWeight * HCost + GCost;
 
         protected internal override MoverBase Mover => process.mover;
 

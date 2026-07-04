@@ -2,23 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
+using AStar;
 
 namespace AStar.TwoD
 {
     public static class PathFinding2DUtility
     {
-        public const float Diagonal = 1.41421356f;
-        public const float Epsilon = 1e-6f;
-
-        public static float CalculateWeight_Default(PathFindingProcess _)
-        {
-            return 1f;
-        }
-
-        public static bool CheckObstacle_Default()
-        {
-            return true;
-        }
         public static Node2D GenerateNode_Default(PathFindingProcess process, Vector2Int position)
         {
             return new Node2D(process, position);
@@ -63,7 +52,7 @@ namespace AStar.TwoD
             float deltaY = Mathf.Abs(a.y - b.y);
             float max = Mathf.Max(deltaX, deltaY);
             float min = Mathf.Min(deltaX, deltaY);
-            return min * Diagonal + (max - min);
+            return min * PathFindingUtility.Diagonal2D + (max - min);
         }
         /// <summary>
         /// 获取某节点周围的八个节点
