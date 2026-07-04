@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace AStar
+namespace AStar.TwoD
 {
     [System.Serializable]
     public class GenerateNodeSO : ScriptableObject

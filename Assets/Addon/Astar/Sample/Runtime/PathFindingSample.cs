@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using AStar.TwoD;
 
 namespace AStar.Sample
 {

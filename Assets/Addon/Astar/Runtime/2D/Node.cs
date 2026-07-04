@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using AStar;
 
-namespace AStar
+namespace AStar.TwoD
 {
     [System.Serializable]
     public class Node

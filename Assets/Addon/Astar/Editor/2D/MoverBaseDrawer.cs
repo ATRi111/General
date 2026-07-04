@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace AStar
+namespace AStar.TwoD
 {
     [CustomPropertyDrawer(typeof(MoverBase))]
     public class MoverBaseDrawer : AutoPropertyDrawer

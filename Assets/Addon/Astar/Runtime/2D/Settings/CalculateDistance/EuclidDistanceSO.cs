@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace AStar
+namespace AStar.TwoD
 {
     [CreateAssetMenu(fileName = "欧几里得距离", menuName = "AStar/计算两点间距离的方法/欧几里得距离")]
     public class EuclidDistanceSO : CalculateDistanceSO

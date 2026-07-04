@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace AStar.Sample
+namespace AStar.TwoD
 {
     [CreateAssetMenu(fileName = "跳点", menuName = "AStar/获取相邻可达节点的方法/跳点")]
     public class GetJumpPointSO : GetMovableNodesSO
@@ -25,9 +25,9 @@ namespace AStar.Sample
                     ret.Add(to);
             }
 
-            Vector2Int[] directions = PathFindingUtility.EightDirections.ToArray();
+            Vector2Int[] directions = PathFinding2DUtility.EightDirections.ToArray();
             Vector2Int v = from.Parent == null ? Vector2Int.left : from.Position - from.Parent.Position;
-            PathFindingUtility.Comparer_Vector2_Nearer comparer = new(v);
+            PathFinding2DUtility.Comparer_Vector2_Nearer comparer = new(v);
             Array.Sort(directions, comparer);
 
             if (from.Parent == null)
@@ -91,8 +91,8 @@ namespace AStar.Sample
             if (node == process.To)
                 return true;
 
-            PathFindingUtility.Comparer_Vector2_Nearer comparer = new(direction);
-            Vector2Int[] directions = PathFindingUtility.EightDirections.ToArray();
+            PathFinding2DUtility.Comparer_Vector2_Nearer comparer = new(direction);
+            Vector2Int[] directions = PathFinding2DUtility.EightDirections.ToArray();
             Array.Sort(directions, comparer);
 
             return CantPass(directions[3]) && !CantPass(directions[1]) ||

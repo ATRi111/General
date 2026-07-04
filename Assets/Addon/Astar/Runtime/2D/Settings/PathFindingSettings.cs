@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AStar
+namespace AStar.TwoD
 {
     [Serializable]
     public class PathFindingSettings
@@ -35,7 +35,7 @@ namespace AStar
             if (getAdjoinedNodesSO != null)
                 getAdjoinedNodesSO.GetMovableNodes(process, from, moveCheck, adjoins);
             else
-                PathFindingUtility.GetAdjoinNodes_Four(process, from, moveCheck, adjoins);
+                PathFinding2DUtility.GetAdjoinNodes_Four(process, from, moveCheck, adjoins);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace AStar
         {
             return calculateDistanceSO != null
                 ? calculateDistanceSO.CalculateDistance(from, to)
-                : PathFindingUtility.ManhattanDistance(from, to);
+                : PathFinding2DUtility.ManhattanDistance(from, to);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace AStar
         {
             return generateNodeSO != null
                 ? generateNodeSO.GenerateNode(process, position)
-                : PathFindingUtility.GenerateNode_Default(process, position);
+                : PathFinding2DUtility.GenerateNode_Default(process, position);
         }
     }
 }

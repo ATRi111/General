@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 
-namespace AStar
+namespace AStar.TwoD
 {
-    public static class PathFindingUtility
+    public static class PathFinding2DUtility
     {
         public const float Diagonal = 1.41421356f;
         public const float Epsilon = 1e-6f;
@@ -55,9 +55,9 @@ namespace AStar
         public static readonly ReadOnlyCollection<Vector2Int> EightDirections;
 
         /// <summary>
-        /// 求切比雪夫距离
+        /// 求对角线距离
         /// </summary>
-        public static float ChebyshevDistance(Vector2Int a, Vector2Int b)
+        public static float DiagonalDistance(Vector2Int a, Vector2Int b)
         {
             float deltaX = Mathf.Abs(a.x - b.x);
             float deltaY = Mathf.Abs(a.y - b.y);
@@ -111,7 +111,7 @@ namespace AStar
             }
         }
 
-        static PathFindingUtility()
+        static PathFinding2DUtility()
         {
             Vector2Int[] eight = new Vector2Int[]
             {

@@ -1,8 +1,9 @@
 ﻿using EditorExtend;
 using UnityEditor;
 using UnityEngine;
+using AStar;
 
-namespace AStar
+namespace AStar.TwoD
 {
     [CustomPropertyDrawer(typeof(Node), true)]
     public class AStarNodeDrawer : AutoPropertyDrawer

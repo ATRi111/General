@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace AStar
+namespace AStar.TwoD
 {
     [CustomPropertyDrawer(typeof(PathFindingSettings))]
     public class PathFindingSettingsDrawer : AutoPropertyDrawer

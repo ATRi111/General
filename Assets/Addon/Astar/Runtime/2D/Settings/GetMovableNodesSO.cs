@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AStar
+namespace AStar.TwoD
 {
     [Serializable]
     public abstract class GetMovableNodesSO : ScriptableObject
