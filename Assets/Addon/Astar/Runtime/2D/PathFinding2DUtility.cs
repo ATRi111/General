@@ -31,7 +31,7 @@ namespace AStar.TwoD
             foreach (Vector2Int direction in FourDirections)
             {
                 to = process.GetNode(from.Position + direction);
-                if (moveCheck(from, to))
+                if (to != null && moveCheck(from, to))
                     ret.Add(to);
             }
         }
@@ -63,7 +63,7 @@ namespace AStar.TwoD
             foreach (Vector2Int direction in EightDirections)
             {
                 to = process.GetNode(from.Position + direction);
-                if (moveCheck(from, to))
+                if (to != null && moveCheck(from, to))
                     ret.Add(to);
             }
         }

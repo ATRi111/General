@@ -38,11 +38,21 @@ namespace AStar.ThreeD
                 if (p == v || p == -v)
                     continue;
 
-                bool blockedAtPrev = !process.mover.MoveCheck(from.Parent, process.PeekNode(from.Parent.Position + p));
-                bool blockedAtCurrent = !process.mover.MoveCheck(from, process.PeekNode(from.Position + p));
+                bool blockedAtPrev = BlockedAt(process, from.Parent, p);
+                bool blockedAtCurrent = BlockedAt(process, from, p);
                 if (blockedAtPrev && !blockedAtCurrent)
                     TryAdd(process.GetNode(from.Position + p));
             }
+        }
+
+        /// <summary>
+        /// 判断从 <paramref name="at"/> 沿 <paramref name="delta"/> 方向是否被阻挡；
+        /// 若该方向上的位置超出寻路边界（<see cref="PathFindingProcess{TPosition,TNode}.PeekNode"/> 返回 null），也视为阻挡
+        /// </summary>
+        private static bool BlockedAt(PathFinding3DProcess process, Node3D at, Vector3Int delta)
+        {
+            Node3D peek = process.PeekNode(at.Position + delta);
+            return peek == null || !process.mover.MoveCheck(at, peek);
         }
 
         /// <summary>
@@ -58,7 +68,7 @@ namespace AStar.ThreeD
             {
                 current += direction;
                 Node3D probe = process.PeekNode(current);
-                if (!process.mover.MoveCheck(prev, probe))
+                if (probe == null || !process.mover.MoveCheck(prev, probe))
                     return null;
 
                 Node3D prevForCheck = prev;
@@ -90,8 +100,8 @@ namespace AStar.ThreeD
                 if (p == direction || p == -direction)
                     continue;
 
-                bool blockedAtPrev = !process.mover.MoveCheck(prevNode, process.PeekNode(prevNode.Position + p));
-                bool blockedAtCurrent = !process.mover.MoveCheck(node, process.PeekNode(node.Position + p));
+                bool blockedAtPrev = BlockedAt(process, prevNode, p);
+                bool blockedAtCurrent = BlockedAt(process, node, p);
                 if (blockedAtPrev && !blockedAtCurrent)
                     return true;
             }

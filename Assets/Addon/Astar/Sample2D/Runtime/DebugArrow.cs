@@ -3,10 +3,10 @@ using UnityEngine;
 namespace AStar.Sample
 {
     /// <summary>
-    /// 调试用箭头：从起点指向终点，箭头尖端在终点一侧。
-    /// 箭杆用 <see cref="LineRenderer"/> 画一条细线（不包含箭头部分），箭头用程序生成的实心三角形 Mesh 画出，
-    /// 两者共用同一张支持顶点色的材质（Sprites/Default），避免像纯 LineRenderer 折线画箭头那样因为线宽在
-    /// 折角处重叠、箭头是"空心V字"而显得粗糙不规整。
+    /// 调试用箭头：从起点指向终点，箭头尖端在终点一侧，支持任意3D方向（不局限于XY平面）。
+    /// 箭杆用 <see cref="LineRenderer"/> 画一条细线（不包含箭头部分），箭头用程序生成的实心四棱锥 Mesh 画出——
+    /// 用四棱锥而不是单片三角形，是为了在3D场景中无论从哪个角度观察都能看到实心箭头，不会因为视线正好与三角形共面而"消失"。
+    /// 两者共用同一张支持顶点色的材质（Sprites/Default），该材质默认双面渲染（Cull Off），无需关心三角形绕序。
     /// </summary>
     [RequireComponent(typeof(LineRenderer))]
     [RequireComponent(typeof(MeshFilter))]
@@ -95,23 +95,39 @@ namespace AStar.Sample
             }
 
             Vector3 dir = delta / length;
-            Vector3 perp = new(-dir.y, dir.x, 0f);
+            // 用叉乘求与dir垂直的一对基向量，兼容任意3D方向（2D场景下dir.z恒为0，同样适用）；
+            // 当dir几乎与参考向量平行时（例如竖直方向的箭头）切换参考向量，避免叉乘退化为零向量
+            Vector3 reference = Mathf.Abs(Vector3.Dot(dir, Vector3.up)) > 0.99f ? Vector3.forward : Vector3.up;
+            Vector3 right = Vector3.Cross(dir, reference).normalized;
+            Vector3 up = Vector3.Cross(right, dir).normalized;
 
             float headLength = Mathf.Min(HeadLength, length * 0.6f);
             Vector3 headBase = to - dir * headLength;
-            Vector3 headLeft = headBase + perp * (HeadWidth * 0.5f);
-            Vector3 headRight = headBase - perp * (HeadWidth * 0.5f);
+            float radius = HeadWidth * 0.5f;
+            Vector3 p0 = headBase + right * radius;
+            Vector3 p1 = headBase + up * radius;
+            Vector3 p2 = headBase - right * radius;
+            Vector3 p3 = headBase - up * radius;
 
             // 箭杆：只画到箭头底边，不与箭头部分重叠，线宽保持均匀
             lineRenderer.positionCount = 2;
             lineRenderer.SetPosition(0, from);
             lineRenderer.SetPosition(1, headBase);
 
-            // 箭头：实心三角形，顶点色与箭杆颜色一致
+            // 箭头：以 to 为尖端、底面为正方形的四棱锥（而非单片三角形），
+            // 保证在3D场景中无论从哪个角度看都能看到实心的箭头，不会因为视角与三角形共面而"消失"
             headMesh.Clear();
-            headMesh.vertices = new[] { to, headLeft, headRight };
-            headMesh.triangles = new[] { 0, 1, 2 };
-            headMesh.colors = new[] { color, color, color };
+            headMesh.vertices = new[] { to, p0, p1, p2, p3 };
+            headMesh.triangles = new[]
+            {
+                0, 1, 2,
+                0, 2, 3,
+                0, 3, 4,
+                0, 4, 1,
+                1, 3, 2,
+                1, 4, 3,
+            };
+            headMesh.colors = new[] { color, color, color, color, color };
             headMesh.RecalculateBounds();
         }
     }

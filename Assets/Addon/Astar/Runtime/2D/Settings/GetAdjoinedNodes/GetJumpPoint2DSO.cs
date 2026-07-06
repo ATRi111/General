@@ -16,7 +16,8 @@ namespace AStar.TwoD
 
             bool CantPass(Vector2Int delta)
             {
-                return !moveCheck(from, process.PeekNode(from.Position + delta));
+                Node2D peek = process.PeekNode(from.Position + delta);
+                return peek == null || !moveCheck(from, peek);
             }
 
             void TryAdd(Node2D to)
@@ -76,7 +77,7 @@ namespace AStar.TwoD
             {
                 current += direction;
                 Node2D probe = process.PeekNode(current);
-                if (!process.mover.MoveCheck(prev, probe))
+                if (probe == null || !process.mover.MoveCheck(prev, probe))
                     return null;
                 prev = probe;
                 moved = true;
@@ -100,7 +101,8 @@ namespace AStar.TwoD
         {
             bool CantPass(Vector2Int delta)
             {
-                return !process.mover.MoveCheck(node, process.PeekNode(node.Position + delta));
+                Node2D peek = process.PeekNode(node.Position + delta);
+                return peek == null || !process.mover.MoveCheck(node, peek);
             }
 
             // node 可能是 PeekNode 探测出的临时节点，与 process.To 比较需按位置而非引用判断

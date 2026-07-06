@@ -8,7 +8,7 @@ namespace AStar
     public class PathFindingProcessDrawer : AutoPropertyDrawer
     {
         [AutoProperty]
-        public SerializedProperty mountPoint;
+        public SerializedProperty mountPoint, useBoundary;
 
         [AutoProperty]
         public SerializedProperty output, available, isRunning, from, to, currentNode, nearest, countOfCloseNode, countOfQuery;
@@ -16,6 +16,7 @@ namespace AStar
         protected override void MyOnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             mountPoint.PropertyField("挂载点", NextRectRelative());
+            useBoundary.BoolField("启用边界", NextRectRelative());
             if (Application.isPlaying)
             {
                 AutoPropertyField("输出路径", output);

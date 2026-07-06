@@ -16,6 +16,12 @@ namespace AStar
         public Transform mountPoint;
 
         /// <summary>
+        /// 是否启用寻路边界。启用后，新发现的节点在加入 Open 之前会先经过 <see cref="InBoundary"/> 检查，
+        /// 超出边界的节点不会被加入 Open（但仍保持 <see cref="ENodeState.Blank"/>，不会被错误地当作已探索过）
+        /// </summary>
+        public bool useBoundary;
+
+        /// <summary>
         /// 供基类访问的配置（具体类型由子类决定）
         /// </summary>
         protected abstract PathFindingSettings SettingsBase { get; }
@@ -233,25 +239,39 @@ namespace AStar
         protected abstract TNode GenerateNode(TPosition position);
 
         /// <summary>
-        /// 获取地图上某个位置的节点，必要时创建新节点
+        /// 判断某个位置是否在寻路边界内，由具体空间表示实现。仅在 <see cref="PathFindingProcess.useBoundary"/> 为 true 时生效，
+        /// 在 <see cref="GetNode"/>/<see cref="PeekNode"/> 生成新节点之前检查（对已缓存过的位置不会重复检查），
+        /// 超出边界的位置直接返回 null，调用处需要自行处理
+        /// </summary>
+        protected abstract bool InBoundary(TPosition position);
+
+        /// <summary>
+        /// 获取地图上某个位置的节点，必要时创建新节点；若启用了边界且该位置超出边界，返回 null
         /// </summary>
         internal TNode GetNode(TPosition pos)
         {
             countOfQuery++;
             if (discoveredNodes.ContainsKey(pos))
                 return discoveredNodes[pos];
+            if (useBoundary && !InBoundary(pos))
+                return null;
             TNode node = GenerateNode(pos);
             discoveredNodes.Add(pos, node);
             return node;
         }
 
         /// <summary>
-        /// 临时获取地图上某个位置的节点，不将其加入缓存中，以节约内存，常用于JPS
+        /// 临时获取地图上某个位置的节点，不将其加入缓存中，以节约内存，常用于JPS；
+        /// 若启用了边界且该位置超出边界，返回 null
         /// </summary>
         internal TNode PeekNode(TPosition pos)
         {
             countOfQuery++;
-            return discoveredNodes.TryGetValue(pos, out TNode node) ? node : GenerateNode(pos);
+            if (discoveredNodes.TryGetValue(pos, out TNode node))
+                return node;
+            if (useBoundary && !InBoundary(pos))
+                return null;
+            return GenerateNode(pos);
         }
 
         public TNode[] GetAllNodes()
@@ -275,6 +295,11 @@ namespace AStar
             Initialize();
             TNode to = GetNode(toPos);
             TNode from = GetNode(fromPos);
+            if (to == null || from == null)
+            {
+                Debug.LogWarning("起点或终点超出寻路边界");
+                return;
+            }
             Start(from, to);
         }
     }

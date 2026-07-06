@@ -32,7 +32,7 @@ namespace AStar.ThreeD
             foreach (Vector3Int direction in SixDirections)
             {
                 to = process.GetNode(from.Position + direction);
-                if (moveCheck(from, to))
+                if (to != null && moveCheck(from, to))
                     ret.Add(to);
             }
         }
@@ -67,7 +67,7 @@ namespace AStar.ThreeD
             foreach (Vector3Int direction in TwentySixDirections)
             {
                 to = process.GetNode(from.Position + direction);
-                if (moveCheck(from, to))
+                if (to != null && moveCheck(from, to))
                     ret.Add(to);
             }
         }

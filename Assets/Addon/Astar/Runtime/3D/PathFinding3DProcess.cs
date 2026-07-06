@@ -11,6 +11,11 @@ namespace AStar.ThreeD
     {
         public PathFinding3DSettings settings;
 
+        /// <summary>
+        /// 寻路边界（含边界本身），仅在 <see cref="AStar.PathFindingProcess.useBoundary"/> 为 true 时生效
+        /// </summary>
+        public Vector3Int boundaryMin, boundaryMax;
+
         protected override PathFindingSettings SettingsBase => settings;
 
         protected override Node3D GenerateNode(Vector3Int position)
@@ -21,6 +26,13 @@ namespace AStar.ThreeD
         protected override void GetMovableNodes(Node from)
         {
             settings.GetAdjoinNodes(this, (Node3D)from, mover.MoveCheck, adjoins);
+        }
+
+        protected override bool InBoundary(Vector3Int position)
+        {
+            return position.x >= boundaryMin.x && position.x <= boundaryMax.x
+                && position.y >= boundaryMin.y && position.y <= boundaryMax.y
+                && position.z >= boundaryMin.z && position.z <= boundaryMax.z;
         }
     }
 }
