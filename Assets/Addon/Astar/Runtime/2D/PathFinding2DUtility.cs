@@ -8,7 +8,7 @@ namespace AStar.TwoD
 {
     public static class PathFinding2DUtility
     {
-        public static Node2D GenerateNode_Default(PathFindingProcess process, Vector2Int position)
+        public static Node2D GenerateNode_Default(PathFinding2DProcess process, Vector2Int position)
         {
             return new Node2D(process, position);
         }
@@ -25,7 +25,7 @@ namespace AStar.TwoD
         /// <summary>
         /// 获取某节点周围的四个节点
         /// </summary>
-        public static void GetAdjoinNodes_Four(PathFindingProcess process, Node2D from, Func<Node2D, Node2D, bool> moveCheck, List<Node2D> ret)
+        public static void GetAdjoinNodes_Four(PathFinding2DProcess process, Node2D from, Func<Node2D, Node2D, bool> moveCheck, List<Node> ret)
         {
             ret.Clear();
             Node2D to;
@@ -57,7 +57,7 @@ namespace AStar.TwoD
         /// <summary>
         /// 获取某节点周围的八个节点
         /// </summary>
-        public static void GetAdjoinNodes_Eight(PathFindingProcess process, Node2D from, Func<Node2D, Node2D, bool> moveCheck, List<Node2D> ret)
+        public static void GetAdjoinNodes_Eight(PathFinding2DProcess process, Node2D from, Func<Node2D, Node2D, bool> moveCheck, List<Node> ret)
         {
             ret.Clear();
             Node2D to;

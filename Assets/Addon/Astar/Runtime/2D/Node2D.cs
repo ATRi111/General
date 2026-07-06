@@ -6,15 +6,10 @@ namespace AStar.TwoD
     [System.Serializable]
     public class Node2D : Node
     {
-        protected internal readonly PathFindingProcess process;
+        protected internal readonly PathFinding2DProcess process;
         [SerializeField]
         protected Vector2Int position;
         public Vector2Int Position => position;
-
-        /// <summary>
-        /// 网格坐标在三维空间中的表示（z 恒为 0），仅用于跨空间表示的通用场景
-        /// </summary>
-        public override Vector3 Position3D => new(position.x, position.y, 0);
 
         public override float WeightedFCost => process.HCostWeight * HCost + GCost;
 
@@ -29,7 +24,7 @@ namespace AStar.TwoD
             set => base.Parent = value;
         }
 
-        public Node2D(PathFindingProcess process, Vector2Int position)
+        public Node2D(PathFinding2DProcess process, Vector2Int position)
         {
             this.process = process;
             this.position = position;

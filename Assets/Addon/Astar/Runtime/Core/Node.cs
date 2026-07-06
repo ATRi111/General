@@ -41,12 +41,6 @@ namespace AStar
 
         protected internal abstract MoverBase Mover { get; }
 
-        /// <summary>
-        /// 节点在三维空间中的坐标，仅用于跨空间表示的通用场景（如调试可视化），
-        /// 不用于节点索引/查找（各具体实现应使用各自更高效、更准确的位置表示）
-        /// </summary>
-        public abstract Vector3 Position3D { get; }
-
         protected Node()
         {
             state = ENodeState.Blank;

@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using AStar;
 
 namespace AStar.TwoD
 {
-    [CreateAssetMenu(fileName = "跳点", menuName = "AStar/获取相邻可达节点的方法/跳点")]
-    public class GetJumpPointSO : GetMovableNodesSO
+    [CreateAssetMenu(fileName = "跳点", menuName = "AStar2D/获取相邻可达节点的方法/跳点")]
+    public class GetJumpPoint2DSO : GetMovableNodes2DSO
     {
         public int depthOnDirection;
 
-        public override void GetMovableNodes(PathFindingProcess process, Node2D from, Func<Node2D, Node2D, bool> moveCheck, List<Node2D> ret)
+        public override void GetMovableNodes(PathFinding2DProcess process, Node2D from, Func<Node2D, Node2D, bool> moveCheck, List<Node> ret)
         {
             // 沿 from 的"穿不过"判定，统一走 mover.MoveCheck 的语义
             // 这样 Pawn 之类 IsObstacle=false 但 StayCheck 不通过的节点也能被正确处理
@@ -63,7 +64,7 @@ namespace AStar.TwoD
             }
         }
 
-        public Node2D FindJumpPointOnDirection(PathFindingProcess process, Vector2Int from, Vector2Int direction)
+        public Node2D FindJumpPointOnDirection(PathFinding2DProcess process, Vector2Int from, Vector2Int direction)
         {
             Vector2Int current = from;
             Node2D prev = process.GetNode(from);
@@ -81,7 +82,7 @@ namespace AStar.TwoD
             return node;
         }
 
-        public bool IsJumpPoint(PathFindingProcess process, Node2D node, Vector2Int direction)
+        public bool IsJumpPoint(PathFinding2DProcess process, Node2D node, Vector2Int direction)
         {
             bool CantPass(Vector2Int delta)
             {

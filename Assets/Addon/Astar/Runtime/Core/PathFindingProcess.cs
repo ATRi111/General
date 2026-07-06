@@ -1,0 +1,272 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.Profiling;
+
+namespace AStar
+{
+    /// <summary>
+    /// 寻路过程的公共部分，不涉及具体的空间位置表示（2D网格 / 稀疏八叉树等）
+    /// </summary>
+    [Serializable]
+    public abstract class PathFindingProcess
+    {
+        public MoverBase mover;
+        public Transform mountPoint;
+
+        /// <summary>
+        /// 供基类访问的配置（具体类型由子类决定）
+        /// </summary>
+        protected abstract PathFindingSettings SettingsBase { get; }
+        public float HCostWeight => SettingsBase.hCostWeight;
+
+        [SerializeReference]
+        public List<Node> output;
+        [SerializeReference]
+        public List<Node> available;
+
+        [SerializeField]
+        protected bool isRunning;
+        /// <summary>
+        /// 是否正在进行寻路
+        /// </summary>
+        public bool IsRunning => isRunning;
+
+        [SerializeReference]
+        protected Node from;
+        /// <summary>
+        /// 起点
+        /// </summary>
+        public Node From => from;
+        [SerializeReference]
+        protected Node to;
+        /// <summary>
+        /// 终点
+        /// </summary>
+        public Node To => to;
+
+        /// <summary>
+        /// 待访问节点相邻可达节点的临时容器
+        /// </summary>
+        protected List<Node> adjoins;
+        /// <summary>
+        /// 待访问节点表
+        /// </summary>
+        protected Heap<Node> open;
+
+        /// <summary>
+        /// 当前经过的节点
+        /// </summary>
+        [SerializeReference]
+        public Node currentNode;
+        /// <summary>
+        /// 在可计算的范围内，到终点距离最近的节点
+        /// </summary>
+        [SerializeReference]
+        public Node nearest;
+
+        [SerializeField]
+        protected int countOfCloseNode;
+        public int CountOfCloseNode => countOfCloseNode;
+
+        [SerializeField]
+        protected int countOfQuery;
+        /// <summary>
+        /// 查询节点次数
+        /// </summary>
+        public int CountOfQuery => countOfQuery;
+
+        public virtual void Initialize()
+        {
+            mover ??= new MoverBase();
+
+            adjoins = new();
+            output = new();
+            available = new();
+            open = new Heap<Node>(SettingsBase.capacity, new Comparer_Cost());
+            countOfQuery = 0;
+            countOfCloseNode = 0;
+        }
+
+        /// <summary>
+        /// 获取与一个节点相邻的可达节点，写入 <see cref="adjoins"/>，由具体空间表示实现
+        /// </summary>
+        protected abstract void GetMovableNodes(Node from);
+
+        /// <summary>
+        /// 开始寻路（要求 <paramref name="from"/>/<paramref name="to"/> 已通过 <see cref="Initialize"/> 后由具体空间表示解析得到）
+        /// </summary>
+        public virtual void Start(Node from, Node to)
+        {
+            if (from == to)
+            {
+                Debug.LogWarning("起点与终点相同");
+                return;
+            }
+
+            isRunning = true;
+
+            this.to = to;
+            to.HCost = 0;
+
+            this.from = from;
+            from.Parent = null;
+            from.HCost = from.PredictCostTo(to);
+
+            open.Push(from);
+            nearest = from;
+        }
+
+        /// <summary>
+        /// 立刻完成寻路
+        /// </summary>
+        public void Complete()
+        {
+            for (; ; )
+            {
+                if (!NextStep())
+                    return;
+            }
+        }
+
+        /// <summary>
+        /// 进行一步寻路
+        /// </summary>
+        public virtual bool NextStep()
+        {
+            Profiler.BeginSample("Step");
+            if (!CheckNextStep())
+            {
+                if (isRunning)
+                    Stop();
+                Profiler.EndSample();
+                return false;
+            }
+
+            currentNode = open.Pop();
+            currentNode.state = ENodeState.Close;
+            countOfCloseNode++;
+
+            if (mover.MoveAbilityCheck(currentNode) && mover.StayCheck(currentNode))
+            {
+                available.Add(currentNode);
+            }
+            if (currentNode.HCost < nearest.HCost)
+                nearest = currentNode;
+
+            if (currentNode == to)
+            {
+                Stop();     //如果权重系数超过1，有可能在没有找到更短可行路径的情况下提前退出
+                Profiler.EndSample();
+                return false;
+            }
+
+            GetMovableNodes(currentNode);
+
+            foreach (Node node in adjoins)
+            {
+                switch (node.state)
+                {
+                    case ENodeState.Blank:
+                        node.HCost = node.PredictCostTo(to);
+                        node.Parent = currentNode;
+                        node.state = ENodeState.Open;
+                        open.Push(node);
+                        break;
+                    case ENodeState.Open:
+                        //节点的值改变，理论上在堆中的位置需要改变，但目前忽略
+                        node.UpdateParent(currentNode);
+                        break;
+                }
+            }
+
+            Profiler.EndSample();
+            return true;
+        }
+
+        /// <summary>
+        /// 停止寻路并返回结果
+        /// </summary>
+        public virtual void Stop()
+        {
+            isRunning = false;
+            nearest.Recall(n => output.Add(n));
+        }
+
+        protected bool CheckNextStep()
+        {
+            if (!isRunning)
+            {
+                Debug.LogWarning("寻路未开始");
+                return false;
+            }
+            if (countOfCloseNode > SettingsBase.maxDepth)
+            {
+                Debug.LogWarning($"超出搜索深度限制,最大深度为{SettingsBase.maxDepth}");
+                return false;
+            }
+            if (open.IsEmpty)
+            {
+                return false;
+            }
+            return true;
+        }
+    }
+
+    /// <summary>
+    /// 携带具体位置类型与节点类型的寻路过程模板，适用于位置可直接作为字典 Key 的空间表示（如均匀网格）。
+    /// 稀疏空间（如八叉树）若节点身份不能用坐标直接表达，不适用此模板，应直接继承 <see cref="PathFindingProcess"/>。
+    /// </summary>
+    [Serializable]
+    public abstract class PathFindingProcess<TPosition, TNode> : PathFindingProcess
+        where TNode : Node
+    {
+        /// <summary>
+        /// 所有已发现节点
+        /// </summary>
+        protected Dictionary<TPosition, TNode> discoveredNodes;
+
+        /// <summary>
+        /// 生成指定位置的新节点，由具体空间表示实现
+        /// </summary>
+        protected abstract TNode GenerateNode(TPosition position);
+
+        /// <summary>
+        /// 获取地图上某个位置的节点，必要时创建新节点
+        /// </summary>
+        internal TNode GetNode(TPosition pos)
+        {
+            countOfQuery++;
+            if (discoveredNodes.ContainsKey(pos))
+                return discoveredNodes[pos];
+            TNode node = GenerateNode(pos);
+            discoveredNodes.Add(pos, node);
+            return node;
+        }
+
+        public TNode[] GetAllNodes()
+        {
+            return discoveredNodes.Values.ToArray();
+        }
+
+        public override void Initialize()
+        {
+            base.Initialize();
+            discoveredNodes = new();
+        }
+
+        /// <summary>
+        /// 开始寻路
+        /// </summary>
+        /// <param name="fromPos">起点</param>
+        /// <param name="toPos">终点</param>
+        public void Start(TPosition fromPos, TPosition toPos)
+        {
+            Initialize();
+            TNode to = GetNode(toPos);
+            TNode from = GetNode(fromPos);
+            Start(from, to);
+        }
+    }
+}

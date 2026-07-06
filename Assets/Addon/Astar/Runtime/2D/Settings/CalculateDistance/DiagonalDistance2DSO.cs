@@ -2,8 +2,8 @@
 
 namespace AStar.TwoD
 {
-    [CreateAssetMenu(fileName = "对角线距离", menuName = "AStar/计算两点间距离的方法/对角线距离")]
-    public class DiagonalDistanceSO : CalculateDistanceSO
+    [CreateAssetMenu(fileName = "对角线距离", menuName = "AStar2D/计算两点间距离的方法/对角线距离")]
+    public class DiagonalDistance2DSO : CalculateDistance2DSO
     {
         public override float CalculateDistance(Vector2Int from, Vector2Int to)
         {

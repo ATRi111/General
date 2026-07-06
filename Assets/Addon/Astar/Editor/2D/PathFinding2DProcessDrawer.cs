@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace AStar.TwoD
 {
-    [CustomPropertyDrawer(typeof(PathFindingProcess), true)]
-    public class PathFindingProcessDrawer : AutoPropertyDrawer
+    [CustomPropertyDrawer(typeof(PathFinding2DProcess), true)]
+    public class PathFinding2DProcessDrawer : AutoPropertyDrawer
     {
         [AutoProperty]
         public SerializedProperty settings, mountPoint;

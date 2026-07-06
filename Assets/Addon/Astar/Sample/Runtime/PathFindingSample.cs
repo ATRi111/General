@@ -6,7 +6,7 @@ namespace AStar.Sample
     public class PathFindingSample : MonoBehaviour
     {
         [SerializeField]
-        private PathFindingProcess process;
+        private PathFinding2DProcess process;
         [SerializeField]
         private GameObject prefab;
         private Transform from;

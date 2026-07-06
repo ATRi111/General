@@ -6,7 +6,7 @@ namespace AStar.Sample
 {
     public class SampleNode : Node2D
     {
-        internal SampleNode(PathFindingProcess process, Vector2Int position)
+        internal SampleNode(PathFinding2DProcess process, Vector2Int position)
             : base(process, position)
         {
 

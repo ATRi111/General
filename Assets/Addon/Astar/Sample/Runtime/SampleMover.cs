@@ -10,7 +10,7 @@ namespace AStar.Sample
         private readonly Tilemap map;
         private readonly PathFindingSample sample;
 
-        public SampleMover(PathFindingProcess process)
+        public SampleMover(PathFinding2DProcess process)
         {
             map = process.mountPoint.GetComponentInChildren<Tilemap>();
             sample = process.mountPoint.GetComponentInChildren<PathFindingSample>();
