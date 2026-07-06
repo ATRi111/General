@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using AStar.TwoD;
+﻿using AStar.TwoD;
+using UnityEngine;
 
 namespace AStar.Sample
 {
@@ -52,6 +52,9 @@ namespace AStar.Sample
             {
                 PaintNode(allNodes[i], obj.transform);
             }
+
+            PaintParentLinks(allNodes, obj.transform);
+            PaintOutputPath(obj.transform);
         }
 
         public void Clear()
@@ -74,6 +77,41 @@ namespace AStar.Sample
         {
             from = transform.Find("From").transform;
             to = transform.Find("To").transform;
+        }
+
+        private const int arrowSortingOrder_ParentLink = 10;
+        private const int arrowSortingOrder_Output = 11;
+
+        /// <summary>
+        /// 画出所有已发现节点的 Parent 连线（黄色箭头，箭头方向为 Parent 指向后续节点），
+        /// 用 <see cref="DebugArrow"/>（LineRenderer+Mesh）而非 Gizmos 实现，因此不受
+        /// Scene 视图 Gizmos 总开关/下拉框状态影响，Game 视图也能看到
+        /// </summary>
+        private void PaintParentLinks(Node2D[] allNodes, Transform parent)
+        {
+            Color color = new(1f, 1f, 0f, 0.9f);
+            foreach (Node2D node in allNodes)
+            {
+                Node2D parentNode = node.Parent;
+                if (parentNode == null)
+                    continue;
+
+                DebugArrow.Create(NodeToWorld(parentNode.Position), NodeToWorld(node.Position), color, parent, arrowSortingOrder_ParentLink);
+            }
+        }
+
+        /// <summary>
+        /// 画出最终输出路径上相邻节点的连线（红色箭头，方向为起点指向终点）
+        /// </summary>
+        private void PaintOutputPath(Transform parent)
+        {
+            Color color = Color.red;
+            for (int i = 1; i < process.output.Count; i++)
+            {
+                Node2D a = (Node2D)process.output[i - 1];
+                Node2D b = (Node2D)process.output[i];
+                DebugArrow.Create(NodeToWorld(a.Position), NodeToWorld(b.Position), color, parent, arrowSortingOrder_Output);
+            }
         }
     }
 }

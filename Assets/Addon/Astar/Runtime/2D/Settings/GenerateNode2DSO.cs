@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using AStar;
 
 namespace AStar.TwoD
 {

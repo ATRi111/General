@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using AStar;
 
 namespace AStar.TwoD
 {
@@ -13,11 +12,11 @@ namespace AStar.TwoD
 
         public override void GetMovableNodes(PathFinding2DProcess process, Node2D from, Func<Node2D, Node2D, bool> moveCheck, List<Node> ret)
         {
-            // 沿 from 的"穿不过"判定，统一走 mover.MoveCheck 的语义
-            // 这样 Pawn 之类 IsObstacle=false 但 StayCheck 不通过的节点也能被正确处理
+            ret.Clear();
+
             bool CantPass(Vector2Int delta)
             {
-                return !moveCheck(from, process.GetNode(from.Position + delta));
+                return !moveCheck(from, process.PeekNode(from.Position + delta));
             }
 
             void TryAdd(Node2D to)
@@ -54,7 +53,7 @@ namespace AStar.TwoD
             }
             else
             {
-                TryAdd(process.GetNode(from.Position + directions[0]));
+                TryAdd(FindJumpPointOnDirection(process, from.Position, directions[0]));
                 TryAdd(FindJumpPointOnDirection(process, from.Position, directions[1]));
                 TryAdd(FindJumpPointOnDirection(process, from.Position, directions[2]));
                 if (CantPass(directions[5]))
@@ -64,40 +63,71 @@ namespace AStar.TwoD
             }
         }
 
-        public Node2D FindJumpPointOnDirection(PathFinding2DProcess process, Vector2Int from, Vector2Int direction)
+        /// <summary>
+        /// 沿某个方向扫描寻找跳点位置，仅用于探测（不缓存扫描到的中间节点），
+        /// 返回 null 表示未找到（撞到障碍物，或前进距离为 0）
+        /// </summary>
+        private Vector2Int? PeekJumpPointOnDirection(PathFinding2DProcess process, Vector2Int from, Vector2Int direction)
         {
             Vector2Int current = from;
-            Node2D prev = process.GetNode(from);
-            Node2D node = null;
+            Node2D prev = process.PeekNode(from);
+            bool moved = false;
             for (int i = 0; i < depthOnDirection; i++)
             {
                 current += direction;
-                node = process.GetNode(current);
-                if (!process.mover.MoveCheck(prev, node))
+                Node2D probe = process.PeekNode(current);
+                if (!process.mover.MoveCheck(prev, probe))
                     return null;
-                prev = node;
-                if (IsJumpPoint(process, node, direction))
-                    return node;
+                prev = probe;
+                moved = true;
+                if (IsJumpPoint(process, probe, direction))
+                    return current;
             }
-            return node;
+            return moved ? current : null;
+        }
+
+        /// <summary>
+        /// 沿某个方向扫描寻找跳点。扫描途中经过的中间格子只用于障碍判定（不缓存），
+        /// 只有最终确定要返回的位置（跳点本身，或达到搜索深度上限时的兜底位置）才会转换为真正缓存的节点
+        /// </summary>
+        public Node2D FindJumpPointOnDirection(PathFinding2DProcess process, Vector2Int from, Vector2Int direction)
+        {
+            Vector2Int? found = PeekJumpPointOnDirection(process, from, direction);
+            return found.HasValue ? process.GetNode(found.Value) : null;
         }
 
         public bool IsJumpPoint(PathFinding2DProcess process, Node2D node, Vector2Int direction)
         {
             bool CantPass(Vector2Int delta)
             {
-                return !process.mover.MoveCheck(node, process.GetNode(node.Position + delta));
+                return !process.mover.MoveCheck(node, process.PeekNode(node.Position + delta));
             }
 
-            if (node == process.To)
+            // node 可能是 PeekNode 探测出的临时节点，与 process.To 比较需按位置而非引用判断
+            if (node.Position == ((Node2D)process.To).Position)
                 return true;
 
             PathFinding2DUtility.Comparer_Vector2_Nearer comparer = new(direction);
             Vector2Int[] directions = PathFinding2DUtility.EightDirections.ToArray();
             Array.Sort(directions, comparer);
 
-            return CantPass(directions[3]) && !CantPass(directions[1]) ||
-                CantPass(directions[4]) && !CantPass(directions[2]);
+            if (CantPass(directions[3]) && !CantPass(directions[1]) ||
+                CantPass(directions[4]) && !CantPass(directions[2]))
+                return true;
+
+            // 沿对角线方向移动时，若从当前节点出发沿任一正交分量能找到跳点，
+            // 当前节点本身即为转折点（需继续在此处拆分为多个方向搜索），而不能再往对角线深处跳过去
+            if (direction.x != 0 && direction.y != 0)
+            {
+                Vector2Int horizontal = new(direction.x, 0);
+                Vector2Int vertical = new(0, direction.y);
+                if (PeekJumpPointOnDirection(process, node.Position, horizontal).HasValue)
+                    return true;
+                if (PeekJumpPointOnDirection(process, node.Position, vertical).HasValue)
+                    return true;
+            }
+
+            return false;
         }
     }
 }

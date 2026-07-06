@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 10
+  serializedVersion: 9
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -38,12 +38,12 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 12
+  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -66,6 +66,9 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
+    m_FinalGather: 0
+    m_FinalGatherFiltering: 1
+    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -293,8 +296,6 @@ TilemapRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -683,6 +684,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   process:
+    mover:
+      moveAbility: 5
+    mountPoint: {fileID: 394363656}
+    output: []
+    available: []
+    isRunning: 0
+    from:
+      rid: -2
+    to:
+      rid: -2
+    currentNode:
+      rid: -2
+    nearest:
+      rid: -2
+    countOfCloseNode: 0
+    countOfQuery: 0
     settings:
       capacity: 1000
       maxDepth: 2000
@@ -690,34 +707,13 @@ MonoBehaviour:
       getAdjoinedNodesSO: {fileID: 11400000, guid: 784715f1651a715438a480e9de9dc26e, type: 2}
       calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
       generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
-    mountPoint: {fileID: 394363656}
-    output: []
-    available: []
-    isRunning: 0
-    from:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    to:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    currentNode:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    nearest:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    countOfCloseNode: 0
-    countOfQuery: 0
   prefab: {fileID: 1374839061621688556, guid: a3ac64f7204db424099a07e7046b2ec0, type: 3}
   moveAbility: 100
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!4 &394363656
 Transform:
   m_ObjectHideFlags: 0
@@ -749,6 +745,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   process:
+    mover:
+      moveAbility: 5
+    mountPoint: {fileID: 394363656}
+    output: []
+    available: []
+    isRunning: 0
+    from:
+      rid: -2
+    to:
+      rid: -2
+    currentNode:
+      rid: -2
+    nearest:
+      rid: -2
+    countOfCloseNode: 0
+    countOfQuery: 0
     settings:
       capacity: 1000
       maxDepth: 2000
@@ -756,34 +768,13 @@ MonoBehaviour:
       getAdjoinedNodesSO: {fileID: 11400000, guid: a546b5bcd5ada2e46a6a9cd5551e8f8b, type: 2}
       calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
       generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
-    mountPoint: {fileID: 394363656}
-    output: []
-    available: []
-    isRunning: 0
-    from:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    to:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    currentNode:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    nearest:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    countOfCloseNode: 0
-    countOfQuery: 0
   prefab: {fileID: 1374839061621688556, guid: a3ac64f7204db424099a07e7046b2ec0, type: 3}
   moveAbility: 100
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!1 &513431481
 GameObject:
   m_ObjectHideFlags: 0
@@ -947,8 +938,6 @@ TilemapRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2042,12 +2031,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!1 &786810150
 GameObject:
   m_ObjectHideFlags: 0
@@ -2200,6 +2189,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   process:
+    mover:
+      moveAbility: 5
+    mountPoint: {fileID: 1110367219}
+    output: []
+    available: []
+    isRunning: 0
+    from:
+      rid: -2
+    to:
+      rid: -2
+    currentNode:
+      rid: -2
+    nearest:
+      rid: -2
+    countOfCloseNode: 0
+    countOfQuery: 0
     settings:
       capacity: 1000
       maxDepth: 2000
@@ -2207,34 +2212,13 @@ MonoBehaviour:
       getAdjoinedNodesSO: {fileID: 11400000, guid: a546b5bcd5ada2e46a6a9cd5551e8f8b, type: 2}
       calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
       generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
-    mountPoint: {fileID: 1110367219}
-    output: []
-    available: []
-    isRunning: 0
-    from:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    to:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    currentNode:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    nearest:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    countOfCloseNode: 0
-    countOfQuery: 0
   prefab: {fileID: 1374839061621688556, guid: a3ac64f7204db424099a07e7046b2ec0, type: 3}
   moveAbility: 100
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!114 &1110367218
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2248,6 +2232,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   process:
+    mover:
+      moveAbility: 5
+    mountPoint: {fileID: 1110367219}
+    output: []
+    available: []
+    isRunning: 0
+    from:
+      rid: -2
+    to:
+      rid: -2
+    currentNode:
+      rid: -2
+    nearest:
+      rid: -2
+    countOfCloseNode: 0
+    countOfQuery: 0
     settings:
       capacity: 1000
       maxDepth: 2000
@@ -2255,34 +2255,13 @@ MonoBehaviour:
       getAdjoinedNodesSO: {fileID: 11400000, guid: 784715f1651a715438a480e9de9dc26e, type: 2}
       calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
       generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
-    mountPoint: {fileID: 1110367219}
-    output: []
-    available: []
-    isRunning: 0
-    from:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    to:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    currentNode:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    nearest:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    countOfCloseNode: 0
-    countOfQuery: 0
   prefab: {fileID: 1374839061621688556, guid: a3ac64f7204db424099a07e7046b2ec0, type: 3}
   moveAbility: 100
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!4 &1110367219
 Transform:
   m_ObjectHideFlags: 0
@@ -2470,6 +2449,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   process:
+    mover:
+      moveAbility: 5
+    mountPoint: {fileID: 1302146505}
+    output: []
+    available: []
+    isRunning: 0
+    from:
+      rid: -2
+    to:
+      rid: -2
+    currentNode:
+      rid: -2
+    nearest:
+      rid: -2
+    countOfCloseNode: 0
+    countOfQuery: 0
     settings:
       capacity: 1000
       maxDepth: 2000
@@ -2477,34 +2472,13 @@ MonoBehaviour:
       getAdjoinedNodesSO: {fileID: 11400000, guid: 784715f1651a715438a480e9de9dc26e, type: 2}
       calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
       generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
-    mountPoint: {fileID: 1302146505}
-    output: []
-    available: []
-    isRunning: 0
-    from:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    to:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    currentNode:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    nearest:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    countOfCloseNode: 0
-    countOfQuery: 0
   prefab: {fileID: 1374839061621688556, guid: a3ac64f7204db424099a07e7046b2ec0, type: 3}
   moveAbility: 20
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!114 &1302146504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2518,6 +2492,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   process:
+    mover:
+      moveAbility: 5
+    mountPoint: {fileID: 1302146505}
+    output: []
+    available: []
+    isRunning: 0
+    from:
+      rid: -2
+    to:
+      rid: -2
+    currentNode:
+      rid: -2
+    nearest:
+      rid: -2
+    countOfCloseNode: 0
+    countOfQuery: 0
     settings:
       capacity: 1000
       maxDepth: 2000
@@ -2525,34 +2515,13 @@ MonoBehaviour:
       getAdjoinedNodesSO: {fileID: 11400000, guid: 784715f1651a715438a480e9de9dc26e, type: 2}
       calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
       generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
-    mountPoint: {fileID: 0}
-    output: []
-    available: []
-    isRunning: 0
-    from:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    to:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    currentNode:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    nearest:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    countOfCloseNode: 0
-    countOfQuery: 0
   prefab: {fileID: 1374839061621688556, guid: a3ac64f7204db424099a07e7046b2ec0, type: 3}
   moveAbility: 10
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!4 &1302146505
 Transform:
   m_ObjectHideFlags: 0
@@ -2621,8 +2590,6 @@ TilemapRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3086,6 +3053,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   process:
+    mover:
+      moveAbility: 5
+    mountPoint: {fileID: 1335244205}
+    output: []
+    available: []
+    isRunning: 0
+    from:
+      rid: -2
+    to:
+      rid: -2
+    currentNode:
+      rid: -2
+    nearest:
+      rid: -2
+    countOfCloseNode: 0
+    countOfQuery: 0
     settings:
       capacity: 1000
       maxDepth: 2000
@@ -3093,34 +3076,13 @@ MonoBehaviour:
       getAdjoinedNodesSO: {fileID: 11400000, guid: a546b5bcd5ada2e46a6a9cd5551e8f8b, type: 2}
       calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
       generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
-    mountPoint: {fileID: 1335244205}
-    output: []
-    available: []
-    isRunning: 0
-    from:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    to:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    currentNode:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    nearest:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    countOfCloseNode: 0
-    countOfQuery: 0
   prefab: {fileID: 1374839061621688556, guid: a3ac64f7204db424099a07e7046b2ec0, type: 3}
   moveAbility: 100
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!114 &1335244204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3134,6 +3096,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   process:
+    mover:
+      moveAbility: 5
+    mountPoint: {fileID: 1335244205}
+    output: []
+    available: []
+    isRunning: 0
+    from:
+      rid: -2
+    to:
+      rid: -2
+    currentNode:
+      rid: -2
+    nearest:
+      rid: -2
+    countOfCloseNode: 0
+    countOfQuery: 0
     settings:
       capacity: 1000
       maxDepth: 2000
@@ -3141,34 +3119,13 @@ MonoBehaviour:
       getAdjoinedNodesSO: {fileID: 11400000, guid: 784715f1651a715438a480e9de9dc26e, type: 2}
       calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
       generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
-    mountPoint: {fileID: 1335244205}
-    output: []
-    available: []
-    isRunning: 0
-    from:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    to:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    currentNode:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    nearest:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    countOfCloseNode: 0
-    countOfQuery: 0
   prefab: {fileID: 1374839061621688556, guid: a3ac64f7204db424099a07e7046b2ec0, type: 3}
   moveAbility: 100
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!4 &1335244205
 Transform:
   m_ObjectHideFlags: 0
@@ -3237,8 +3194,6 @@ TilemapRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -5205,6 +5160,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   process:
+    mover:
+      moveAbility: 5
+    mountPoint: {fileID: 1920400652}
+    output: []
+    available: []
+    isRunning: 0
+    from:
+      rid: -2
+    to:
+      rid: -2
+    currentNode:
+      rid: -2
+    nearest:
+      rid: -2
+    countOfCloseNode: 0
+    countOfQuery: 0
     settings:
       capacity: 1000
       maxDepth: 2000
@@ -5212,34 +5183,13 @@ MonoBehaviour:
       getAdjoinedNodesSO: {fileID: 11400000, guid: 784715f1651a715438a480e9de9dc26e, type: 2}
       calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
       generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
-    mountPoint: {fileID: 1920400652}
-    output: []
-    available: []
-    isRunning: 0
-    from:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    to:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    currentNode:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    nearest:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    countOfCloseNode: 0
-    countOfQuery: 0
   prefab: {fileID: 1374839061621688556, guid: a3ac64f7204db424099a07e7046b2ec0, type: 3}
   moveAbility: 20
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!114 &1920400654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5253,6 +5203,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   process:
+    mover:
+      moveAbility: 5
+    mountPoint: {fileID: 1920400652}
+    output: []
+    available: []
+    isRunning: 0
+    from:
+      rid: -2
+    to:
+      rid: -2
+    currentNode:
+      rid: -2
+    nearest:
+      rid: -2
+    countOfCloseNode: 0
+    countOfQuery: 0
     settings:
       capacity: 1000
       maxDepth: 2000
@@ -5260,34 +5226,13 @@ MonoBehaviour:
       getAdjoinedNodesSO: {fileID: 11400000, guid: 784715f1651a715438a480e9de9dc26e, type: 2}
       calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
       generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
-    mountPoint: {fileID: 1920400652}
-    output: []
-    available: []
-    isRunning: 0
-    from:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    to:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    currentNode:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    nearest:
-      position: {x: 0, y: 0}
-      state: 0
-      GCost: 0
-      HCost: 0
-    countOfCloseNode: 0
-    countOfQuery: 0
   prefab: {fileID: 1374839061621688556, guid: a3ac64f7204db424099a07e7046b2ec0, type: 3}
   moveAbility: 20
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!1 &2045330950
 GameObject:
   m_ObjectHideFlags: 0
@@ -5369,8 +5314,6 @@ TilemapRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

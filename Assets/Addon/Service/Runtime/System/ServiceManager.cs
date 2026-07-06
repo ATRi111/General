@@ -13,7 +13,7 @@ namespace Services
         private readonly Dictionary<Type, Service> serviceDict = new Dictionary<Type, Service>();
 
         /// <summary>每个ServiceManager管理一个作用域(场景)，以scene.handle为标识符，handle = 0表示Global</summary>
-        public int Handle { get; private set;}
+        public int Handle { get; private set; }
 
         /// <summary>
         /// 同一 RegisterType 重复注册时的冲突处理方法。

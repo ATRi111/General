@@ -2,20 +2,19 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace AStar.TwoD
+namespace AStar
 {
-    [CustomPropertyDrawer(typeof(PathFinding2DProcess), true)]
-    public class PathFinding2DProcessDrawer : AutoPropertyDrawer
+    [CustomPropertyDrawer(typeof(PathFindingProcess), true)]
+    public class PathFindingProcessDrawer : AutoPropertyDrawer
     {
         [AutoProperty]
-        public SerializedProperty settings, mountPoint;
+        public SerializedProperty mountPoint;
 
         [AutoProperty]
         public SerializedProperty output, available, isRunning, from, to, currentNode, nearest, countOfCloseNode, countOfQuery;
 
         protected override void MyOnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            AutoPropertyField("设置", settings);
             mountPoint.PropertyField("挂载点", NextRectRelative());
             if (Application.isPlaying)
             {

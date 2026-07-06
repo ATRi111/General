@@ -1,7 +1,6 @@
-﻿using TMPro;
+﻿using AStar.TwoD;
+using TMPro;
 using UnityEngine;
-using AStar;
-using AStar.TwoD;
 
 namespace AStar.Sample
 {

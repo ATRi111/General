@@ -31,7 +31,7 @@ namespace Services
         protected virtual void Awake()
         {
             //禁止将服务移动到其他场景，全局服务自动确保不销毁
-            if(isGlobal)
+            if (isGlobal)
                 DontDestroyOnLoad(transform.root.gameObject);
             Handle = isGlobal ? 0 : gameObject.scene.handle;
             string scope = isGlobal ? "Global" : gameObject.scene.name;

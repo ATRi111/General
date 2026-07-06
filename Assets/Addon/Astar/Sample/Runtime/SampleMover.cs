@@ -1,7 +1,6 @@
-﻿using UnityEngine;
+﻿using AStar.TwoD;
+using UnityEngine;
 using UnityEngine.Tilemaps;
-using AStar;
-using AStar.TwoD;
 
 namespace AStar.Sample
 {

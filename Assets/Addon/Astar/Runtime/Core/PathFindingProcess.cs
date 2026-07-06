@@ -245,6 +245,15 @@ namespace AStar
             return node;
         }
 
+        /// <summary>
+        /// 临时获取地图上某个位置的节点，不将其加入缓存中，以节约内存，常用于JPS
+        /// </summary>
+        internal TNode PeekNode(TPosition pos)
+        {
+            countOfQuery++;
+            return discoveredNodes.TryGetValue(pos, out TNode node) ? node : GenerateNode(pos);
+        }
+
         public TNode[] GetAllNodes()
         {
             return discoveredNodes.Values.ToArray();
