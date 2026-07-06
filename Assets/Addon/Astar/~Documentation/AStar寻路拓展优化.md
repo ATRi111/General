@@ -263,10 +263,6 @@ $$
 
 # 参考
 
-https://blog.csdn.net/weixin_43398590/article/details/106307466
-
-https://www.cnblogs.com/KillerAery/p/12242445.html
-
 Harabor D，Grastien A． Online Graph Pruning for Pathfinding on Grid Maps［C］
 
 

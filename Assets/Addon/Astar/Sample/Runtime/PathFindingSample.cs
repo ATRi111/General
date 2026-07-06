@@ -89,7 +89,7 @@ namespace AStar.Sample
         /// </summary>
         private void PaintParentLinks(Node2D[] allNodes, Transform parent)
         {
-            Color color = new(1f, 1f, 0f, 0.9f);
+            Color color = new(1f, 1f, 0f, 0.5f);
             foreach (Node2D node in allNodes)
             {
                 Node2D parentNode = node.Parent;
@@ -105,7 +105,7 @@ namespace AStar.Sample
         /// </summary>
         private void PaintOutputPath(Transform parent)
         {
-            Color color = Color.red;
+            Color color = new(1f, 0f, 0f, 0.5f);
             for (int i = 1; i < process.output.Count; i++)
             {
                 Node2D a = (Node2D)process.output[i - 1];

@@ -13,12 +13,20 @@ namespace AStar.Sample
     [RequireComponent(typeof(MeshRenderer))]
     public class DebugArrow : MonoBehaviour
     {
-        private const float ShaftWidth = 0.025f;
-        private const float HeadLength = 0.15f;
-        private const float HeadWidth = 0.09f;
+        private const float ShaftWidth = 0.05f;
+        private const float HeadLength = 0.25f;
+        private const float HeadWidth = 0.15f;
 
         private static Material sharedMaterial;
-        private static Material SharedMaterial => sharedMaterial ??= new Material(Shader.Find("Sprites/Default"));
+        private static Material SharedMaterial
+        {
+            get
+            {
+                if(sharedMaterial == null)
+                    sharedMaterial = new Material(Shader.Find("Sprites/Default"));
+                return sharedMaterial;
+            }
+        }
 
         private LineRenderer lineRenderer;
         private MeshFilter meshFilter;
