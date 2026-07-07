@@ -28,10 +28,12 @@ namespace AStar
         }
 
         /// <summary>
-        /// 判断能否从某节点移动到另一节点
+        /// 判断能否从某节点移动到另一节点，此函数被用于创建节点阶段，因此必须包含对to的null检查
         /// </summary>
         public virtual bool MoveCheck(Node from, Node to)
         {
+            if(to == null) 
+                return false;
             return !to.IsObstacle;
         }
 

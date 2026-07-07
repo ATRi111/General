@@ -54,12 +54,10 @@ namespace AStar
         public Node To => to;
 
         /// <summary>
-        /// 待访问节点相邻可达节点的临时容器
+        /// 可达节点的临时容器
         /// </summary>
-        protected List<Node> adjoins;
-        /// <summary>
-        /// 待访问节点表
-        /// </summary>
+        protected List<Node> movables;
+
         protected Heap<Node> open;
 
         /// <summary>
@@ -88,7 +86,7 @@ namespace AStar
         {
             mover ??= new MoverBase();
 
-            adjoins = new();
+            movables = new();
             output = new();
             available = new();
             open = new Heap<Node>(SettingsBase.capacity, new Comparer_Cost());
@@ -97,7 +95,7 @@ namespace AStar
         }
 
         /// <summary>
-        /// 获取与一个节点相邻的可达节点，写入 <see cref="adjoins"/>，由具体空间表示实现
+        /// 获取与一个节点相邻的可达节点，写入 <see cref="movables"/>，由具体空间表示实现
         /// </summary>
         protected abstract void GetMovableNodes(Node from);
 
@@ -167,11 +165,11 @@ namespace AStar
                 return false;
             }
 
-            GetMovableNodes(currentNode);
+            GetMovableNodes(currentNode);       //JPS中，可能会获取到一些非直接相邻和非Blank节点
 
-            foreach (Node node in adjoins)
+            foreach (Node node in movables)
             {
-                node.Parent ??= currentNode;    //JPS中，如果提前找到了跳点，对角线上的点已经被设为Close，提前找到的跳点已经设好了Parent
+                node.Parent ??= currentNode;
                 switch (node.state)
                 {
                     case ENodeState.Blank:

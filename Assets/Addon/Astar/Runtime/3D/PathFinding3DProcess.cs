@@ -35,7 +35,7 @@ namespace AStar.ThreeD
 
         protected override void GetMovableNodes(Node from)
         {
-            settings.GetAdjoinNodes(this, (Node3D)from, mover.MoveCheck, adjoins);
+            settings.GetAdjoinNodes(this, (Node3D)from, mover.MoveCheck, movables);
         }
 
         protected override bool InBoundary(Vector3Int position)

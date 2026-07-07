@@ -32,7 +32,7 @@ namespace AStar.TwoD
             foreach (Vector2Int direction in FourDirections)
             {
                 to = process.GetNode(from.Position + direction);
-                if (to != null && moveCheck(from, to))
+                if (moveCheck(from, to))
                     ret.Add(to);
             }
         }
@@ -61,19 +61,12 @@ namespace AStar.TwoD
         /// </summary>
         public static void GetAdjoin8Nodes(PathFinding2DProcess process, Node2D from, Func<Node2D, Node2D, bool> moveCheck, List<Node> ret)
         {
-            bool CantPass(Node2D to)
-            {
-                if (to == null)
-                    return true;
-                return !moveCheck(from, to);
-            }
-
             ret.Clear();
             Node2D to;
             foreach (Vector2Int direction in FourDirections)
             {
                 to = process.GetNode(from.Position + direction);
-                if (CantPass(to))
+                if (!moveCheck(from, to))
                     continue;
                 ret.Add(to);
             }
@@ -81,15 +74,11 @@ namespace AStar.TwoD
             foreach (Vector2Int direction in DiagnolDirections)
             {
                 to = process.GetNode(from.Position + direction);
-                if (CantPass(to))
-                    continue;
-                to = process.GetNode(from.Position + new Vector2Int(direction.x, 0));
-                if (CantPass(to))
-                    continue;
-                to = process.GetNode(from.Position + new Vector2Int(0, direction.y));
-                if (CantPass(to))
-                    continue;
-                ret.Add(to);
+                Node2D horizontal = process.GetNode(from.Position + new Vector2Int(direction.x, 0));
+                Node2D vertical = process.GetNode(from.Position + new Vector2Int(0, direction.y));
+                if (moveCheck(from, horizontal) && moveCheck(horizontal, to)
+                    || moveCheck(from, vertical) && moveCheck(vertical, to))
+                    ret.Add(to);    //沿对角线前进时，两边有一边没障碍物就可以走
             }
         }
         #endregion

@@ -35,7 +35,7 @@ namespace AStar.TwoD
 
         protected override void GetMovableNodes(Node from)
         {
-            settings.GetAdjoinNodes(this, (Node2D)from, mover.MoveCheck, adjoins);
+            settings.GetAdjoinNodes(this, (Node2D)from, mover.MoveCheck, movables);
         }
 
         protected override bool InBoundary(Vector2Int position)

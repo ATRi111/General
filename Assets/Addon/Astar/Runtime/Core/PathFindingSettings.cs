@@ -41,7 +41,7 @@ namespace AStar
         private GenerateNodeSO<TProcess, TPosition, TNode> generateNodeSO;
 
         /// <summary>
-        /// 获取相邻可达节点
+        /// 获取相邻可达节点;必定确保moveCheck包含对to参数的null检查
         /// </summary>
         public void GetAdjoinNodes(TProcess process, TNode from, Func<TNode, TNode, bool> moveCheck, List<Node> adjoins)
         {
