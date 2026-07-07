@@ -118,7 +118,6 @@ namespace AStar
             to.HCost = 0;
 
             this.from = from;
-            from.Parent = null;
             from.HCost = from.PredictCostTo(to);
 
             open.Push(from);
@@ -172,7 +171,7 @@ namespace AStar
 
             foreach (Node node in adjoins)
             {
-                node.Parent ??= currentNode;
+                node.Parent ??= currentNode;    //JPS中，如果提前找到了跳点，对角线上的点已经被设为Close，提前找到的跳点已经设好了Parent
                 switch (node.state)
                 {
                     case ENodeState.Blank:
@@ -199,6 +198,7 @@ namespace AStar
         /// </summary>
         public virtual void Stop()
         {
+            from.Parent = null; //寻路过程中，起点的Parent可能被修改
             isRunning = false;
             nearest.Recall(n => output.Add(n));
         }

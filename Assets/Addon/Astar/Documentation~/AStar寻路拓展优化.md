@@ -2,16 +2,16 @@
 
 ## 概念
 
-- A*算法是一种求图中两点间最短路径的算法
 
-<img src="image-20230404075539330.png" alt="image-20230404075539330" style="zoom:67%;" />
+
+
 
 - A*算法是一种启发式算法，启发函数为FCost=GCost+HCost
 - 节点：相当于图这个数据结构中的节点，并拥有一些额外属性
   - GCost：从起点到该节点的路径总长度。由于是从起点逐步搜索，起点到某点的路径是确定的，即GCost是真实的
   - HCost：从该节点到终点的路径的估计长度。最基本的做法是假设该节点到终点没有障碍物，以此计算距离
 - open list：已计算FCost而从起点出发的最短路径未确定的节点，每次从中选出FCost最小的节点测试，故适合用最小堆实现
-- close list：从起点出发的最短路径已经确定的节点
+- close list：从起点出发的最短路径已经确定的节点；只要每个节点记录了自身的父节点，便不需要显式定义close list
 
 ## 自然语言描述
 
@@ -78,33 +78,12 @@ public Func<Vector2Int, Vector2Int, float> CalculateHCost;
 
 ## 计算HCost的方式
 
-<img src="image-20230404085717700.png" alt="image-20230404085717700" style="zoom:50%;" />
-
-- 主要指适应游戏移动方式的改变
+- 可以适应不同的可选移动方向
   - 四向移动：曼哈顿距离
   - 八向移动：对角线距离
   - 六向移动
 
-```C#
-//边长
-public static float Side = 10f;
-//对角线长
-public static float Diagnol = 14f;
-public static float ManhattanDistance(Vector2Int a, Vector2Int b)
-    => Mathf.Abs(a.x - b.x) * Side + Mathf.Abs(a.y - b.y) * Side;
-public static float ChebyshevDistance(Vector2Int a, Vector2Int b)
-{
-    float deltaX = Mathf.Abs(a.x - b.x);
-    float deltaY = Mathf.Abs(a.y - b.y);
-    float max = Mathf.Max(deltaX, deltaY);
-    float min = Mathf.Min(deltaX, deltaY);
-    return min * Diagnol + (max - min) * Side;
-}
-public static float HexagonGridDistance(Vector3Int a,Vector3Int b)
-    => return Side * Mathf.Max(Mathf.Abs(a.x - b.x), Mathf.Abs(a.y - b.y), Mathf.Abs(a.z - b.z));
-```
-
-# 计算GCost的方式
+## 计算GCost的方式
 
 ```C#
 /// <summary>
@@ -113,7 +92,7 @@ public static float HexagonGridDistance(Vector3Int a,Vector3Int b)
 public Func<Vector2Int, Vector2Int, float> CalculateGCost;
 ```
 
-- 主要指适应游戏中不同地块移动消耗不同的情况
+- 可以适应困难地形、不同移动方式等需求
 
 # 判断能否从一点移动到另一点的方式
 
@@ -132,7 +111,7 @@ public Func<PathNode, PathNode, bool> MoveCheck;
 public Func<Vector2Int, ENodeType> DefineNodeType;
 ```
 
-- 主要指适应游戏中移动方式的改变
+- 可以适应的可选移动方向，以及
   - 四向移动
   - 自由八向移动
   - 受限八向移动：贴墙时不能走对角线

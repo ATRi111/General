@@ -42,6 +42,10 @@ namespace AStar.ThreeD
         #region 二十六向寻路（面、边、角相邻）
 
         public static readonly ReadOnlyCollection<Vector3Int> TwentySixDirections;
+        /// <summary>恰好两个分量非零的12个"边"方向（2D对角线，同一坐标平面内斜向相邻）</summary>
+        public static readonly ReadOnlyCollection<Vector3Int> EdgeDirections;
+        /// <summary>三个分量都非零的8个"角"方向（3D对角线，立方体对角相邻）</summary>
+        public static readonly ReadOnlyCollection<Vector3Int> CornerDirections;
 
         /// <summary>
         /// 求对角线距离
@@ -58,17 +62,63 @@ namespace AStar.ThreeD
         }
 
         /// <summary>
-        /// 获取某节点周围面、边、角相邻的二十六个节点
+        /// 获取某节点周围面、边、角相邻的二十六个节点；仿照 <see cref="GetAdjoin8Nodes"/> 禁止在侧面有障碍时走对角线（禁止穿角）：
+        /// 边方向（2D对角线）要求其2个直线分量都畅通；角方向（3D对角线）要求其3个直线分量与3个边分量（即所有更低维度的"影子"方向）都畅通
         /// </summary>
         public static void Get26AdjoinNodes(PathFinding3DProcess process, Node3D from, Func<Node3D, Node3D, bool> moveCheck, List<Node> ret)
         {
+            bool CantPass(Node3D to)
+            {
+                if (to == null)
+                    return true;
+                return !moveCheck(from, to);
+            }
+
             ret.Clear();
             Node3D to;
-            foreach (Vector3Int direction in TwentySixDirections)
+
+            foreach (Vector3Int direction in SixDirections)
             {
                 to = process.GetNode(from.Position + direction);
-                if (to != null && moveCheck(from, to))
-                    ret.Add(to);
+                if (CantPass(to))
+                    continue;
+                ret.Add(to);
+            }
+
+            foreach (Vector3Int direction in EdgeDirections)
+            {
+                // 边方向恰好2个分量非零，只需检查这2个分量各自对应的直线方向（侧面）是否畅通
+                to = process.GetNode(from.Position + direction);
+                if (CantPass(to))
+                    continue;
+                if (direction.x != 0 && CantPass(process.GetNode(from.Position + new Vector3Int(direction.x, 0, 0))))
+                    continue;
+                if (direction.y != 0 && CantPass(process.GetNode(from.Position + new Vector3Int(0, direction.y, 0))))
+                    continue;
+                if (direction.z != 0 && CantPass(process.GetNode(from.Position + new Vector3Int(0, 0, direction.z))))
+                    continue;
+                ret.Add(to);
+            }
+
+            foreach (Vector3Int direction in CornerDirections)
+            {
+                // 角方向3个分量都非零，需要检查3个直线分量（面）与3个边分量（棱），即所有更低维度的"影子"方向
+                to = process.GetNode(from.Position + direction);
+                if (CantPass(to))
+                    continue;
+                if (CantPass(process.GetNode(from.Position + new Vector3Int(direction.x, 0, 0))))
+                    continue;
+                if (CantPass(process.GetNode(from.Position + new Vector3Int(0, direction.y, 0))))
+                    continue;
+                if (CantPass(process.GetNode(from.Position + new Vector3Int(0, 0, direction.z))))
+                    continue;
+                if (CantPass(process.GetNode(from.Position + new Vector3Int(direction.x, direction.y, 0))))
+                    continue;
+                if (CantPass(process.GetNode(from.Position + new Vector3Int(direction.x, 0, direction.z))))
+                    continue;
+                if (CantPass(process.GetNode(from.Position + new Vector3Int(0, direction.y, direction.z))))
+                    continue;
+                ret.Add(to);
             }
         }
 
@@ -132,6 +182,19 @@ namespace AStar.ThreeD
                 }
             }
             TwentySixDirections = new ReadOnlyCollection<Vector3Int>(twentySix);
+
+            List<Vector3Int> edge = new();
+            List<Vector3Int> corner = new();
+            foreach (Vector3Int direction in twentySix)
+            {
+                int nonZeroCount = (direction.x != 0 ? 1 : 0) + (direction.y != 0 ? 1 : 0) + (direction.z != 0 ? 1 : 0);
+                if (nonZeroCount == 2)
+                    edge.Add(direction);
+                else if (nonZeroCount == 3)
+                    corner.Add(direction);
+            }
+            EdgeDirections = new ReadOnlyCollection<Vector3Int>(edge);
+            CornerDirections = new ReadOnlyCollection<Vector3Int>(corner);
         }
     }
 }

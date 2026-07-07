@@ -27,7 +27,6 @@ namespace AStar.TwoD
             {
                 Node2D current = from;
                 Vector2Int pos = current.Position;
-                Debug.Log($"{from.state};{from.Position})");
                 for (int i = 0; i < depthOnDirection; i++)
                 {
                     pos += direction;

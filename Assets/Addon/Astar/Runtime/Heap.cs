@@ -59,7 +59,7 @@ namespace AStar
 
         private void ResizeItemStore(int newSize)
         {
-            if (Count < newSize || DefaultCapacity <= newSize)
+            if (newSize < Count || newSize < DefaultCapacity)
                 return;
 
             T[] temp = new T[newSize];

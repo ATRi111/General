@@ -42,6 +42,7 @@ namespace AStar.TwoD
         #region 八向寻路
 
         public static readonly ReadOnlyCollection<Vector2Int> EightDirections;
+        public static readonly ReadOnlyCollection<Vector2Int> DiagnolDirections;
         public static readonly Dictionary<Vector2Int, Vector2Int[]> SortedEightDirections;
 
         /// <summary>
@@ -60,13 +61,35 @@ namespace AStar.TwoD
         /// </summary>
         public static void GetAdjoin8Nodes(PathFinding2DProcess process, Node2D from, Func<Node2D, Node2D, bool> moveCheck, List<Node> ret)
         {
+            bool CantPass(Node2D to)
+            {
+                if (to == null)
+                    return true;
+                return !moveCheck(from, to);
+            }
+
             ret.Clear();
             Node2D to;
-            foreach (Vector2Int direction in EightDirections)
+            foreach (Vector2Int direction in FourDirections)
             {
                 to = process.GetNode(from.Position + direction);
-                if (to != null && moveCheck(from, to))
-                    ret.Add(to);
+                if (CantPass(to))
+                    continue;
+                ret.Add(to);
+            }
+
+            foreach (Vector2Int direction in DiagnolDirections)
+            {
+                to = process.GetNode(from.Position + direction);
+                if (CantPass(to))
+                    continue;
+                to = process.GetNode(from.Position + new Vector2Int(direction.x, 0));
+                if (CantPass(to))
+                    continue;
+                to = process.GetNode(from.Position + new Vector2Int(0, direction.y));
+                if (CantPass(to))
+                    continue;
+                ret.Add(to);
             }
         }
         #endregion
@@ -161,6 +184,15 @@ namespace AStar.TwoD
                 Vector2Int.right,
             };
             FourDirections = new ReadOnlyCollection<Vector2Int>(four);
+
+            Vector2Int[] diag = new Vector2Int[]
+            {
+                Vector2Int.left + Vector2Int.up,
+                Vector2Int.left + Vector2Int.down,
+                Vector2Int.right + Vector2Int.down,
+                Vector2Int.right + Vector2Int.up,
+            };
+            DiagnolDirections = new ReadOnlyCollection<Vector2Int>(diag);
 
             SortedEightDirections = new();
             foreach (Vector2Int direction in EightDirections)
