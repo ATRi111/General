@@ -9,7 +9,7 @@ namespace AStar.TwoD
     {
         protected override void GetAdjoinNodes_Default(PathFinding2DProcess process, Node2D from, Func<Node2D, Node2D, bool> moveCheck, List<Node> adjoins)
         {
-            PathFinding2DUtility.GetAdjoinNodes_Four(process, from, moveCheck, adjoins);
+            PathFinding2DUtility.GetAdjoin4Nodes(process, from, moveCheck, adjoins);
         }
 
         protected override float CalculateDistance_Default(Vector2Int from, Vector2Int to)

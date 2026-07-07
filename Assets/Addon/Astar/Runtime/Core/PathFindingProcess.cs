@@ -1,3 +1,4 @@
+using AStar.TwoD;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -121,6 +122,7 @@ namespace AStar
             from.HCost = from.PredictCostTo(to);
 
             open.Push(from);
+            from.state = ENodeState.Open;
             nearest = from;
         }
 
@@ -151,8 +153,6 @@ namespace AStar
             }
 
             currentNode = open.Pop();
-            currentNode.state = ENodeState.Close;
-            countOfCloseNode++;
 
             if (mover.MoveAbilityCheck(currentNode) && mover.StayCheck(currentNode))
             {
@@ -172,11 +172,11 @@ namespace AStar
 
             foreach (Node node in adjoins)
             {
+                node.Parent ??= currentNode;
                 switch (node.state)
                 {
                     case ENodeState.Blank:
                         node.HCost = node.PredictCostTo(to);
-                        node.Parent = currentNode;
                         node.state = ENodeState.Open;
                         open.Push(node);
                         break;
@@ -186,6 +186,9 @@ namespace AStar
                         break;
                 }
             }
+
+            currentNode.state = ENodeState.Close;
+            countOfCloseNode++;
 
             Profiler.EndSample();
             return true;

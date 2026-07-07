@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using UnityEngine;
 
 namespace AStar.TwoD
@@ -17,6 +18,15 @@ namespace AStar.TwoD
         public Vector2Int boundaryMin, boundaryMax;
 
         protected override PathFindingSettings SettingsBase => settings;
+
+        /// <summary>
+        /// 用于持久化保存一个临时节点
+        /// </summary>
+        protected internal void PersistNode(Node2D node)
+        {
+            if (!discoveredNodes.ContainsKey(node.Position))
+                discoveredNodes.Add(node.Position, node);
+        }
 
         protected override Node2D GenerateNode(Vector2Int position)
         {

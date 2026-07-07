@@ -1,3 +1,4 @@
+using AStar.TwoD;
 using System;
 using UnityEngine;
 
@@ -17,6 +18,15 @@ namespace AStar.ThreeD
         public Vector3Int boundaryMin, boundaryMax;
 
         protected override PathFindingSettings SettingsBase => settings;
+
+        /// <summary>
+        /// 用于持久化保存一个临时节点
+        /// </summary>
+        protected internal void PersistNode(Node3D node)
+        {
+            if (!discoveredNodes.ContainsKey(node.Position))
+                discoveredNodes.Add(node.Position, node);
+        }
 
         protected override Node3D GenerateNode(Vector3Int position)
         {

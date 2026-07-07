@@ -9,7 +9,7 @@ namespace AStar.ThreeD
     {
         protected override void GetAdjoinNodes_Default(PathFinding3DProcess process, Node3D from, Func<Node3D, Node3D, bool> moveCheck, List<Node> adjoins)
         {
-            PathFinding3DUtility.GetAdjoinNodes_Six(process, from, moveCheck, adjoins);
+            PathFinding3DUtility.Get6AdjoinNodes(process, from, moveCheck, adjoins);
         }
 
         protected override float CalculateDistance_Default(Vector3Int from, Vector3Int to)

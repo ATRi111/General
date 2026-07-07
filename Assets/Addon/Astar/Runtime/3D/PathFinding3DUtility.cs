@@ -25,7 +25,7 @@ namespace AStar.ThreeD
         /// <summary>
         /// 获取某节点周围面相邻的六个节点
         /// </summary>
-        public static void GetAdjoinNodes_Six(PathFinding3DProcess process, Node3D from, Func<Node3D, Node3D, bool> moveCheck, List<Node> ret)
+        public static void Get6AdjoinNodes(PathFinding3DProcess process, Node3D from, Func<Node3D, Node3D, bool> moveCheck, List<Node> ret)
         {
             ret.Clear();
             Node3D to;
@@ -60,7 +60,7 @@ namespace AStar.ThreeD
         /// <summary>
         /// 获取某节点周围面、边、角相邻的二十六个节点
         /// </summary>
-        public static void GetAdjoinNodes_TwentySix(PathFinding3DProcess process, Node3D from, Func<Node3D, Node3D, bool> moveCheck, List<Node> ret)
+        public static void Get26AdjoinNodes(PathFinding3DProcess process, Node3D from, Func<Node3D, Node3D, bool> moveCheck, List<Node> ret)
         {
             ret.Clear();
             Node3D to;
@@ -73,6 +73,37 @@ namespace AStar.ThreeD
         }
 
         #endregion
+
+        /// <summary>
+        /// 判断两个方向是否相同（至少有一个0向量时返回false）
+        /// </summary>
+        public static bool Align(Vector3Int a, Vector3Int b)
+        {
+            int cross = a.y * b.z - a.z * b.y;
+            if (cross != 0)
+                return false;
+            cross = a.z * b.x - a.x * b.z;
+            if (cross != 0) 
+                return false;
+            cross = a.x * b.y - a.y * b.x;
+            if (cross != 0)
+                return false;
+            int dot = a.x * b.x + a.y * b.y + a.z * b.z;
+            return dot > 0;
+        }
+
+        /// <summary>
+        /// 判断一个方向是否与6个方向之一相同
+        /// </summary>
+        public static bool Align6(Vector3Int v)
+        {
+            foreach (Vector3Int direction in SixDirections)
+            {
+                if(Align(v, direction)) 
+                    return true;
+            }
+            return false;
+        }
 
         static PathFinding3DUtility()
         {

@@ -9,6 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b69e59b897cbb649adda8bb69f6e64d, type: 3}
-  m_Name: "\u5207\u6BD4\u96EA\u592B\u8DDD\u79BB"
+  m_Script: {fileID: 11500000, guid: a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2, type: 3}
+  m_Name: "\u751F\u6210SampleNode3D"
   m_EditorClassIdentifier: 

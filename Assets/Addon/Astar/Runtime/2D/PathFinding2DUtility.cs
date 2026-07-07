@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using UnityEngine;
 
 namespace AStar.TwoD
@@ -24,7 +25,7 @@ namespace AStar.TwoD
         /// <summary>
         /// 获取某节点周围的四个节点
         /// </summary>
-        public static void GetAdjoinNodes_Four(PathFinding2DProcess process, Node2D from, Func<Node2D, Node2D, bool> moveCheck, List<Node> ret)
+        public static void GetAdjoin4Nodes(PathFinding2DProcess process, Node2D from, Func<Node2D, Node2D, bool> moveCheck, List<Node> ret)
         {
             ret.Clear();
             Node2D to;
@@ -41,6 +42,7 @@ namespace AStar.TwoD
         #region 八向寻路
 
         public static readonly ReadOnlyCollection<Vector2Int> EightDirections;
+        public static readonly Dictionary<Vector2Int, Vector2Int[]> SortedEightDirections;
 
         /// <summary>
         /// 求对角线距离
@@ -56,7 +58,7 @@ namespace AStar.TwoD
         /// <summary>
         /// 获取某节点周围的八个节点
         /// </summary>
-        public static void GetAdjoinNodes_Eight(PathFinding2DProcess process, Node2D from, Func<Node2D, Node2D, bool> moveCheck, List<Node> ret)
+        public static void GetAdjoin8Nodes(PathFinding2DProcess process, Node2D from, Func<Node2D, Node2D, bool> moveCheck, List<Node> ret)
         {
             ret.Clear();
             Node2D to;
@@ -68,6 +70,44 @@ namespace AStar.TwoD
             }
         }
         #endregion
+
+        /// <summary>
+        /// 判断两个方向是否相同（至少有一个0向量时返回false）
+        /// </summary>
+        public static bool Align(Vector2Int a, Vector2Int b)
+        {
+            int cross = a.x * b.y - a.y * b.x;
+            if(cross != 0)
+                return false;
+            int dot = a.x * b.x + a.y * b.y;
+            return dot > 0;
+        }
+
+        /// <summary>
+        /// 判断一个方向是否与4个方向之一相同
+        /// </summary>
+        public static bool Align4(Vector2Int v)
+        {
+            foreach (Vector2Int direction in FourDirections)
+            {
+                if (Align(v, direction))
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 判断一个方向是否与8个方向之一相同
+        /// </summary>
+        public static bool Align8(Vector2Int v)
+        {
+            foreach (Vector2Int direction in EightDirections)
+            {
+                if (Align(v, direction))
+                    return true;
+            }
+            return false;
+        }
 
         /// <summary>
         /// 对向量按与某个向量的夹角大小排序;
@@ -121,6 +161,15 @@ namespace AStar.TwoD
                 Vector2Int.right,
             };
             FourDirections = new ReadOnlyCollection<Vector2Int>(four);
+
+            SortedEightDirections = new();
+            foreach (Vector2Int direction in EightDirections)
+            {
+                Vector2Int[] directions = EightDirections.ToArray();
+                Comparer_Vector2_Nearer comparer = new(direction);
+                Array.Sort(directions, comparer);
+                SortedEightDirections.Add(direction, directions);
+            }
         }
     }
 }

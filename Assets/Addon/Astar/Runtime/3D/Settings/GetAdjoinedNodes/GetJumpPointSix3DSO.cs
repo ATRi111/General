@@ -4,6 +4,12 @@ using UnityEngine;
 
 namespace AStar.ThreeD
 {
+    /// <summary>
+    /// 六向（无对角线）JPS。转向完全依赖障碍物几何特征触发的"强制邻居"，因此在完全没有障碍物、
+    /// 或障碍物是一圈平整无缺口的围墙（不会产生任何强制邻居）的地图上，若终点不恰好落在某个已发现跳点的
+    /// 六条坐标轴射线上，理论上就找不到路径——这是该算法本身的固有局限，与"是否用了人为设置的寻路边界"无关：
+    /// 人为边界与用Block实际围一圈墙，对搜索的效果必须完全等效（见 <see cref="FindJumpPointOnDirection"/>）
+    /// </summary>
     [CreateAssetMenu(fileName = "六向跳点", menuName = "AStar3D/获取相邻可达节点的方法/六向跳点")]
     public class GetJumpPointSix3DSO : GetMovableNodes3DSO
     {
@@ -21,28 +27,58 @@ namespace AStar.ThreeD
 
             if (from.Parent == null)
             {
-                // 起点没有"来向"可供剪枝参考，六个方向都需要各自尝试寻找跳点
                 foreach (Vector3Int direction in PathFinding3DUtility.SixDirections)
                     TryAdd(FindJumpPointOnDirection(process, from.Position, direction));
                 return;
             }
 
-            Vector3Int v = from.Position - from.Parent.Position;
+            // from与Parent之间可能是一次跳跃了多格的结果（depthOnDirection>1时很常见），
+            // 两点间的位置差不是单位向量，必须按符号归一化，否则下面无论是拿它继续扫描（每次前进的步长就错了），
+            // 还是拿它与SixDirections逐个比较排除来向/反向（比较永远不成立），全都会出错，
+            // 表现为JPS从第二层扩展开始基本失效、搜索很快就断掉（找不到路径或提前结束）
+            Vector3Int delta = from.Position - from.Parent.Position;
+            Vector3Int v = new(Math.Sign(delta.x), Math.Sign(delta.y), Math.Sign(delta.z));
 
             // 沿来向继续前进
             TryAdd(FindJumpPointOnDirection(process, from.Position, v));
 
-            // 强制邻居：某个垂直方向在上一格被阻挡、但在当前格畅通，说明只能经由当前节点转向该方向
-            foreach (Vector3Int p in PathFinding3DUtility.SixDirections)
+            // 强制邻居：某个垂直方向在"来向上紧邻的前一格"被阻挡、但在当前格畅通，说明只能经由当前节点转向该方向。
+            // 这里必须用紧邻的前一格（from.Position - v），而不是from.Parent——Parent同样可能是好几格之外的跳点，
+            // 用它来做判断在多格跳跃时是错的
+            Node3D prevNode = process.PeekNode(from.Position - v);
+            if (prevNode != null)
             {
-                if (p == v || p == -v)
-                    continue;
+                Vector3Int toDelta = ((Node3D)process.To).Position - from.Position;
+                foreach (Vector3Int p in PathFinding3DUtility.SixDirections)
+                {
+                    if (p == v || p == -v)
+                        continue;
 
-                bool blockedAtPrev = BlockedAt(process, from.Parent, p);
-                bool blockedAtCurrent = BlockedAt(process, from, p);
-                if (blockedAtPrev && !blockedAtCurrent)
-                    TryAdd(process.GetNode(from.Position + p));
+                    if (IsAlignedAlong(toDelta, p))
+                    {
+                        TryAdd(FindJumpPointOnDirection(process, from.Position, p));
+                        continue;
+                    }
+
+                    bool blockedAtPrev = BlockedAt(process, prevNode, p);
+                    bool blockedAtCurrent = BlockedAt(process, from, p);
+                    if (blockedAtPrev && !blockedAtCurrent)
+                        TryAdd(process.GetNode(from.Position + p));
+                }
             }
+        }
+
+        /// <summary>
+        /// 判断 <paramref name="delta"/>（终点相对当前节点的位置差）是否恰好落在 <paramref name="direction"/>
+        /// 这根坐标轴的正方向上——即另外两个分量都为0，且沿该轴的分量与direction同号（同为0则不算对齐，避免二者重合的退化情况）
+        /// </summary>
+        private static bool IsAlignedAlong(Vector3Int delta, Vector3Int direction)
+        {
+            if (direction.x != 0)
+                return delta.y == 0 && delta.z == 0 && Math.Sign(delta.x) == direction.x;
+            if (direction.y != 0)
+                return delta.x == 0 && delta.z == 0 && Math.Sign(delta.y) == direction.y;
+            return delta.x == 0 && delta.y == 0 && Math.Sign(delta.z) == direction.z;
         }
 
         /// <summary>
@@ -53,6 +89,12 @@ namespace AStar.ThreeD
         {
             Node3D peek = process.PeekNode(at.Position + delta);
             return peek == null || !process.mover.MoveCheck(at, peek);
+        }
+
+        public static bool PeekTarget(Vector3Int current, Vector3Int to)
+        {
+            Vector3Int v = to - current;
+            return PathFinding3DUtility.Align6(v);
         }
 
         /// <summary>
@@ -68,6 +110,10 @@ namespace AStar.ThreeD
             {
                 current += direction;
                 Node3D probe = process.PeekNode(current);
+                // 越过寻路边界（PeekNode返回null）和撞到真实障碍物（MoveCheck为false）统一处理：
+                // 如果给地图直接围一圈Block当边界，走到围墙时同样是MoveCheck失败，效果必须和这里一致，
+                // 不应该单独给"越界"开特例去回退到最后一格——沿途没有触发任何强制邻居的话，
+                // 这个方向本来就该到此为止，是JPS的正常语义（详见类注释：这是六向JPS在无障碍物地图上的固有局限，不是bug）
                 if (probe == null || !process.mover.MoveCheck(prev, probe))
                     return null;
 
