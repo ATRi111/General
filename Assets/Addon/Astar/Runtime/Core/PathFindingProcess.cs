@@ -170,10 +170,11 @@ namespace AStar
             foreach (Node node in movables)
             {
                 node.Parent ??= currentNode;
+                if(node.HCost < 0)
+                    node.HCost = node.PredictCostTo(to);
                 switch (node.state)
                 {
                     case ENodeState.Blank:
-                        node.HCost = node.PredictCostTo(to);
                         node.state = ENodeState.Open;
                         open.Push(node);
                         break;

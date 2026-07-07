@@ -44,6 +44,7 @@ namespace AStar
         protected Node()
         {
             state = ENodeState.Blank;
+            HCost = -1;
         }
 
         /// <summary>
