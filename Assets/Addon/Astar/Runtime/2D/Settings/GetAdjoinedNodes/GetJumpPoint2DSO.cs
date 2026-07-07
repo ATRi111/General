@@ -16,6 +16,7 @@ namespace AStar.TwoD
         {
             void AddToPath(Node2D node)
             {
+                //此函数不能用于添加终点
                 if (!process.discoveredNodes.ContainsKey(node.Position))
                 {
                     process.PersistNode(node);
@@ -35,12 +36,19 @@ namespace AStar.TwoD
                 {
                     pos += direction;
                     Node2D next = process.PeekNode(pos);
-                    if (!moveCheck(current, next))
+                    if (!moveCheck(current, next) || next.state != ENodeState.Blank)    //合理的路径不可能互相穿插
                         return false;
+
                     current = next;
                     current.UpdateParent(start);
 
-                    isJumpPoint = current == process.To || GetForcedNeighbourOrthogonal(current, direction);
+                    if (current == process.To)
+                    {
+                        ret.Add(current);
+                        return true;
+                    }
+
+                    isJumpPoint = GetForcedNeighbourOrthogonal(current, direction);
                     if (isJumpPoint)
                         break;
                 }
@@ -59,14 +67,19 @@ namespace AStar.TwoD
                 {
                     pos += direction;
                     Node2D next = process.PeekNode(pos);
-                    if (!moveCheck(current, next))
+                    if (!moveCheck(current, next) || next.state != ENodeState.Blank)     //合理的路径不可能互相穿插
                         return false;
 
                     current = next;
                     current.UpdateParent(start);
 
-                    isJumpPoint = current == process.To
-                        || GetForcedNeighbourDiagonal(current, direction)
+                    if(current == process.To)
+                    {
+                        ret.Add(current);
+                        return true;
+                    }
+
+                    isJumpPoint = GetForcedNeighbourDiagonal(current, direction)
                         || FindPathOrthogonal(current, new Vector2Int(direction.x, 0))
                         || FindPathOrthogonal(current, new Vector2Int(0, direction.y));
                     if (isJumpPoint)

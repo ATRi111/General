@@ -71,6 +71,8 @@ namespace AStar
 
         public void UpdateParent(Node node)
         {
+            if (state == ENodeState.Close)
+                return;
             if (parent == null)
                 Parent = node;
             else

@@ -125,7 +125,6 @@ namespace AStar.Sample
                 if (child.name.StartsWith("Block"))
                     obstacleMap[WorldToNode(child.position)] = child.name;
             }
-            obstacleMap.Clear();
         }
 
         internal bool IsBlockAt(Vector3Int position)
