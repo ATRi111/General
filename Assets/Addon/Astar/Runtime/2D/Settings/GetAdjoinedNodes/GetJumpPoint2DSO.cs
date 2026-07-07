@@ -16,9 +16,12 @@ namespace AStar.TwoD
         {
             void AddToPath(Node2D node)
             {
-                process.PersistNode(node);
-                //添加到ret的节点，Parent如果为空，则会被设为from;state如果为Blank，则会被设为Open
-                ret.Add(node);
+                if (!process.discoveredNodes.ContainsKey(node.Position))
+                {
+                    process.PersistNode(node);
+                    //添加到ret的节点，Parent如果为空，则会被设为from;state如果为Blank，则会被设为Open
+                    ret.Add(node);
+                }
             }
 
             ret.Clear();
@@ -34,20 +37,16 @@ namespace AStar.TwoD
                     Node2D next = process.PeekNode(pos);
                     if (!moveCheck(current, next))
                         return false;
-                    next.Parent = current; //必须从前往后设置Parent，才能正确计算GCost
                     current = next;
+                    current.UpdateParent(start);
 
-                    isJumpPoint = pos == (process.To as Node2D).Position || GetForcedNeighbourOrthogonal(current, direction);
+                    isJumpPoint = current == process.To || GetForcedNeighbourOrthogonal(current, direction);
                     if (isJumpPoint)
                         break;
                 }
-                isJumpPoint = isJumpPoint || current != start;
+                isJumpPoint |= current != start;    //走到最大距离的点也加入后续节点，但不作为预知对角线上跳点的依据
                 if (isJumpPoint)
-                {
-                    current.Parent = start;
-                    start.state = ENodeState.Close;
-                    AddToPath(current);   //走到最大距离的点也视为跳点
-                }
+                    AddToPath(current);
                 return isJumpPoint;
             }
 
@@ -62,23 +61,20 @@ namespace AStar.TwoD
                     Node2D next = process.PeekNode(pos);
                     if (!moveCheck(current, next))
                         return false;
-                    next.Parent = current; //必须从前往后设置Parent，才能正确计算GCost
-                    current = next;
 
-                    isJumpPoint = pos == (process.To as Node2D).Position
+                    current = next;
+                    current.UpdateParent(start);
+
+                    isJumpPoint = current == process.To
                         || GetForcedNeighbourDiagonal(current, direction)
                         || FindPathOrthogonal(current, new Vector2Int(direction.x, 0))
                         || FindPathOrthogonal(current, new Vector2Int(0, direction.y));
                     if (isJumpPoint)
                         break;
                 }
-                isJumpPoint = isJumpPoint || current != start;
+                isJumpPoint |= current != start;    //走到最大距离的点也作为预知对角线上跳点的依据
                 if (isJumpPoint)
-                {
-                    current.Parent = start;
-                    start.state = ENodeState.Close;
-                    AddToPath(current);   //走到最大距离的点也视为跳点
-                }
+                    AddToPath(current);
                 return isJumpPoint;
             }
 
@@ -100,22 +96,20 @@ namespace AStar.TwoD
                 if (!moveCheck(current, node3) && moveCheck(node0, node1))
                 {
                     hasFocedNeighbour = true;
-                    node1.Parent = current;
+                    node1.UpdateParent(current);
                     AddToPath(node1);
                 }
                 if (!moveCheck(current, node4) && moveCheck(node0, node2))
                 {
                     hasFocedNeighbour = true;
-                    node2.Parent = current;
+                    node2.UpdateParent(current);
                     AddToPath(node2);
                 }
 
                 if (hasFocedNeighbour)
                 {
-                    node0.Parent = current;
-                    current.state = ENodeState.Close;
+                    node0.UpdateParent(current);
                     AddToPath(current);
-                    AddToPath(node0);
                 }
 
                 return hasFocedNeighbour;
@@ -124,12 +118,11 @@ namespace AStar.TwoD
             /// <summary>
             /// 沿对角线前进时，查找current的强制邻居，如果找到，则直接建立路径
             /// </summary>
-            bool GetForcedNeighbourDiagonal(Node2D current, Vector2Int enterDirection)
+            bool GetForcedNeighbourDiagonal(Node2D current, Vector2Int direction)
             {
                 bool hasFocedNeighbour = false;
-                Vector2Int[] directions = PathFinding2DUtility.SortedEightDirections[enterDirection];
+                Vector2Int[] directions = PathFinding2DUtility.SortedEightDirections[direction];
 
-                Node2D node0 = process.PeekNode(current.Position + directions[0]);
                 Node2D node1 = process.PeekNode(current.Position + directions[1]);
                 Node2D node2 = process.PeekNode(current.Position + directions[2]);
                 Node2D node3 = process.PeekNode(current.Position + directions[3]);
@@ -139,29 +132,19 @@ namespace AStar.TwoD
                 if (!moveCheck(current, node5) && moveCheck(current, node1) && moveCheck(node1, node3))
                 {
                     hasFocedNeighbour = true;
-                    node3.Parent = current;
-                    node1.Parent = current;
-                    AddToPath(node1);
+                    node3.UpdateParent(current);
                     AddToPath(node3);
                 }
                 if (!moveCheck(current, node6) && moveCheck(current, node2) && moveCheck(node2, node4))
                 {
                     hasFocedNeighbour = true;
-                    node2.Parent = current;
-                    node4.Parent = current;
-                    AddToPath(node2);
+                    node4.UpdateParent(current);
                     AddToPath(node4);
                 }
 
                 if (hasFocedNeighbour)
                 {
-                    current.state = ENodeState.Close;
                     AddToPath(current);
-                    if (moveCheck(current, node0))
-                    {
-                        node0.Parent = current;
-                        AddToPath(node0);
-                    }
                 }
 
                 return hasFocedNeighbour;
@@ -174,7 +157,7 @@ namespace AStar.TwoD
             if (from == process.From)
             {
                 FindPathOrthogonal(from, directions[0]);
-                FindPathOrthogonal(from, directions[1]);
+                FindPathDiagonal(from, directions[1]);
                 FindPathDiagonal(from, directions[2]);
                 FindPathOrthogonal(from, directions[3]);
                 FindPathOrthogonal(from, directions[4]);
@@ -184,12 +167,14 @@ namespace AStar.TwoD
             }
             else if (v.x * v.y != 0)
             {
+                GetForcedNeighbourDiagonal(from, v);
                 FindPathDiagonal(from, directions[0]);
                 FindPathOrthogonal(from, directions[1]);
                 FindPathOrthogonal(from, directions[2]);
             }
             else
             {
+                GetForcedNeighbourOrthogonal(from, v);
                 FindPathOrthogonal(from, directions[0]);
             }
         }

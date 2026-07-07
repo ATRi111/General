@@ -10473,7 +10473,7 @@ MonoBehaviour:
       capacity: 1000
       maxDepth: 2000
       hCostWeight: 1
-      getAdjoinedNodesSO: {fileID: 11400000, guid: 1b0983823c9444748a4be2a655e886e6, type: 2}
+      getAdjoinedNodesSO: {fileID: 11400000, guid: bd7ac48c705ef1f49aa87a169bbcb7d5, type: 2}
       calculateDistanceSO: {fileID: 0}
       generateNodeSO: {fileID: 11400000, guid: 808ce26c658e87a48ba7a4f1015efa3e, type: 2}
     boundaryMin: {x: 0, y: 0, z: 0}

@@ -2,6 +2,7 @@ using AStar.TwoD;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Profiling;
 
@@ -151,27 +152,30 @@ namespace AStar
 
             currentNode = open.Pop();
 
+            GetMovableNodes(currentNode);       //JPS中，可能会获取到一些非直接相邻和非Blank节点
             if (mover.MoveAbilityCheck(currentNode) && mover.StayCheck(currentNode))
             {
                 available.Add(currentNode);
             }
-            if (currentNode.HCost < nearest.HCost)
-                nearest = currentNode;
-
-            if (currentNode == to)
-            {
-                Stop();     //如果权重系数超过1，有可能在没有找到更短可行路径的情况下提前退出
-                Profiler.EndSample();
-                return false;
-            }
-
-            GetMovableNodes(currentNode);       //JPS中，可能会获取到一些非直接相邻和非Blank节点
 
             foreach (Node node in movables)
             {
                 node.Parent ??= currentNode;
                 if(node.HCost < 0)
                     node.HCost = node.PredictCostTo(to);
+
+                if (node.HCost < nearest.HCost)
+                    nearest = node;
+                //为了可视化Open节点，这里不更新available
+
+                if (node == to)
+                {
+                    if (mover.MoveAbilityCheck(to) && mover.StayCheck(to))
+                        available.Add(to);
+                    Stop();     //如果权重系数超过1，有可能在没有找到更短可行路径的情况下提前退出
+                    Profiler.EndSample();
+                    return false;
+                }
                 switch (node.state)
                 {
                     case ENodeState.Blank:
@@ -233,7 +237,7 @@ namespace AStar
         /// <summary>
         /// 所有已发现节点
         /// </summary>
-        protected Dictionary<TPosition, TNode> discoveredNodes;
+        protected internal Dictionary<TPosition, TNode> discoveredNodes;
 
         /// <summary>
         /// 生成指定位置的新节点，由具体空间表示实现

@@ -71,9 +71,14 @@ namespace AStar
 
         public void UpdateParent(Node node)
         {
-            float g = node.GCost + node.CostTo(this);
-            if (GCost > g)
+            if (parent == null)
                 Parent = node;
+            else
+            {
+                float g = node.GCost + node.CostTo(this);
+                if (GCost > g)
+                    Parent = node;
+            }
         }
 
         /// <summary>
