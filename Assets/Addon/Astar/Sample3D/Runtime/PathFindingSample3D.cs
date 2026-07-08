@@ -75,13 +75,25 @@ namespace AStar.Sample
             Clear();
             GameObject obj = new("debug");
 
-            Node3D[] allNodes = process.GetAllNodes();
-            for (int i = 0; i < allNodes.Length; i++)
+            if (process.IsRunning)
             {
-                PaintNode(allNodes[i], obj.transform);
+                // 寻路仍在单步进行中：展示全部已发现节点及其Parent连线，便于观察搜索过程
+                Node3D[] allNodes = process.GetAllNodes();
+                for (int i = 0; i < allNodes.Length; i++)
+                {
+                    PaintNode(allNodes[i], obj.transform);
+                }
+                PaintParentLinks(allNodes, obj.transform);
+            }
+            else
+            {
+                // 寻路已结束：只画最终路径上的节点，隐藏其余所有已发现节点/连线，避免无关信息淹没结果
+                foreach (Node node in process.output)
+                {
+                    PaintNode((Node3D)node, obj.transform);
+                }
             }
 
-            PaintParentLinks(allNodes, obj.transform);
             PaintOutputPath(obj.transform);
         }
 

@@ -6,7 +6,7 @@ namespace AStar.Sample
 {
     public class SampleDebugNode3D : MonoBehaviour
     {
-        private Renderer cubeRenderer;
+        private Renderer sphereRenderer;
         private TextMeshPro textbox;
 
         [SerializeField]
@@ -24,12 +24,15 @@ namespace AStar.Sample
 
         private void Awake()
         {
-            cubeRenderer = GetComponent<Renderer>();
+            sphereRenderer = GetComponent<Renderer>();
             textbox = GetComponentInChildren<TextMeshPro>();
         }
 
         /// <summary>
-        /// 3D场景中相机视角是任意的，文字需要每帧转向主摄像机才能一直保持可读
+        /// 3D场景中相机视角是任意的，文字需要每帧转向主摄像机才能一直保持可读；
+        /// 文字原本挂在球心位置，容易被球体本身遮挡/与球面深度打架导致看不清，
+        /// 这里额外把文字沿"球心→摄像机"方向挪到球体朝向摄像机一侧的表面外沿（略微外扩避免z-fighting），
+        /// 效果类似一个贴着球面、随摄像机移动而绕球体表面移动的公告板
         /// </summary>
         private void LateUpdate()
         {
@@ -37,26 +40,36 @@ namespace AStar.Sample
                 return;
 
             Transform textTransform = textbox.transform;
-            textTransform.rotation = Quaternion.LookRotation(textTransform.position - Camera.main.transform.position);
+            Vector3 camPos = Camera.main.transform.position;
+            Vector3 center = transform.position;
+            Vector3 direction = camPos - center;
+            if (direction.sqrMagnitude > 0.0001f)
+            {
+                direction.Normalize();
+                float radius = sphereRenderer.bounds.extents.x;
+                textTransform.position = center + direction * (radius * 1.05f);
+            }
+
+            textTransform.rotation = Quaternion.LookRotation(textTransform.position - camPos);
         }
 
         public void Initialize(Node3D node)
         {
             if (node.IsObstacle)
             {
-                cubeRenderer.material.color = color_obstacle;
+                sphereRenderer.material.color = color_obstacle;
             }
             else if (node.process.output.Contains(node))
             {
-                cubeRenderer.material.color = color_output;
+                sphereRenderer.material.color = color_output;
             }
             else if (node.process.available.Contains(node))
             {
-                cubeRenderer.material.color = color_available;
+                sphereRenderer.material.color = color_available;
             }
             else
             {
-                cubeRenderer.material.color = node.state switch
+                sphereRenderer.material.color = node.state switch
                 {
                     ENodeState.Open => color_open,
                     ENodeState.Close => color_close,
@@ -64,12 +77,11 @@ namespace AStar.Sample
                 };
             }
 
+            // UI拥挤看不清，只保留FCost（寻路排序实际依据的值），不再同时显示G/H
             if (node.state == ENodeState.Blank || node.IsObstacle)
                 textbox.text = string.Empty;
             else
-                textbox.text = $"G:{Mathf.RoundToInt(10 * node.GCost)}\n" +
-                    $"H:{Mathf.RoundToInt(10 * node.HCost)}\n" +
-                    $"F:{Mathf.RoundToInt(10 * node.WeightedFCost)}\n";
+                textbox.text = $"F:{Mathf.RoundToInt(10 * node.WeightedFCost)}";
         }
     }
 }
