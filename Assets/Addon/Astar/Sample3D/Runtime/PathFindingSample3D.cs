@@ -4,6 +4,12 @@ using UnityEngine;
 
 namespace AStar.Sample
 {
+    /// <summary>
+    /// 寻路演示的主体部分：驱动寻路流程本身、绘制调试可视化。
+    /// 相机漫游/自动飞行的部分拆到了独立组件 <see cref="PathCameraRoamer"/> 里（Runtime/PathCameraRoamer.cs），
+    /// 通过 <see cref="GetOutputPathWorldPoints"/>/<see cref="IsBlockAt"/> 读取这里的数据，
+    /// 而不是和寻路逻辑混在同一个类里维护
+    /// </summary>
     public class PathFindingSample3D : MonoBehaviour
     {
         [SerializeField]
@@ -32,6 +38,13 @@ namespace AStar.Sample
         /// <see cref="process"/> 的边界，避免六向JPS等沿单一方向一直扫描到地图外、甚至因为地形边缘外没有生成节点而报错
         /// </summary>
         public Vector3Int gridSize = new(10, 10, 10);
+
+        /// <summary>
+        /// 寻路结束后，是否隐藏不在最终输出路径上的其它已发现节点：勾选（默认）=只画路径节点，画面更清爽；
+        /// 取消勾选=保留寻路过程中的全部已发现节点+Parent连线，方便在寻路结束后仍能复盘整个搜索过程。
+        /// 寻路仍在单步进行中时（<see cref="AStar.PathFindingProcess.IsRunning"/>）不受这个开关影响，始终画全部节点
+        /// </summary>
+        public bool hideNodesOutsidePath = true;
 
         public void StartPathFinding()
         {
@@ -74,14 +87,26 @@ namespace AStar.Sample
         internal Vector3 NodeToWorld(Vector3Int node)
             => new(node.x + 0.5f, node.y + 0.5f, node.z + 0.5f);
 
+        /// <summary>
+        /// 返回当前寻路结果(<see cref="AStar.PathFindingProcess.output"/>)对应的世界坐标点数组，
+        /// 供 <see cref="PathCameraRoamer"/> 等外部组件读取，而不需要它们了解 Node/Node3D 的内部结构
+        /// </summary>
+        public Vector3[] GetOutputPathWorldPoints()
+        {
+            Vector3[] points = new Vector3[process.output.Count];
+            for (int i = 0; i < points.Length; i++)
+                points[i] = NodeToWorld(((Node3D)process.output[i]).Position);
+            return points;
+        }
+
         public void Repaint()
         {
             Clear();
             GameObject obj = new("debug");
 
-            if (process.IsRunning)
+            if (process.IsRunning || !hideNodesOutsidePath)
             {
-                // 寻路仍在单步进行中：展示全部已发现节点及其Parent连线，便于观察搜索过程
+                // 寻路仍在单步进行中，或者用户选择不隐藏：展示全部已发现节点及其Parent连线，便于观察/复盘搜索过程
                 Node3D[] allNodes = process.GetAllNodes();
                 for (int i = 0; i < allNodes.Length; i++)
                 {
@@ -91,7 +116,7 @@ namespace AStar.Sample
             }
             else
             {
-                // 寻路已结束：只画最终路径上的节点，隐藏其余所有已发现节点/连线，避免无关信息淹没结果
+                // 寻路已结束且用户选择隐藏：只画最终路径上的节点，隐藏其余所有已发现节点/连线，避免无关信息淹没结果
                 foreach (Node node in process.output)
                 {
                     PaintNode((Node3D)node, obj.transform);

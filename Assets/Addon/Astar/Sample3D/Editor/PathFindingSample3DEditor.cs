@@ -8,7 +8,7 @@ namespace AStar.Sample
     public class PathFindingSample3DEditor : AutoEditor
     {
         [AutoProperty]
-        public SerializedProperty prefab, process, moveAbility, gridSize;
+        public SerializedProperty prefab, process, moveAbility, gridSize, hideNodesOutsidePath;
         public PathFindingSample3D sample;
 
         protected override void OnEnable()
@@ -22,6 +22,19 @@ namespace AStar.Sample
             prefab.PropertyField("预制体");
             moveAbility.IntField("移动力");
             gridSize.Vector3IntField("网格范围");
+
+            EditorGUI.BeginChangeCheck();
+            hideNodesOutsidePath.BoolField("隐藏路径以外的节点");
+            if (EditorGUI.EndChangeCheck())
+            {
+                // 勾选框改变的效果只体现在Repaint画出来的调试物体上，不改变process数据本身；
+                // 提前ApplyModifiedProperties让sample.hideNodesOutsidePath拿到最新值，再立刻重绘一次，
+                // 不用等到下一次点"下一步"/"立刻完成寻路"才看到效果
+                serializedObject.ApplyModifiedProperties();
+                if (Application.isPlaying)
+                    sample.Repaint();
+            }
+
             process.PropertyField("寻路过程");
             if (Application.isPlaying)
             {

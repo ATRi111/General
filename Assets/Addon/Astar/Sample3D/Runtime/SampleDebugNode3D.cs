@@ -22,6 +22,14 @@ namespace AStar.Sample
         [SerializeField]
         private Color color_blank;
 
+        /// <summary>
+        /// 球体的整体透明度（0~1），统一应用在上面6种状态颜色之上——半透明便于观察被遮挡在球体背后/内部的其它节点，
+        /// 或者球体本身正好嵌在障碍物方块内部时不会完全挡住方块。要真正显示出透明效果，球体材质本身必须支持alpha混合
+        /// （见 <see cref="AStarSample3DBuilder.GetOrCreateDebugPrefab"/> 里用的是"Sprites/Default"而不是默认不透明材质）
+        /// </summary>
+        [SerializeField]
+        private float alpha = 0.55f;
+
         private void Awake()
         {
             sphereRenderer = GetComponent<Renderer>();
@@ -55,33 +63,36 @@ namespace AStar.Sample
 
         public void Initialize(Node3D node)
         {
+            Color color;
             if (node.IsObstacle)
             {
-                sphereRenderer.material.color = color_obstacle;
+                color = color_obstacle;
             }
             else if (node.process.output.Contains(node))
             {
-                sphereRenderer.material.color = color_output;
+                color = color_output;
             }
             else if (node.process.available.Contains(node))
             {
-                sphereRenderer.material.color = color_available;
+                color = color_available;
             }
             else
             {
-                sphereRenderer.material.color = node.state switch
+                color = node.state switch
                 {
                     ENodeState.Open => color_open,
                     ENodeState.Close => color_close,
                     _ => color_blank,
                 };
             }
+            color.a = alpha;
+            sphereRenderer.material.color = color;
 
             // UI拥挤看不清，只保留FCost（寻路排序实际依据的值），不再同时显示G/H
             if (node.state == ENodeState.Blank || node.IsObstacle)
                 textbox.text = string.Empty;
             else
-                textbox.text = $"F:{Mathf.RoundToInt(10 * node.WeightedFCost)}";
+                textbox.text = $"{Mathf.RoundToInt(10 * node.WeightedFCost)}";
         }
     }
 }

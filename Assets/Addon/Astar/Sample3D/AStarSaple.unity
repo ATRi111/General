@@ -8435,10 +8435,10 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.1
-  far clip plane: 55.832947
-  field of view: 60
-  orthographic: 1
-  orthographic size: 10.301972
+  far clip plane: 505.16547
+  field of view: 50
+  orthographic: 0
+  orthographic size: 84.5074
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -8463,7 +8463,7 @@ Transform:
   m_GameObject: {fileID: 530805374}
   serializedVersion: 2
   m_LocalRotation: {x: 0.3535534, y: 0.3535534, z: -0.14644663, w: 0.85355335}
-  m_LocalPosition: {x: -8.958237, y: 25.23993, z: -8.958235}
+  m_LocalPosition: {x: -45.61335, y: 155.21771, z: -45.613342}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10432,13 +10432,14 @@ GameObject:
   m_Component:
   - component: {fileID: 662352375}
   - component: {fileID: 662352374}
+  - component: {fileID: 662352376}
   m_Layer: 0
-  m_Name: AStarSample3D_Demo
+  m_Name: Hill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &662352374
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10467,12 +10468,14 @@ MonoBehaviour:
       rid: -2
     nearest:
       rid: -2
-    countOfCloseNode: 0
-    countOfQuery: 0
+    generateCount: 0
+    queryCount: 0
+    openCount: 0
     settings:
-      capacity: 1000
-      maxDepth: 2000
       hCostWeight: 1
+      heapCapacity: 1000
+      cacheCapacity: 2000
+      temporaryCacheCapacity: 100
       getAdjoinedNodesSO: {fileID: 11400000, guid: bd7ac48c705ef1f49aa87a169bbcb7d5, type: 2}
       calculateDistanceSO: {fileID: 0}
       generateNodeSO: {fileID: 11400000, guid: 808ce26c658e87a48ba7a4f1015efa3e, type: 2}
@@ -10888,6 +10891,55 @@ Transform:
   - {fileID: 1797414092}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &662352376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 662352373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  process:
+    mover:
+      moveAbility: 5
+    mountPoint: {fileID: 662352375}
+    useBoundary: 0
+    output: []
+    available: []
+    isRunning: 0
+    from:
+      rid: -2
+    to:
+      rid: -2
+    currentNode:
+      rid: -2
+    nearest:
+      rid: -2
+    generateCount: 0
+    queryCount: 0
+    openCount: 0
+    settings:
+      hCostWeight: 1
+      heapCapacity: 1000
+      cacheCapacity: 2000
+      temporaryCacheCapacity: 100
+      getAdjoinedNodesSO: {fileID: 11400000, guid: 1b0983823c9444748a4be2a655e886e6, type: 2}
+      calculateDistanceSO: {fileID: 0}
+      generateNodeSO: {fileID: 11400000, guid: 808ce26c658e87a48ba7a4f1015efa3e, type: 2}
+    boundaryMin: {x: 0, y: 0, z: 0}
+    boundaryMax: {x: 0, y: 0, z: 0}
+  prefab: {fileID: 1524769408793297797, guid: 284079904219ce94793968f53796df2c, type: 3}
+  moveAbility: 100
+  gridSize: {x: 10, y: 11, z: 10}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!1 &664463839
 GameObject:
   m_ObjectHideFlags: 0
