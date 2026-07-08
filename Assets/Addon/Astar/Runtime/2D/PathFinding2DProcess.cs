@@ -17,15 +17,16 @@ namespace AStar.TwoD
         /// </summary>
         public Vector2Int boundaryMin, boundaryMax;
 
-        protected override PathFindingSettings SettingsBase => settings;
+        protected override PathFindingSettings Settings => settings;
 
         /// <summary>
         /// 用于持久化保存一个临时节点
         /// </summary>
         protected internal void PersistNode(Node2D node)
         {
-            if (!discoveredNodes.ContainsKey(node.Position))
-                discoveredNodes.Add(node.Position, node);
+            if (!cachedNodes.ContainsKey(node.Position))
+                cachedNodes.Add(node.Position, node);
+            temporaryNodes.Remove(node.Position);
         }
 
         protected override Node2D GenerateNode(Vector2Int position)

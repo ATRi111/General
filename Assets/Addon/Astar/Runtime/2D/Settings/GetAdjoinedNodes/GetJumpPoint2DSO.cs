@@ -17,7 +17,7 @@ namespace AStar.TwoD
             void AddToPath(Node2D node)
             {
                 //此函数不能用于添加终点
-                if (!process.discoveredNodes.ContainsKey(node.Position))
+                if (!process.cachedNodes.ContainsKey(node.Position))
                 {
                     process.PersistNode(node);
                     //添加到ret的节点，Parent如果为空，则会被设为from;state如果为Blank，则会被设为Open
@@ -40,7 +40,7 @@ namespace AStar.TwoD
                         return false;
 
                     current = next;
-                    current.UpdateParent(start);
+                    current.UpdateParent(start);    //必须正确地从前往后设置Parent
 
                     if (current == process.To)
                     {
@@ -70,10 +70,15 @@ namespace AStar.TwoD
                     if (!moveCheck(current, next) || next.state != ENodeState.Blank)     //合理的路径不可能互相穿插
                         return false;
 
-                    current = next;
-                    current.UpdateParent(start);
+                    Node2D horizontal = process.PeekNode(pos - new Vector2Int(0, direction.y));
+                    Node2D vertical = process.PeekNode(pos - new Vector2Int(direction.x, 0));
+                    if (!moveCheck(current, horizontal) && !moveCheck(current, vertical))
+                        return false;
 
-                    if(current == process.To)
+                    current = next;
+                    current.UpdateParent(start);    //必须正确地从前往后设置Parent
+
+                    if (current == process.To)
                     {
                         ret.Add(current);
                         return true;

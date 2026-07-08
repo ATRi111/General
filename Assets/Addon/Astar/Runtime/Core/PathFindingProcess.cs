@@ -1,8 +1,6 @@
-using AStar.TwoD;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Profiling;
 
@@ -26,8 +24,8 @@ namespace AStar
         /// <summary>
         /// 供基类访问的配置（具体类型由子类决定）
         /// </summary>
-        protected abstract PathFindingSettings SettingsBase { get; }
-        public float HCostWeight => SettingsBase.hCostWeight;
+        protected abstract PathFindingSettings Settings { get; }
+        public float HCostWeight => Settings.hCostWeight;
 
         [SerializeReference]
         public List<Node> output;
@@ -73,26 +71,23 @@ namespace AStar
         public Node nearest;
 
         [SerializeField]
-        protected int countOfCloseNode;
-        public int CountOfCloseNode => countOfCloseNode;
+        protected internal int generateCount;
 
         [SerializeField]
-        protected int countOfQuery;
-        /// <summary>
-        /// 查询节点次数
-        /// </summary>
-        public int CountOfQuery => countOfQuery;
+        protected internal int queryCount;
+
+        [SerializeField]
+        protected internal int openCount;
 
         public virtual void Initialize()
         {
             mover ??= new MoverBase();
-
             movables = new();
             output = new();
             available = new();
-            open = new Heap<Node>(SettingsBase.capacity, new Comparer_Cost());
-            countOfQuery = 0;
-            countOfCloseNode = 0;
+            open = new Heap<Node>(Settings.heapCapacity, new Comparer_Cost());
+            queryCount = 0;
+            generateCount = 0;
         }
 
         /// <summary>
@@ -181,6 +176,7 @@ namespace AStar
                     case ENodeState.Blank:
                         node.state = ENodeState.Open;
                         open.Push(node);
+                        openCount++;
                         break;
                     case ENodeState.Open:
                         //节点的值改变，理论上在堆中的位置需要改变，但目前忽略
@@ -190,10 +186,14 @@ namespace AStar
             }
 
             currentNode.state = ENodeState.Close;
-            countOfCloseNode++;
-
+            ClearTemporary();
             Profiler.EndSample();
             return true;
+        }
+
+        protected virtual void ClearTemporary()
+        {
+
         }
 
         /// <summary>
@@ -206,16 +206,11 @@ namespace AStar
             nearest.Recall(n => output.Add(n));
         }
 
-        protected bool CheckNextStep()
+        protected virtual bool CheckNextStep()
         {
             if (!isRunning)
             {
                 Debug.LogWarning("寻路未开始");
-                return false;
-            }
-            if (countOfCloseNode > SettingsBase.maxDepth)
-            {
-                Debug.LogWarning($"超出搜索深度限制,最大深度为{SettingsBase.maxDepth}");
                 return false;
             }
             if (open.IsEmpty)
@@ -235,9 +230,13 @@ namespace AStar
         where TNode : Node
     {
         /// <summary>
-        /// 所有已发现节点
+        /// 寻路过程中持久存储的节点
         /// </summary>
-        protected internal Dictionary<TPosition, TNode> discoveredNodes;
+        protected internal Dictionary<TPosition, TNode> cachedNodes;
+        /// <summary>
+        /// 寻路过程中临时存储的节点
+        /// </summary>
+        protected internal Dictionary<TPosition, TNode> temporaryNodes;
 
         /// <summary>
         /// 生成指定位置的新节点，由具体空间表示实现
@@ -256,13 +255,14 @@ namespace AStar
         /// </summary>
         internal TNode GetNode(TPosition pos)
         {
-            countOfQuery++;
-            if (discoveredNodes.ContainsKey(pos))
-                return discoveredNodes[pos];
+            queryCount++;
+            if (cachedNodes.ContainsKey(pos))
+                return cachedNodes[pos];
             if (useBoundary && !InBoundary(pos))
                 return null;
             TNode node = GenerateNode(pos);
-            discoveredNodes.Add(pos, node);
+            generateCount++;
+            cachedNodes.Add(pos, node);
             return node;
         }
 
@@ -272,23 +272,29 @@ namespace AStar
         /// </summary>
         internal TNode PeekNode(TPosition pos)
         {
-            countOfQuery++;
-            if (discoveredNodes.TryGetValue(pos, out TNode node))
-                return node;
+            queryCount++;
+            if (cachedNodes.ContainsKey(pos))
+                return cachedNodes[pos];
+            if (temporaryNodes.ContainsKey(pos))
+                return temporaryNodes[pos];
             if (useBoundary && !InBoundary(pos))
                 return null;
-            return GenerateNode(pos);
+            TNode node = GenerateNode(pos);
+            generateCount++;
+            temporaryNodes.Add(pos, node);
+            return node;
         }
 
         public TNode[] GetAllNodes()
         {
-            return discoveredNodes.Values.ToArray();
+            return cachedNodes.Values.ToArray();
         }
 
         public override void Initialize()
         {
             base.Initialize();
-            discoveredNodes = new();
+            cachedNodes = new();
+            temporaryNodes = new();
         }
 
         /// <summary>
@@ -307,6 +313,26 @@ namespace AStar
                 return;
             }
             Start(from, to);
+        }
+
+        protected override void ClearTemporary()
+        {
+            base.ClearTemporary();
+            if(temporaryNodes.Count> Settings.temporaryCacheCapacity)
+                temporaryNodes.Clear();
+        }
+
+        protected override bool CheckNextStep()
+        {
+            if (!base.CheckNextStep())
+                return false;
+
+            if (cachedNodes.Count > Settings.cacheCapacity)
+            {
+                Debug.LogWarning($"节点缓存容量超出限制");
+                return false;
+            }
+            return true;
         }
     }
 }

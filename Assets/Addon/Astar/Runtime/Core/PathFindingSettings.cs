@@ -11,17 +11,21 @@ namespace AStar
     public class PathFindingSettings
     {
         /// <summary>
-        /// 堆容量
-        /// </summary>
-        public int capacity = 1000;
-        /// <summary>
-        /// 最大Closed节点数
-        /// </summary>
-        public int maxDepth = 2000;
-        /// <summary>
         /// HCost权重
         /// </summary>
         public float hCostWeight = 1;
+        /// <summary>
+        /// 堆容量
+        /// </summary>
+        public int heapCapacity = 1000;
+        /// <summary>
+        /// 最大持久存储节点数
+        /// </summary>
+        public int cacheCapacity = 2000;
+        /// <summary>
+        /// 临时缓存节点数
+        /// </summary>
+        public int temporaryCacheCapacity = 100;
     }
 
     /// <summary>

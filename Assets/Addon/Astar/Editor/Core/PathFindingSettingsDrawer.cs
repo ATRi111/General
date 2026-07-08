@@ -10,12 +10,13 @@ namespace AStar
         protected override bool AlwaysFoldout => true;
 
         [AutoProperty]
-        public SerializedProperty capacity, maxDepth, hCostWeight;
+        public SerializedProperty heapCapacity, cacheCapacity, temporaryCacheCapacity, hCostWeight;
 
         protected override void MyOnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            capacity.IntField("堆容量", NextRectRelative());
-            maxDepth.IntField("最大Closed节点数", NextRectRelative());
+            heapCapacity.IntField("堆容量", NextRectRelative());
+            cacheCapacity.IntField("节点缓存容量", NextRectRelative());
+            temporaryCacheCapacity.IntField("节点临时缓存容量", NextRectRelative());
             hCostWeight.FloatField("HCost权重", NextRectRelative());
         }
     }

@@ -261,12 +261,14 @@ MonoBehaviour:
       rid: -2
     nearest:
       rid: -2
-    countOfCloseNode: 0
-    countOfQuery: 0
+    generateCount: 0
+    queryCount: 0
+    openCount: 0
     settings:
-      capacity: 1000
-      maxDepth: 2000
       hCostWeight: 1
+      heapCapacity: 1000
+      cacheCapacity: 2000
+      temporaryCacheCapacity: 100
       getAdjoinedNodesSO: {fileID: 11400000, guid: a546b5bcd5ada2e46a6a9cd5551e8f8b, type: 2}
       calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
       generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
@@ -307,12 +309,14 @@ MonoBehaviour:
       rid: -2
     nearest:
       rid: -2
-    countOfCloseNode: 0
-    countOfQuery: 0
+    generateCount: 0
+    queryCount: 0
+    openCount: 0
     settings:
-      capacity: 1000
-      maxDepth: 2000
       hCostWeight: 1
+      heapCapacity: 1000
+      cacheCapacity: 2000
+      temporaryCacheCapacity: 100
       getAdjoinedNodesSO: {fileID: 11400000, guid: 784715f1651a715438a480e9de9dc26e, type: 2}
       calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
       generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
@@ -858,12 +862,14 @@ MonoBehaviour:
       rid: -2
     nearest:
       rid: -2
-    countOfCloseNode: 0
-    countOfQuery: 0
+    generateCount: 0
+    queryCount: 0
+    openCount: 0
     settings:
-      capacity: 1000
-      maxDepth: 2000
       hCostWeight: 1
+      heapCapacity: 1000
+      cacheCapacity: 2000
+      temporaryCacheCapacity: 100
       getAdjoinedNodesSO: {fileID: 11400000, guid: 784715f1651a715438a480e9de9dc26e, type: 2}
       calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
       generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
@@ -922,12 +928,14 @@ MonoBehaviour:
       rid: -2
     nearest:
       rid: -2
-    countOfCloseNode: 0
-    countOfQuery: 0
+    generateCount: 0
+    queryCount: 0
+    openCount: 0
     settings:
-      capacity: 1000
-      maxDepth: 2000
       hCostWeight: 1
+      heapCapacity: 1000
+      cacheCapacity: 2000
+      temporaryCacheCapacity: 100
       getAdjoinedNodesSO: {fileID: 11400000, guid: a546b5bcd5ada2e46a6a9cd5551e8f8b, type: 2}
       calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
       generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
@@ -2400,12 +2408,14 @@ MonoBehaviour:
       rid: -2
     nearest:
       rid: -2
-    countOfCloseNode: 0
-    countOfQuery: 0
+    generateCount: 0
+    queryCount: 0
+    openCount: 0
     settings:
-      capacity: 1000
-      maxDepth: 2000
       hCostWeight: 1
+      heapCapacity: 1000
+      cacheCapacity: 2000
+      temporaryCacheCapacity: 100
       getAdjoinedNodesSO: {fileID: 11400000, guid: a546b5bcd5ada2e46a6a9cd5551e8f8b, type: 2}
       calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
       generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
@@ -2446,12 +2456,14 @@ MonoBehaviour:
       rid: -2
     nearest:
       rid: -2
-    countOfCloseNode: 0
-    countOfQuery: 0
+    generateCount: 0
+    queryCount: 0
+    openCount: 0
     settings:
-      capacity: 1000
-      maxDepth: 2000
       hCostWeight: 1
+      heapCapacity: 1000
+      cacheCapacity: 2000
+      temporaryCacheCapacity: 100
       getAdjoinedNodesSO: {fileID: 11400000, guid: 784715f1651a715438a480e9de9dc26e, type: 2}
       calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
       generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
@@ -2666,12 +2678,14 @@ MonoBehaviour:
       rid: -2
     nearest:
       rid: -2
-    countOfCloseNode: 0
-    countOfQuery: 0
+    generateCount: 0
+    queryCount: 0
+    openCount: 0
     settings:
-      capacity: 1000
-      maxDepth: 2000
       hCostWeight: 1
+      heapCapacity: 1000
+      cacheCapacity: 2000
+      temporaryCacheCapacity: 0
       getAdjoinedNodesSO: {fileID: 11400000, guid: 784715f1651a715438a480e9de9dc26e, type: 2}
       calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
       generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
@@ -2712,12 +2726,14 @@ MonoBehaviour:
       rid: -2
     nearest:
       rid: -2
-    countOfCloseNode: 0
-    countOfQuery: 0
+    generateCount: 0
+    queryCount: 0
+    openCount: 0
     settings:
-      capacity: 1000
-      maxDepth: 2000
       hCostWeight: 1
+      heapCapacity: 1000
+      cacheCapacity: 2000
+      temporaryCacheCapacity: 0
       getAdjoinedNodesSO: {fileID: 11400000, guid: 784715f1651a715438a480e9de9dc26e, type: 2}
       calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
       generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
@@ -3276,12 +3292,14 @@ MonoBehaviour:
       rid: -2
     nearest:
       rid: -2
-    countOfCloseNode: 0
-    countOfQuery: 0
+    generateCount: 0
+    queryCount: 0
+    openCount: 0
     settings:
-      capacity: 1000
-      maxDepth: 2000
       hCostWeight: 1
+      heapCapacity: 1000
+      cacheCapacity: 2000
+      temporaryCacheCapacity: 100
       getAdjoinedNodesSO: {fileID: 11400000, guid: a546b5bcd5ada2e46a6a9cd5551e8f8b, type: 2}
       calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
       generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
@@ -3322,12 +3340,14 @@ MonoBehaviour:
       rid: -2
     nearest:
       rid: -2
-    countOfCloseNode: 0
-    countOfQuery: 0
+    generateCount: 0
+    queryCount: 0
+    openCount: 0
     settings:
-      capacity: 1000
-      maxDepth: 2000
       hCostWeight: 1
+      heapCapacity: 1000
+      cacheCapacity: 2000
+      temporaryCacheCapacity: 100
       getAdjoinedNodesSO: {fileID: 11400000, guid: 784715f1651a715438a480e9de9dc26e, type: 2}
       calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
       generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
@@ -12376,12 +12396,14 @@ MonoBehaviour:
       rid: -2
     nearest:
       rid: -2
-    countOfCloseNode: 0
-    countOfQuery: 0
+    generateCount: 0
+    queryCount: 0
+    openCount: 0
     settings:
-      capacity: 1000
-      maxDepth: 2000
       hCostWeight: 1
+      heapCapacity: 1000
+      cacheCapacity: 2000
+      temporaryCacheCapacity: 0
       getAdjoinedNodesSO: {fileID: 11400000, guid: 784715f1651a715438a480e9de9dc26e, type: 2}
       calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
       generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
@@ -12422,12 +12444,14 @@ MonoBehaviour:
       rid: -2
     nearest:
       rid: -2
-    countOfCloseNode: 0
-    countOfQuery: 0
+    generateCount: 0
+    queryCount: 0
+    openCount: 0
     settings:
-      capacity: 1000
-      maxDepth: 2000
       hCostWeight: 2
+      heapCapacity: 1000
+      cacheCapacity: 2000
+      temporaryCacheCapacity: 0
       getAdjoinedNodesSO: {fileID: 11400000, guid: 784715f1651a715438a480e9de9dc26e, type: 2}
       calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
       generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
