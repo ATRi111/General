@@ -180,8 +180,9 @@ namespace AStar
                         openCount++;
                         break;
                     case ENodeState.Open:
-                        //节点的值改变，理论上在堆中的位置需要改变，但目前忽略
-                        node.UpdateParent(currentNode);
+                        // 如果FCost改变，必须更新元素在堆中的位置
+                        if (node.UpdateParent(currentNode))
+                            open.Update(node);
                         break;
                 }
             }

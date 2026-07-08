@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace AStar
 {
     /// <summary>
-    /// 在comparer中使用x-y时为最小堆
+    /// 能够通过元素的引用反查下标的堆，因为需要支持原地更新元素的位置
     /// </summary>
     public class Heap<T>
     {
@@ -12,6 +12,7 @@ namespace AStar
 
         private T[] datas;
         private readonly IComparer<T> comparer;
+        private readonly Dictionary<T, int> indexDict;
         public int Count { get; private set; }
         public int Capacity => datas.Length;
         public bool IsEmpty => Count == 0;
@@ -23,6 +24,7 @@ namespace AStar
                 throw new IndexOutOfRangeException();
             datas = new T[capacity];
             this.comparer = comparer ?? Comparer<T>.Default;
+            indexDict = new Dictionary<T, int>();
         }
 
         public bool Push(T value)
@@ -30,7 +32,9 @@ namespace AStar
             if (Count == datas.Length)
                 ResizeItemStore(datas.Length * 2);
 
-            datas[Count++] = value;
+            datas[Count] = value;
+            indexDict[value] = Count;
+            Count++;
             int position = BubbleUp(Count - 1);
 
             return position == 0;
@@ -42,6 +46,7 @@ namespace AStar
                 throw new InvalidOperationException();
 
             T result = datas[0];
+            indexDict.Remove(result);
             if (Count == 1)
             {
                 Count = 0;
@@ -50,11 +55,18 @@ namespace AStar
             else
             {
                 Count--;
-                datas[0] = datas[Count];
+                Move(Count, 0);
                 datas[Count] = default;
                 BubbleDown();
             }
             return result;
+        }
+
+        public void Update(T value)
+        {
+            if (!indexDict.TryGetValue(value, out int index))
+                return;    //不在堆里（比如已经被弹出过），忽略
+            BubbleUp(index);
         }
 
         private void ResizeItemStore(int newSize)
@@ -71,6 +83,22 @@ namespace AStar
         {
             Count = 0;
             datas = new T[Capacity];
+            indexDict.Clear();
+        }
+
+        /// <summary>把下标from处的元素搬到下标to（覆盖式移动，不是交换），并同步更新反向索引</summary>
+        private void Move(int from, int to)
+        {
+            datas[to] = datas[from];
+            indexDict[datas[to]] = to;
+        }
+
+        /// <summary>交换两个下标处的元素，并同步更新反向索引</summary>
+        private void Swap(int a, int b)
+        {
+            (datas[a], datas[b]) = (datas[b], datas[a]);
+            indexDict[datas[a]] = a;
+            indexDict[datas[b]] = b;
         }
 
         private void BubbleDown()
@@ -86,7 +114,7 @@ namespace AStar
                 if (comparer.Compare(datas[bestChild], datas[parent]) >= 0)
                     break;
 
-                (datas[bestChild], datas[parent]) = (datas[parent], datas[bestChild]);
+                Swap(bestChild, parent);
                 parent = bestChild;
                 leftChild = (parent * 2) + 1;
             }
@@ -100,7 +128,7 @@ namespace AStar
                 if (comparer.Compare(datas[startIndex], datas[parent]) >= 0)
                     break;
 
-                (datas[parent], datas[startIndex]) = (datas[startIndex], datas[parent]);
+                Swap(startIndex, parent);
                 startIndex = parent;
             }
             return startIndex;

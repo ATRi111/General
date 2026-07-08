@@ -69,18 +69,22 @@ namespace AStar
         /// </summary>
         protected internal abstract float PrimitiveCostTo(Node to);
 
-        public void UpdateParent(Node node)
+        public bool UpdateParent(Node node)
         {
             if (state == ENodeState.Close)
-                return;
+                return false;
             if (parent == null)
-                Parent = node;
-            else
             {
-                float g = node.GCost + node.CostTo(this);
-                if (GCost > g)
-                    Parent = node;
+                Parent = node;
+                return true;
             }
+            float g = node.GCost + node.CostTo(this);
+            if (GCost > g)
+            {
+                Parent = node;
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -106,7 +110,7 @@ namespace AStar
             int c = x.WeightedFCost.CompareTo(y.WeightedFCost);
             if (c != 0)
                 return c;
-            return x.HCost.CompareTo(y.HCost);  //FCost相等时，优先选择HCost更小的
+            return x.HCost.CompareTo(y.HCost);  //FCost相等时，优先选择HCost更小的（更快找到终点）
         }
     }
 }
