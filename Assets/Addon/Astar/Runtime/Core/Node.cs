@@ -86,17 +86,16 @@ namespace AStar
         /// <summary>
         /// 回溯路径（会考虑移动力，但不会考虑能否停留）
         /// </summary>
-        /// <param name="onNode">对回溯路径上依次经过的节点（从起点到当前节点）执行的操作</param>
-        public void Recall(Action<Node> onNode = null)
+        public void Recall(Action<Node> VisitNode = null)
         {
-            if (onNode == null)
+            if (VisitNode == null)
                 return;
             List<Node> stack = new();
             for (Node n = this; n != null; n = n.Parent)
                 if (n.Mover.MoveAbilityCheck(n))
                     stack.Add(n);
             for (int i = stack.Count - 1; i >= 0; i--)
-                onNode(stack[i]);
+                VisitNode(stack[i]);
         }
     }
 
@@ -107,7 +106,7 @@ namespace AStar
             int c = x.WeightedFCost.CompareTo(y.WeightedFCost);
             if (c != 0)
                 return c;
-            return y.HCost.CompareTo(x.HCost);  //FCost相等时，优先选择HCost更小的
+            return x.HCost.CompareTo(y.HCost);  //FCost相等时，优先选择HCost更小的
         }
     }
 }
