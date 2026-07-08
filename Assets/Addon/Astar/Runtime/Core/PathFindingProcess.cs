@@ -88,6 +88,7 @@ namespace AStar
             open = new Heap<Node>(Settings.heapCapacity, new Comparer_Cost());
             queryCount = 0;
             generateCount = 0;
+            openCount = 0;
         }
 
         /// <summary>

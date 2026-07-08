@@ -60,7 +60,11 @@ namespace AStar.Sample
 
         public void Complete()
         {
+            // 只统计寻路算法本身耗时，不包含Repaint的可视化开销；用完全限定名避免和UnityEngine.Debug产生命名冲突（不额外加using System.Diagnostics）
+            System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
             process.Complete();
+            stopwatch.Stop();
+            Debug.Log($"寻路耗时：{stopwatch.Elapsed.TotalMilliseconds:F3} ms");
             Repaint();
         }
 

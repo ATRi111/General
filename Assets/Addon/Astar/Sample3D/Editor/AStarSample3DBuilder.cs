@@ -53,7 +53,7 @@ namespace AStar.Sample
 
             GenerateSampleNode3DSO generateNodeSO = GetOrCreateAsset<GenerateSampleNode3DSO>($"{ResFolder}/生成SampleNode3D.asset");
 
-            GetJumpPointSix3DSO jumpPointSO = GetOrCreateAsset<GetJumpPointSix3DSO>($"{ResFolder}/六向跳点.asset");
+            GetJumpPoint3DSO jumpPointSO = GetOrCreateAsset<GetJumpPoint3DSO>($"{ResFolder}/六向跳点.asset");
             if (jumpPointSO.depthOnDirection <= 0)
             {
                 jumpPointSO.depthOnDirection = 50;

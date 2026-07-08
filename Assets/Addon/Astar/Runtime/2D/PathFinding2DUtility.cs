@@ -15,7 +15,7 @@ namespace AStar.TwoD
 
         #region 四向寻路
 
-        public static readonly ReadOnlyCollection<Vector2Int> FourDirections;
+        public static readonly ReadOnlyCollection<Vector2Int> Orthogonals;
         /// <summary>
         /// 求曼哈顿距离
         /// </summary>
@@ -29,7 +29,7 @@ namespace AStar.TwoD
         {
             ret.Clear();
             Node2D to;
-            foreach (Vector2Int direction in FourDirections)
+            foreach (Vector2Int direction in Orthogonals)
             {
                 to = process.GetNode(from.Position + direction);
                 if (moveCheck(from, to))
@@ -42,7 +42,7 @@ namespace AStar.TwoD
         #region 八向寻路
 
         public static readonly ReadOnlyCollection<Vector2Int> EightDirections;
-        public static readonly ReadOnlyCollection<Vector2Int> DiagnolDirections;
+        public static readonly ReadOnlyCollection<Vector2Int> Diagonals;
         public static readonly Dictionary<Vector2Int, Vector2Int[]> SortedEightDirections;
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace AStar.TwoD
         {
             ret.Clear();
             Node2D to;
-            foreach (Vector2Int direction in FourDirections)
+            foreach (Vector2Int direction in Orthogonals)
             {
                 to = process.GetNode(from.Position + direction);
                 if (!moveCheck(from, to))
@@ -71,7 +71,7 @@ namespace AStar.TwoD
                 ret.Add(to);
             }
 
-            foreach (Vector2Int direction in DiagnolDirections)
+            foreach (Vector2Int direction in Diagonals)
             {
                 to = process.GetNode(from.Position + direction);
                 Node2D horizontal = process.GetNode(from.Position + new Vector2Int(direction.x, 0));
@@ -96,34 +96,8 @@ namespace AStar.TwoD
         }
 
         /// <summary>
-        /// 判断一个方向是否与4个方向之一相同
-        /// </summary>
-        public static bool Align4(Vector2Int v)
-        {
-            foreach (Vector2Int direction in FourDirections)
-            {
-                if (Align(v, direction))
-                    return true;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// 判断一个方向是否与8个方向之一相同
-        /// </summary>
-        public static bool Align8(Vector2Int v)
-        {
-            foreach (Vector2Int direction in EightDirections)
-            {
-                if (Align(v, direction))
-                    return true;
-            }
-            return false;
-        }
-
-        /// <summary>
         /// 对向量按与某个向量的夹角大小排序;
-        /// 两侧存在到当前向量夹角大小相等的一对向量时，能确保总是返回某一侧的向量
+        /// 两侧存在到当前向量夹角大小相等的一对向量时，能确保总是把其中一侧的向量排在前面
         /// </summary>
         public class Comparer_Vector2_Nearer : IComparer<Vector2>, IComparer<Vector2Int>
         {
@@ -172,7 +146,7 @@ namespace AStar.TwoD
                 Vector2Int.down,
                 Vector2Int.right,
             };
-            FourDirections = new ReadOnlyCollection<Vector2Int>(four);
+            Orthogonals = new ReadOnlyCollection<Vector2Int>(four);
 
             Vector2Int[] diag = new Vector2Int[]
             {
@@ -181,7 +155,7 @@ namespace AStar.TwoD
                 Vector2Int.right + Vector2Int.down,
                 Vector2Int.right + Vector2Int.up,
             };
-            DiagnolDirections = new ReadOnlyCollection<Vector2Int>(diag);
+            Diagonals = new ReadOnlyCollection<Vector2Int>(diag);
 
             SortedEightDirections = new();
             foreach (Vector2Int direction in EightDirections)

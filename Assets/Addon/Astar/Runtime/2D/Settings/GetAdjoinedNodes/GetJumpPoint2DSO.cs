@@ -52,7 +52,7 @@ namespace AStar.TwoD
                     if (isJumpPoint)
                         break;
                 }
-                isJumpPoint |= current != start;    //走到最大距离的点也加入后续节点，但不作为预知对角线上跳点的依据
+                isJumpPoint |= current != start;    //走到最大距离的点也作为预知对角线上跳点的依据（否则，沿对角线前进时，会一次性进行大量预测）
                 if (isJumpPoint)
                     AddToPath(current);
                 return isJumpPoint;
@@ -90,15 +90,12 @@ namespace AStar.TwoD
                     if (isJumpPoint)
                         break;
                 }
-                isJumpPoint |= current != start;    //走到最大距离的点也作为预知对角线上跳点的依据
+                isJumpPoint |= current != start;    //走到最大距离的点也作为预知对角线上跳点的依据（否则，沿对角线前进时，会一次性进行大量预测）
                 if (isJumpPoint)
                     AddToPath(current);
                 return isJumpPoint;
             }
 
-            /// <summary>
-            /// 沿非对角线前进时，查找current的强制邻居，如果找到，则直接建立路径
-            /// </summary>
             bool GetForcedNeighbourOrthogonal(Node2D current, Vector2Int enterDirection)
             {
                 bool hasFocedNeighbour = false;
@@ -133,9 +130,6 @@ namespace AStar.TwoD
                 return hasFocedNeighbour;
             }
 
-            /// <summary>
-            /// 沿对角线前进时，查找current的强制邻居，如果找到，则直接建立路径
-            /// </summary>
             bool GetForcedNeighbourDiagonal(Node2D current, Vector2Int direction)
             {
                 bool hasFocedNeighbour = false;
@@ -168,22 +162,24 @@ namespace AStar.TwoD
                 return hasFocedNeighbour;
             }
 
-            Vector2Int v = from.Parent == null ? Vector2Int.left : from.Position - from.Parent.Position;
+            if (from == process.From)
+            {
+                foreach(Vector2Int direction in PathFinding2DUtility.Orthogonals)
+                {
+                    FindPathOrthogonal(from, direction);
+                }
+                foreach(Vector2Int direction in PathFinding2DUtility.Diagonals)
+                {
+                    FindPathDiagonal(from, direction);
+                }
+                return;
+            }
+
+            Vector2Int v = from.Position - from.Parent.Position;
             v = new Vector2Int(Math.Sign(v.x), Math.Sign(v.y));
             Vector2Int[] directions = PathFinding2DUtility.SortedEightDirections[v];
 
-            if (from == process.From)
-            {
-                FindPathOrthogonal(from, directions[0]);
-                FindPathDiagonal(from, directions[1]);
-                FindPathDiagonal(from, directions[2]);
-                FindPathOrthogonal(from, directions[3]);
-                FindPathOrthogonal(from, directions[4]);
-                FindPathDiagonal(from, directions[5]);
-                FindPathDiagonal(from, directions[6]);
-                FindPathOrthogonal(from, directions[7]);
-            }
-            else if (v.x * v.y != 0)
+            if (v.x * v.y != 0)
             {
                 GetForcedNeighbourDiagonal(from, v);
                 FindPathDiagonal(from, directions[0]);

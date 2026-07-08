@@ -14,7 +14,7 @@ namespace AStar.ThreeD
 
         #region 六向寻路（面相邻）
 
-        public static readonly ReadOnlyCollection<Vector3Int> SixDirections;
+        public static readonly ReadOnlyCollection<Vector3Int> Orthogonals;
 
         /// <summary>
         /// 求曼哈顿距离
@@ -29,7 +29,7 @@ namespace AStar.ThreeD
         {
             ret.Clear();
             Node3D to;
-            foreach (Vector3Int direction in SixDirections)
+            foreach (Vector3Int direction in Orthogonals)
             {
                 to = process.GetNode(from.Position + direction);
                 if (moveCheck(from, to))
@@ -42,10 +42,10 @@ namespace AStar.ThreeD
         #region 二十六向寻路（面、边、角相邻）
 
         public static readonly ReadOnlyCollection<Vector3Int> TwentySixDirections;
-        /// <summary>恰好两个分量非零的12个"边"方向（2D对角线，同一坐标平面内斜向相邻）</summary>
-        public static readonly ReadOnlyCollection<Vector3Int> EdgeDirections;
-        /// <summary>三个分量都非零的8个"角"方向（3D对角线，立方体对角相邻）</summary>
-        public static readonly ReadOnlyCollection<Vector3Int> CornerDirections;
+        //与面对角线平行的方向
+        public static readonly ReadOnlyCollection<Vector3Int> FaceDiagonalDirections;
+        //体对角线方向
+        public static readonly ReadOnlyCollection<Vector3Int> BodyDiagonalDirections;
 
         /// <summary>
         /// 求对角线距离
@@ -71,7 +71,7 @@ namespace AStar.ThreeD
             ret.Clear();
             Node3D to;
 
-            foreach (Vector3Int direction in SixDirections)
+            foreach (Vector3Int direction in Orthogonals)
             {
                 to = process.GetNode(from.Position + direction);
                 if (!moveCheck(from, to))
@@ -79,20 +79,20 @@ namespace AStar.ThreeD
                 ret.Add(to);
             }
 
-            foreach (Vector3Int direction in EdgeDirections)
+            foreach (Vector3Int direction in FaceDiagonalDirections)
             {
                 to = process.GetNode(from.Position + direction);
                 // 边方向恰好2个分量非零，2条侧路分别经由这2个分量各自对应的直线邻格
                 Node3D sideX = direction.x != 0 ? process.GetNode(from.Position + new Vector3Int(direction.x, 0, 0)) : null;
                 Node3D sideY = direction.y != 0 ? process.GetNode(from.Position + new Vector3Int(0, direction.y, 0)) : null;
                 Node3D sideZ = direction.z != 0 ? process.GetNode(from.Position + new Vector3Int(0, 0, direction.z)) : null;
-                if (sideX != null && moveCheck(from, sideX) && moveCheck(sideX, to)
-                    || sideY != null && moveCheck(from, sideY) && moveCheck(sideY, to)
-                    || sideZ != null && moveCheck(from, sideZ) && moveCheck(sideZ, to))
+                if (moveCheck(from, sideX) && moveCheck(sideX, to)
+                    || moveCheck(from, sideY) && moveCheck(sideY, to)
+                    || moveCheck(from, sideZ) && moveCheck(sideZ, to))
                     ret.Add(to);
             }
 
-            foreach (Vector3Int direction in CornerDirections)
+            foreach (Vector3Int direction in BodyDiagonalDirections)
             {
                 to = process.GetNode(from.Position + direction);
                 // 角方向3个分量都非零，6条侧路分别经由3个直线分量（面）与3个边分量（棱）
@@ -112,38 +112,54 @@ namespace AStar.ThreeD
             }
         }
 
-        #endregion
+        public static readonly Dictionary<Vector3Int, Vector3Int[]> SortedTwentySixDirections;
 
         /// <summary>
-        /// 判断两个方向是否相同（至少有一个0向量时返回false）
+        /// 对向量按与某个向量的夹角大小排序（3D版，用于JPS按"最接近来向"的顺序遍历26个方向）；
+        /// 2D版（<see cref="AStar.TwoD.PathFinding2DUtility.Comparer_Vector2_Nearer"/>）夹角相同时只需要
+        /// 一个正负号区分"绕direction的哪一侧"，因为2D里垂直于direction的截面退化成两个点；
+        /// 3D里垂直于direction的截面是一整圈，必须用完整的"绕direction的钟表角"才能确定唯一顺序，
+        /// 否则夹角相同的一批方向（比如45°的4个边方向）彼此之间的先后顺序会不确定
         /// </summary>
-        public static bool Align(Vector3Int a, Vector3Int b)
+        public class Comparer_Vector3_Nearer : IComparer<Vector3>, IComparer<Vector3Int>
         {
-            int cross = a.y * b.z - a.z * b.y;
-            if (cross != 0)
-                return false;
-            cross = a.z * b.x - a.x * b.z;
-            if (cross != 0) 
-                return false;
-            cross = a.x * b.y - a.y * b.x;
-            if (cross != 0)
-                return false;
-            int dot = a.x * b.x + a.y * b.y + a.z * b.z;
-            return dot > 0;
-        }
+            public readonly Vector3 direction;
+            private readonly Vector3 axis1;
+            private readonly Vector3 axis2;
 
-        /// <summary>
-        /// 判断一个方向是否与6个方向之一相同
-        /// </summary>
-        public static bool Align6(Vector3Int v)
-        {
-            foreach (Vector3Int direction in SixDirections)
+            public Comparer_Vector3_Nearer(Vector3 direction)
             {
-                if(Align(v, direction)) 
-                    return true;
+                this.direction = direction.normalized;
+                // 在垂直于direction的平面内取一对正交基(axis1,axis2)：先用世界上方向对direction做Gram-Schmidt投影得到axis1，
+                // 如果direction本身接近竖直（几乎与上方向平行/反平行），这个投影会退化为零向量，改用世界前方向兜底
+                Vector3 seed = Mathf.Abs(Vector3.Dot(this.direction, Vector3.up)) > 0.999f ? Vector3.forward : Vector3.up;
+                axis1 = (seed - this.direction * Vector3.Dot(seed, this.direction)).normalized;
+                axis2 = Vector3.Cross(this.direction, axis1);
             }
-            return false;
+
+            /// <summary>候选方向投影到(axis1,axis2)平面后，绕direction的钟表角，范围[0, 2π)</summary>
+            private float ClockAngle(Vector3 x)
+            {
+                float angle = Mathf.Atan2(Vector3.Dot(x, axis2), Vector3.Dot(x, axis1));
+                return angle < 0 ? angle + Mathf.PI * 2 : angle;
+            }
+
+            public int Compare(Vector3 x, Vector3 y)
+            {
+                float angleX = Vector3.Angle(direction, x);
+                float angleY = Vector3.Angle(direction, y);
+                if (angleX != angleY)
+                    return angleX.CompareTo(angleY);
+                return ClockAngle(x).CompareTo(ClockAngle(y));
+            }
+
+            public int Compare(Vector3Int x, Vector3Int y)
+            {
+                return Compare((Vector3)x, (Vector3)y);
+            }
         }
+
+        #endregion
 
         static PathFinding3DUtility()
         {
@@ -156,7 +172,7 @@ namespace AStar.ThreeD
                 Vector3Int.forward,
                 Vector3Int.back,
             };
-            SixDirections = new ReadOnlyCollection<Vector3Int>(six);
+            Orthogonals = new ReadOnlyCollection<Vector3Int>(six);
 
             List<Vector3Int> twentySix = new();
             for (int x = -1; x <= 1; x++)
@@ -183,8 +199,17 @@ namespace AStar.ThreeD
                 else if (nonZeroCount == 3)
                     corner.Add(direction);
             }
-            EdgeDirections = new ReadOnlyCollection<Vector3Int>(edge);
-            CornerDirections = new ReadOnlyCollection<Vector3Int>(corner);
+            FaceDiagonalDirections = new ReadOnlyCollection<Vector3Int>(edge);
+            BodyDiagonalDirections = new ReadOnlyCollection<Vector3Int>(corner);
+
+            SortedTwentySixDirections = new();
+            foreach (Vector3Int direction in twentySix)
+            {
+                Vector3Int[] directions = twentySix.ToArray();
+                Comparer_Vector3_Nearer comparer = new(direction);
+                Array.Sort(directions, comparer);
+                SortedTwentySixDirections.Add(direction, directions);
+            }
         }
     }
 }
