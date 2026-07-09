@@ -77,7 +77,11 @@ namespace AStar.Sample
             System.Diagnostics.Stopwatch stopwatch = System.Diagnostics.Stopwatch.StartNew();
             process.Complete();
             stopwatch.Stop();
-            Debug.Log($"寻路耗时：{stopwatch.Elapsed.TotalMilliseconds:F3} ms");
+            // 顺带输出用的是哪种"获取相邻节点的方法"（朴素26向/JPS跳点等）+三个统计量，方便同一份耗时数据能直接对应到具体策略，
+            // 不需要再切回Inspector里的PathFindingProcessDrawer去对照——统计量字段参考自PathFindingProcessDrawer里展示的那三个
+            Debug.Log($"寻路耗时：{stopwatch.Elapsed.TotalMilliseconds:F3} ms，" +
+                $"方法：{process.settings.GetAdjoinedNodesSOName}，" +
+                $"生成节点次数：{process.generateCount}，位置查询次数：{process.queryCount}，入堆节点个数：{process.openCount}");
             Repaint();
         }
 

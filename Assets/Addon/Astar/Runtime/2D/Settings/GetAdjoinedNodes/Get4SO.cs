@@ -9,7 +9,7 @@ namespace AStar.TwoD
     {
         public override void GetMovableNodes(PathFinding2DProcess process, Node2D from, Func<Node2D, Node2D, bool> moveCheck, List<Node> ret)
         {
-            PathFinding2DUtility.GetAdjoin4Nodes(process, from, moveCheck, ret);
+            PathFinding2DUtility.GetAdjoin4Nodes(process, from, process.ExploreCheck, ret);
         }
     }
 }

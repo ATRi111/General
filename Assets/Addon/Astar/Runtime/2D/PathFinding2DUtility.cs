@@ -81,19 +81,29 @@ namespace AStar.TwoD
                     ret.Add(to);    //沿对角线前进时，两边有一边没障碍物就可以走
             }
         }
-        #endregion
 
         /// <summary>
-        /// 判断两个方向是否相同（至少有一个0向量时返回false）
+        /// 判断能否沿对角线方向及其两个分量前进
         /// </summary>
-        public static bool Align(Vector2Int a, Vector2Int b)
+        /// <returns>0b1:水平方向;0b10:竖直方向;0b100:对角线方向</returns>
+        public static int DiagonalMoveCheck(PathFinding2DProcess process, Node2D from, Func<Node2D, Node2D, bool> moveCheck, Vector2Int direction,
+            out Node2D to, out Node2D horizontal, out Node2D vertical)
         {
-            int cross = a.x * b.y - a.y * b.x;
-            if(cross != 0)
-                return false;
-            int dot = a.x * b.x + a.y * b.y;
-            return dot > 0;
+            int bitMask = 0;
+            to = process.PeekNode(from.Position + direction);
+            horizontal = process.PeekNode(from.Position + new Vector2Int(direction.x, 0));
+            vertical = process.PeekNode(from.Position + new Vector2Int(0, direction.y));
+
+            if (moveCheck(from, horizontal))
+                bitMask |= 0b1;
+            if (moveCheck(from, vertical))
+                bitMask |= 0b10;
+            if (bitMask > 0 && moveCheck(from, to))
+                bitMask |= 0b100;
+            return bitMask;
         }
+
+        #endregion
 
         /// <summary>
         /// 对向量按与某个向量的夹角大小排序;

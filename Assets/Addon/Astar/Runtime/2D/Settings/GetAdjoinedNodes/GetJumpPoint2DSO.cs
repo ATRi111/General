@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 namespace AStar.TwoD
 {
@@ -11,6 +8,7 @@ namespace AStar.TwoD
     public class GetJumpPoint2DSO : GetMovableNodes2DSO
     {
         public int depthOnDirection;
+        public bool lazyScan;
 
         public override void GetMovableNodes(PathFinding2DProcess process, Node2D from, Func<Node2D, Node2D, bool> moveCheck, List<Node> ret)
         {
@@ -25,8 +23,6 @@ namespace AStar.TwoD
                 }
             }
 
-            ret.Clear();
-
             bool FindPathOrthogonal(Node2D start, Vector2Int direction)
             {
                 Node2D current = start;
@@ -36,7 +32,8 @@ namespace AStar.TwoD
                 {
                     pos += direction;
                     Node2D next = process.PeekNode(pos);
-                    if (!moveCheck(current, next) || next.state != ENodeState.Blank)    //合理的路径不可能互相穿插
+
+                    if (!process.ExploreCheck(current, next))
                         return false;
 
                     current = next;
@@ -58,21 +55,24 @@ namespace AStar.TwoD
                 return isJumpPoint;
             }
 
+
             bool FindPathDiagonal(Node2D start, Vector2Int direction)
             {
+                return lazyScan ? FindPathDiagonal_Lazy(start, direction) : FindPathDiagonal_Regular(start, direction);
+            }
+
+            bool FindPathDiagonal_Regular(Node2D start, Vector2Int direction)
+            {
                 Node2D current = start;
-                Vector2Int pos = current.Position;
-                bool isJumpPoint = false;
+                bool found = false;
+                Node2D horizontal, vertical, next;
+                int bitMask;
                 for (int i = 0; i < depthOnDirection; i++)
                 {
-                    pos += direction;
-                    Node2D next = process.PeekNode(pos);
-                    if (!moveCheck(current, next) || next.state != ENodeState.Blank)     //合理的路径不可能互相穿插
-                        return false;
+                    bitMask = PathFinding2DUtility.DiagonalMoveCheck(process, current, process.ExploreCheck, direction,
+                            out next, out horizontal, out vertical);
 
-                    Node2D horizontal = process.PeekNode(pos - new Vector2Int(0, direction.y));
-                    Node2D vertical = process.PeekNode(pos - new Vector2Int(direction.x, 0));
-                    if (!moveCheck(current, horizontal) && !moveCheck(current, vertical))
+                    if ((bitMask & 0b100) == 0)
                         return false;
 
                     current = next;
@@ -84,80 +84,106 @@ namespace AStar.TwoD
                         return true;
                     }
 
-                    isJumpPoint = GetForcedNeighbourDiagonal(current, direction)
-                        || FindPathOrthogonal(current, new Vector2Int(direction.x, 0))
-                        || FindPathOrthogonal(current, new Vector2Int(0, direction.y));
-                    if (isJumpPoint)
+                    found = GetForcedNeighbourDiagonal(current, direction)
+                        || (bitMask & 0b1) > 0 && FindPathOrthogonal(current, new Vector2Int(direction.x, 0))
+                        || (bitMask & 0b10) > 0 && FindPathOrthogonal(current, new Vector2Int(0, direction.y));
+                    if (found)
                         break;
                 }
-                isJumpPoint |= current != start;    //走到最大距离的点也作为预知对角线上跳点的依据（否则，沿对角线前进时，会一次性进行大量预测）
-                if (isJumpPoint)
+                found |= current != start;
+                if (found)
                     AddToPath(current);
-                return isJumpPoint;
+                return found;
+            }
+
+            bool FindPathDiagonal_Lazy(Node2D start, Vector2Int direction)
+            {
+                Node2D current = start;
+                Node2D horizontal, vertical, next;
+
+                int bitMask = PathFinding2DUtility.DiagonalMoveCheck(process, current, process.ExploreCheck, direction,
+                            out next, out horizontal, out vertical);
+                if ((bitMask & 0b100) == 0)
+                    return false;
+                current = next;
+                current.UpdateParent(start);
+
+                for (int i = 0; i < depthOnDirection; i++)
+                {
+                    AddToPath(current);
+                    if (current == process.To)
+                    {
+                        ret.Add(current);
+                        return true;
+                    }
+
+                    bitMask = PathFinding2DUtility.DiagonalMoveCheck(process, current, process.ExploreCheck, direction,
+                            out next, out horizontal, out vertical);
+
+                    if ((bitMask & 0b1) > 0)
+                    {
+                        horizontal.UpdateParent(current);
+                        AddToPath(horizontal);
+                    }
+                    if ((bitMask & 0b10) > 0)
+                    {
+                        vertical.UpdateParent(current);
+                        AddToPath(vertical);
+                    }
+                    if ((bitMask & 0b100) > 0)  
+                    {
+                        next.UpdateParent(current);
+                        AddToPath(next);
+                    }
+                    current.state = ENodeState.Close;
+                    if (GetForcedNeighbourDiagonal(current, direction))
+                        break;
+                    if ((bitMask & 0b100) == 0)
+                        break;
+                    current = next;
+                }
+                return true;
+            }
+
+            //获取单一方向上的强制邻居
+            bool GetForcedNeighbour(Node2D current, Vector2Int direction, Vector2Int expectedPass)
+            {
+                int bitMask = PathFinding2DUtility.DiagonalMoveCheck(process, current, moveCheck, direction,
+                            out Node2D next, out Node2D horizontal, out Node2D vertical);
+                int expectedValue = expectedPass.x != 0 ? 0b101 : 0b110;
+                if (bitMask == expectedValue)
+                {
+                    next.UpdateParent(current);
+                    AddToPath(next);
+                    return true;
+                }
+                return false;
             }
 
             bool GetForcedNeighbourOrthogonal(Node2D current, Vector2Int enterDirection)
             {
                 bool hasFocedNeighbour = false;
                 Vector2Int[] directions = PathFinding2DUtility.SortedEightDirections[enterDirection];
-                Node2D node0 = process.PeekNode(current.Position + directions[0]);
-                if (!moveCheck(current, node0))
-                    return false;
-                Node2D node1 = process.PeekNode(current.Position + directions[1]);
-                Node2D node2 = process.PeekNode(current.Position + directions[2]);
-                Node2D node3 = process.PeekNode(current.Position + directions[3]);
-                Node2D node4 = process.PeekNode(current.Position + directions[4]);
 
-                if (!moveCheck(current, node3) && moveCheck(node0, node1))
-                {
-                    hasFocedNeighbour = true;
-                    node1.UpdateParent(current);
-                    AddToPath(node1);
-                }
-                if (!moveCheck(current, node4) && moveCheck(node0, node2))
-                {
-                    hasFocedNeighbour = true;
-                    node2.UpdateParent(current);
-                    AddToPath(node2);
-                }
+                hasFocedNeighbour |= GetForcedNeighbour(current, directions[1], directions[0]);
+                hasFocedNeighbour |= GetForcedNeighbour(current, directions[2], directions[0]);
 
                 if (hasFocedNeighbour)
-                {
-                    node0.UpdateParent(current);
                     AddToPath(current);
-                }
 
                 return hasFocedNeighbour;
             }
 
-            bool GetForcedNeighbourDiagonal(Node2D current, Vector2Int direction)
+            bool GetForcedNeighbourDiagonal(Node2D current, Vector2Int enterDirection)
             {
                 bool hasFocedNeighbour = false;
-                Vector2Int[] directions = PathFinding2DUtility.SortedEightDirections[direction];
+                Vector2Int[] directions = PathFinding2DUtility.SortedEightDirections[enterDirection];
 
-                Node2D node1 = process.PeekNode(current.Position + directions[1]);
-                Node2D node2 = process.PeekNode(current.Position + directions[2]);
-                Node2D node3 = process.PeekNode(current.Position + directions[3]);
-                Node2D node4 = process.PeekNode(current.Position + directions[4]);
-                Node2D node5 = process.PeekNode(current.Position + directions[5]);
-                Node2D node6 = process.PeekNode(current.Position + directions[6]);
-                if (!moveCheck(current, node5) && moveCheck(current, node1) && moveCheck(node1, node3))
-                {
-                    hasFocedNeighbour = true;
-                    node3.UpdateParent(current);
-                    AddToPath(node3);
-                }
-                if (!moveCheck(current, node6) && moveCheck(current, node2) && moveCheck(node2, node4))
-                {
-                    hasFocedNeighbour = true;
-                    node4.UpdateParent(current);
-                    AddToPath(node4);
-                }
+                hasFocedNeighbour |= GetForcedNeighbour(current, directions[3], directions[1]);
+                hasFocedNeighbour |= GetForcedNeighbour(current, directions[4], directions[2]);
 
                 if (hasFocedNeighbour)
-                {
                     AddToPath(current);
-                }
 
                 return hasFocedNeighbour;
             }
@@ -174,6 +200,9 @@ namespace AStar.TwoD
                 }
                 return;
             }
+
+
+            ret.Clear();
 
             Vector2Int v = from.Position - from.Parent.Position;
             v = new Vector2Int(Math.Sign(v.x), Math.Sign(v.y));

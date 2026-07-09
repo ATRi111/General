@@ -97,6 +97,14 @@ namespace AStar
         protected abstract void GetMovableNodes(Node from);
 
         /// <summary>
+        /// 将Close节点也视为不可通过
+        /// </summary>
+        public virtual bool ExploreCheck(Node from, Node to)
+        {
+            return mover.MoveCheck(from, to) && to.state != ENodeState.Close;
+        }
+
+        /// <summary>
         /// 开始寻路（要求 <paramref name="from"/>/<paramref name="to"/> 已通过 <see cref="Initialize"/> 后由具体空间表示解析得到）
         /// </summary>
         public virtual void Start(Node from, Node to)
@@ -149,10 +157,6 @@ namespace AStar
             currentNode = open.Pop();
 
             GetMovableNodes(currentNode);       //JPS中，可能会获取到一些非直接相邻和非Blank节点
-            if (mover.MoveAbilityCheck(currentNode) && mover.StayCheck(currentNode))
-            {
-                available.Add(currentNode);
-            }
 
             foreach (Node node in movables)
             {
@@ -162,12 +166,12 @@ namespace AStar
 
                 if (node.HCost < nearest.HCost)
                     nearest = node;
-                //为了可视化Open节点，这里不更新available
+
+                if (mover.MoveAbilityCheck(to) && mover.StayCheck(to))
+                    available.Add(node);
 
                 if (node == to)
                 {
-                    if (mover.MoveAbilityCheck(to) && mover.StayCheck(to))
-                        available.Add(to);
                     Stop();     //如果权重系数超过1，有可能在没有找到更短可行路径的情况下提前退出
                     Profiler.EndSample();
                     return false;

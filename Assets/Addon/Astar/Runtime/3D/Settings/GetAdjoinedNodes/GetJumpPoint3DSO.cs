@@ -44,7 +44,7 @@ namespace AStar.ThreeD
                 {
                     pos += direction;
                     Node3D next = process.PeekNode(pos);
-                    if (!moveCheck(current, next) || next.state != ENodeState.Blank)    //合理的路径不可能互相穿插
+                    if (!process.ExploreCheck(current, next))
                         return false;
 
                     current = next;
@@ -78,7 +78,7 @@ namespace AStar.ThreeD
                 {
                     pos += direction;
                     Node3D next = process.PeekNode(pos);
-                    if (!moveCheck(current, next) || next.state != ENodeState.Blank)     //合理的路径不可能互相穿插
+                    if (!process.ExploreCheck(current, next))
                         return false;
 
                     //宽松角规则：a、b两条侧路只要有一条从current出发是畅通的，就允许切这个角
@@ -123,7 +123,7 @@ namespace AStar.ThreeD
                 {
                     pos += direction;
                     Node3D next = process.PeekNode(pos);
-                    if (!moveCheck(current, next) || next.state != ENodeState.Blank)     //合理的路径不可能互相穿插
+                    if (!process.ExploreCheck(current, next))
                         return false;
 
                     //体对角线转角比面对角线更宽，仿照Get26AdjoinNodes的宽松角规则：

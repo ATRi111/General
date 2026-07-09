@@ -72,6 +72,12 @@ namespace AStar.Sample
             {
                 color = color_output;
             }
+            else if (node.state == ENodeState.Open)
+            {
+                // Open节点统一显示绿色，不管是否同时在available里——available只用来标记"上一步刚展开的节点"，
+                // 不应该盖掉"这个节点当前仍在Open堆里、还没被处理"这个更重要的状态信息
+                color = color_open;
+            }
             else if (node.process.available.Contains(node))
             {
                 color = color_available;
@@ -80,7 +86,6 @@ namespace AStar.Sample
             {
                 color = node.state switch
                 {
-                    ENodeState.Open => color_open,
                     ENodeState.Close => color_close,
                     _ => color_blank,
                 };

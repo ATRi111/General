@@ -45,6 +45,12 @@ namespace AStar
         private GenerateNodeSO<TProcess, TPosition, TNode> generateNodeSO;
 
         /// <summary>
+        /// 当前用于获取相邻可达节点的策略SO名称，供日志/统计展示（如朴素26向、跳点JPS等）；
+        /// 未指定SO（走 <see cref="GetAdjoinNodes_Default"/> 兜底）时返回"默认"
+        /// </summary>
+        public string GetAdjoinedNodesSOName => getAdjoinedNodesSO != null ? getAdjoinedNodesSO.name : "默认";
+
+        /// <summary>
         /// 获取相邻可达节点;必定确保moveCheck包含对to参数的null检查
         /// </summary>
         public void GetAdjoinNodes(TProcess process, TNode from, Func<TNode, TNode, bool> moveCheck, List<Node> adjoins)
