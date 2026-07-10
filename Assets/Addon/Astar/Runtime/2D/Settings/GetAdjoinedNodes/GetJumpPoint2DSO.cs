@@ -7,7 +7,7 @@ namespace AStar.TwoD
     [CreateAssetMenu(fileName = "跳点", menuName = "AStar2D/获取相邻可达节点的方法/跳点")]
     public class GetJumpPoint2DSO : GetMovableNodes2DSO
     {
-        public int depthOnDirection;
+        public ScanCheck2DSO ScanSO;
         public bool lazyScan;
 
         public override void GetMovableNodes(PathFinding2DProcess process, Node2D from, Func<Node2D, Node2D, bool> moveCheck, List<Node> ret)
@@ -26,11 +26,9 @@ namespace AStar.TwoD
             bool FindPathOrthogonal(Node2D start, Vector2Int direction)
             {
                 Node2D current = start;
-                Vector2Int pos = current.Position;
-                bool isJumpPoint = false;
-                for (int i = 0; i < depthOnDirection; i++)
+                bool found = false;
+                for (Vector2Int pos = current.Position + direction; ; pos += direction)
                 {
-                    pos += direction;
                     Node2D next = process.PeekNode(pos);
 
                     if (!process.ExploreCheck(current, next))
@@ -45,14 +43,15 @@ namespace AStar.TwoD
                         return true;
                     }
 
-                    isJumpPoint = GetForcedNeighbourOrthogonal(current, direction);
-                    if (isJumpPoint)
+                    found = GetForcedNeighbourOrthogonal(current, direction) 
+                        || !ScanSO.ScanCheck(process, start, current);
+                    if (found)
+                    {
+                        AddToPath(current);
                         break;
+                    }
                 }
-                isJumpPoint |= current != start;    //走到最大距离的点也作为预知对角线上跳点的依据（否则，沿对角线前进时，会一次性进行大量预测）
-                if (isJumpPoint)
-                    AddToPath(current);
-                return isJumpPoint;
+                return found;
             }
 
 
@@ -67,7 +66,7 @@ namespace AStar.TwoD
                 bool found = false;
                 Node2D horizontal, vertical, next;
                 int bitMask;
-                for (int i = 0; i < depthOnDirection; i++)
+                for (; ; )
                 {
                     bitMask = PathFinding2DUtility.DiagonalMoveCheck(process, current, process.ExploreCheck, direction,
                             out next, out horizontal, out vertical);
@@ -86,13 +85,14 @@ namespace AStar.TwoD
 
                     found = GetForcedNeighbourDiagonal(current, direction)
                         || (bitMask & 0b1) > 0 && FindPathOrthogonal(current, new Vector2Int(direction.x, 0))
-                        || (bitMask & 0b10) > 0 && FindPathOrthogonal(current, new Vector2Int(0, direction.y));
+                        || (bitMask & 0b10) > 0 && FindPathOrthogonal(current, new Vector2Int(0, direction.y))
+                        || !ScanSO.ScanCheck(process, start, current);
                     if (found)
+                    {
+                        AddToPath(current);
                         break;
+                    }
                 }
-                found |= current != start;
-                if (found)
-                    AddToPath(current);
                 return found;
             }
 
@@ -108,7 +108,7 @@ namespace AStar.TwoD
                 current = next;
                 current.UpdateParent(start);
 
-                for (int i = 0; i < depthOnDirection; i++)
+                for (; ; )
                 {
                     AddToPath(current);
                     if (current == process.To)
@@ -141,12 +141,13 @@ namespace AStar.TwoD
                     if ((bitMask & 0b100) == 0)
                         break;
                     current = next;
+                    if (!ScanSO.ScanCheck(process, start, current))
+                        break;
                 }
                 return true;
             }
 
-            //获取单一方向上的强制邻居
-            bool GetForcedNeighbour(Node2D current, Vector2Int direction, Vector2Int expectedPass)
+            bool GetSingleForcedNeighbour(Node2D current, Vector2Int direction, Vector2Int expectedPass)
             {
                 int bitMask = PathFinding2DUtility.DiagonalMoveCheck(process, current, moveCheck, direction,
                             out Node2D next, out Node2D horizontal, out Node2D vertical);
@@ -165,8 +166,8 @@ namespace AStar.TwoD
                 bool hasFocedNeighbour = false;
                 Vector2Int[] directions = PathFinding2DUtility.SortedEightDirections[enterDirection];
 
-                hasFocedNeighbour |= GetForcedNeighbour(current, directions[1], directions[0]);
-                hasFocedNeighbour |= GetForcedNeighbour(current, directions[2], directions[0]);
+                hasFocedNeighbour |= GetSingleForcedNeighbour(current, directions[1], directions[0]);
+                hasFocedNeighbour |= GetSingleForcedNeighbour(current, directions[2], directions[0]);
 
                 if (hasFocedNeighbour)
                     AddToPath(current);
@@ -179,8 +180,8 @@ namespace AStar.TwoD
                 bool hasFocedNeighbour = false;
                 Vector2Int[] directions = PathFinding2DUtility.SortedEightDirections[enterDirection];
 
-                hasFocedNeighbour |= GetForcedNeighbour(current, directions[3], directions[1]);
-                hasFocedNeighbour |= GetForcedNeighbour(current, directions[4], directions[2]);
+                hasFocedNeighbour |= GetSingleForcedNeighbour(current, directions[3], directions[1]);
+                hasFocedNeighbour |= GetSingleForcedNeighbour(current, directions[4], directions[2]);
 
                 if (hasFocedNeighbour)
                     AddToPath(current);

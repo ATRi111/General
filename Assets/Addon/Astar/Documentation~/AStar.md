@@ -4,7 +4,7 @@
 
 - 此项目中包含运行在2D/3D均匀网格上的A*算法
 - 为了适应游戏中各种不同的需求，此算法中有大量可自定义的部分
-  - `PathFindingSettings`：中包含三个SO，分别用于调整计算距离的方式，获取相邻可达节点的方式，计算距离的方式
+  - `PathFindingSettings`：中包含三个SO，分别用于调整计算距离的方法，获取相邻可达节点的方法，生成新节点的方法
   - `PathFindingProcess`：寻路过程，A*的核心（不变）部分
   - `Node`：表示寻路过程中生成的节点，可以进一步派生，以适应更多需求
   - `MoverBase`：表示移动者，可以进一步派生，以适应更多需求
@@ -20,10 +20,24 @@
 | 1           | 标准A*                     |
 | >1          | 找到路径更快，但不一定最短 |
 
-## 获取相邻可达节点的方法
+### 获取相邻可达节点的方法
 
 - 用于适应游戏中不同的移动方向（四向/八向...）
 - 支持JPS算法
+
+### 计算距离的方法
+
+- 用于适应游戏中不同的移动方向（四向/八向...）
+- 这里算出的只是原始距离
+
+### 生成新节点的方法
+
+- 输入一个位置，此方法需要在该位置生成一个节点，并注入必要信息
+- 用于适应游戏中的不同的“障碍物"（例如，2D游戏用Tilemap绘制障碍物，3D游戏用Collider规定障碍物）
+
+## Node
+
+- 除了Cost，还
 
 ## 拓展
 
@@ -92,57 +106,9 @@ public Func<Vector2Int, Vector2Int, float> CalculateGCost;
 
 - 可以适应困难地形、不同移动方式等需求
 
-# 判断能否从一点移动到另一点的方式
 
-```C#
-/// <summary>
-/// 获取相邻节点的方法
-/// </summary>
-public Action<PathFindingProcess, PathNode, List<PathNode>> GetAdjoinNodes;
-/// <summary>
-/// 判断能否移动的方法
-/// </summary>
-public Func<PathNode, PathNode, bool> MoveCheck;
-/// <summary>
-/// 确定节点类型的方法
-/// </summary>
-public Func<Vector2Int, ENodeType> DefineNodeType;
-```
 
-- 可以适应的可选移动方向，以及
-  - 四向移动
-  - 自由八向移动
-  - 受限八向移动：贴墙时不能走对角线
-  - 六向移动
 
-```C#
-public static bool CheckPassable_Default(PathNode from, PathNode to)
-{
-    return to.Type != ENodeType.Obstacle;
-}
-
-private ENodeType DefineNodeType(Vector2Int nodePos)
-{
-    Vector3 world = NodeToWorld(nodePos);
-    Vector3Int tilePos = map.WorldToCell(world);
-    RuleTile tile = map.GetTile(tilePos) as RuleTile;
-    if (tile != null)
-    {
-        if (tile.m_DefaultSprite.name == "Block")
-            return ENodeType.Obstacle;
-    }
-    return ENodeType.Blank;
-}
-```
-
-# 获取相邻节点的方式
-
-```C#
-/// <summary>
-/// 获取相邻节点的方法
-/// </summary>
-public Action<PathFindingProcess, PathNode, List<PathNode>> GetAdjoinNodes;
-```
 
 # 算法
 

@@ -12,6 +12,16 @@ namespace AStar.Sample
         [SerializeField]
         private PathFindingSample3D sample;
 
+        /// <summary>
+        /// 供 <see cref="PathFindingSample3D"/> 在按钮被按下时调用，把自己设为当前跟随的目标——
+        /// 支持同一个物体上挂多个 <see cref="PathFindingSample3D"/>（比如同一张地图分别用不同的
+        /// 获取相邻节点策略对比效果），点哪一个的按钮，摄像机接下来就跟随哪一个的寻路结果，
+        /// 不需要每次都手动去这个组件的Inspector里重新拖引用
+        /// </summary>
+        internal void SetSample(PathFindingSample3D newSample) => sample = newSample;
+
+
+
         /// <summary>沿路径飞行时的移动速度（单位/秒），决定 <see cref="FlyCameraAlongPath"/> 里飞完全程要多久</summary>
         public float flightSpeed = 5f;
 

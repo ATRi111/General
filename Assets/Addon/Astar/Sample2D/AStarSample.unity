@@ -227,6 +227,7 @@ GameObject:
   - component: {fileID: 88550861}
   - component: {fileID: 88550860}
   - component: {fileID: 88550863}
+  - component: {fileID: 88550864}
   m_Layer: 0
   m_Name: "\u8DF3\u70B94"
   m_TagString: Untagged
@@ -385,6 +386,54 @@ MonoBehaviour:
       cacheCapacity: 2000
       temporaryCacheCapacity: 100
       getAdjoinedNodesSO: {fileID: 11400000, guid: 1976f2f99ac8f6a4ebd698d25023b8a2, type: 2}
+      calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
+      generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
+    boundaryMin: {x: 0, y: 0}
+    boundaryMax: {x: 0, y: 0}
+  prefab: {fileID: 1374839061621688556, guid: a3ac64f7204db424099a07e7046b2ec0, type: 3}
+  moveAbility: 100
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+--- !u!114 &88550864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 88550859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6c753e31a842ac439404c4e5afc6900, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  process:
+    mover:
+      moveAbility: 5
+    mountPoint: {fileID: 88550862}
+    useBoundary: 0
+    output: []
+    available: []
+    isRunning: 0
+    from:
+      rid: -2
+    to:
+      rid: -2
+    currentNode:
+      rid: -2
+    nearest:
+      rid: -2
+    generateCount: 0
+    queryCount: 0
+    openCount: 0
+    settings:
+      hCostWeight: 1
+      heapCapacity: 1000
+      cacheCapacity: 2000
+      temporaryCacheCapacity: 100
+      getAdjoinedNodesSO: {fileID: 11400000, guid: f5e4552520172f34a9f512e8cb90404a, type: 2}
       calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
       generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
     boundaryMin: {x: 0, y: 0}
@@ -922,6 +971,7 @@ GameObject:
   - component: {fileID: 394363655}
   - component: {fileID: 394363657}
   - component: {fileID: 394363658}
+  - component: {fileID: 394363659}
   m_Layer: 0
   m_Name: "\u7A7A\u767D"
   m_TagString: Untagged
@@ -1080,6 +1130,54 @@ MonoBehaviour:
       cacheCapacity: 2000
       temporaryCacheCapacity: 100
       getAdjoinedNodesSO: {fileID: 11400000, guid: 1976f2f99ac8f6a4ebd698d25023b8a2, type: 2}
+      calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
+      generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
+    boundaryMin: {x: 0, y: 0}
+    boundaryMax: {x: 0, y: 0}
+  prefab: {fileID: 1374839061621688556, guid: a3ac64f7204db424099a07e7046b2ec0, type: 3}
+  moveAbility: 100
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+--- !u!114 &394363659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 394363654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6c753e31a842ac439404c4e5afc6900, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  process:
+    mover:
+      moveAbility: 5
+    mountPoint: {fileID: 394363656}
+    useBoundary: 0
+    output: []
+    available: []
+    isRunning: 0
+    from:
+      rid: -2
+    to:
+      rid: -2
+    currentNode:
+      rid: -2
+    nearest:
+      rid: -2
+    generateCount: 0
+    queryCount: 0
+    openCount: 0
+    settings:
+      hCostWeight: 1
+      heapCapacity: 1000
+      cacheCapacity: 2000
+      temporaryCacheCapacity: 100
+      getAdjoinedNodesSO: {fileID: 11400000, guid: f5e4552520172f34a9f512e8cb90404a, type: 2}
       calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
       generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
     boundaryMin: {x: 0, y: 0}
@@ -2365,6 +2463,7 @@ GameObject:
   - component: {fileID: 738061342}
   - component: {fileID: 738061341}
   - component: {fileID: 738061340}
+  - component: {fileID: 738061344}
   m_Layer: 0
   m_Name: "\u8DF3\u70B95"
   m_TagString: Untagged
@@ -2534,6 +2633,54 @@ Transform:
   - {fileID: 1569583219}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &738061344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 738061339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6c753e31a842ac439404c4e5afc6900, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  process:
+    mover:
+      moveAbility: 5
+    mountPoint: {fileID: 738061343}
+    useBoundary: 0
+    output: []
+    available: []
+    isRunning: 0
+    from:
+      rid: -2
+    to:
+      rid: -2
+    currentNode:
+      rid: -2
+    nearest:
+      rid: -2
+    generateCount: 0
+    queryCount: 0
+    openCount: 0
+    settings:
+      hCostWeight: 1
+      heapCapacity: 1000
+      cacheCapacity: 2000
+      temporaryCacheCapacity: 100
+      getAdjoinedNodesSO: {fileID: 11400000, guid: f5e4552520172f34a9f512e8cb90404a, type: 2}
+      calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
+      generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
+    boundaryMin: {x: 0, y: 0}
+    boundaryMax: {x: 0, y: 0}
+  prefab: {fileID: 1374839061621688556, guid: a3ac64f7204db424099a07e7046b2ec0, type: 3}
+  moveAbility: 100
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!1 &786810150
 GameObject:
   m_ObjectHideFlags: 0
@@ -5764,6 +5911,7 @@ GameObject:
   - component: {fileID: 1335244204}
   - component: {fileID: 1335244203}
   - component: {fileID: 1335244206}
+  - component: {fileID: 1335244207}
   m_Layer: 0
   m_Name: "\u8DF3\u70B91"
   m_TagString: Untagged
@@ -5922,6 +6070,54 @@ MonoBehaviour:
       cacheCapacity: 2000
       temporaryCacheCapacity: 100
       getAdjoinedNodesSO: {fileID: 11400000, guid: 1976f2f99ac8f6a4ebd698d25023b8a2, type: 2}
+      calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
+      generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
+    boundaryMin: {x: 0, y: 0}
+    boundaryMax: {x: 0, y: 0}
+  prefab: {fileID: 1374839061621688556, guid: a3ac64f7204db424099a07e7046b2ec0, type: 3}
+  moveAbility: 100
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+--- !u!114 &1335244207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1335244202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6c753e31a842ac439404c4e5afc6900, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  process:
+    mover:
+      moveAbility: 5
+    mountPoint: {fileID: 1335244205}
+    useBoundary: 0
+    output: []
+    available: []
+    isRunning: 0
+    from:
+      rid: -2
+    to:
+      rid: -2
+    currentNode:
+      rid: -2
+    nearest:
+      rid: -2
+    generateCount: 0
+    queryCount: 0
+    openCount: 0
+    settings:
+      hCostWeight: 1
+      heapCapacity: 1000
+      cacheCapacity: 2000
+      temporaryCacheCapacity: 100
+      getAdjoinedNodesSO: {fileID: 11400000, guid: f5e4552520172f34a9f512e8cb90404a, type: 2}
       calculateDistanceSO: {fileID: 11400000, guid: 844c25ee1f16c7b48b935b45ed9295f8, type: 2}
       generateNodeSO: {fileID: 11400000, guid: a299493c03a247f488f3cccc0d214050, type: 2}
     boundaryMin: {x: 0, y: 0}

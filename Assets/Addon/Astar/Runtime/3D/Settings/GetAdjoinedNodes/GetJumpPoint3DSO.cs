@@ -1,4 +1,3 @@
-using AStar.TwoD;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +7,9 @@ namespace AStar.ThreeD
     [CreateAssetMenu(fileName = "跳点", menuName = "AStar3D/获取相邻可达节点的方法/六向跳点")]
     public class GetJumpPoint3DSO : GetMovableNodes3DSO
     {
-        public int depthOnDirection;
+        public ScanCheck3DSO ScanSO;
+
+        public bool lazyScan;
 
         public override void GetMovableNodes(PathFinding3DProcess process, Node3D from, Func<Node3D, Node3D, bool> moveCheck, List<Node> ret)
         {
@@ -23,8 +24,6 @@ namespace AStar.ThreeD
                 }
             }
 
-            ret.Clear();
-
             // direction恰好有两个非零分量(面对角线)时，拆成两个直线自然分量a、b（哪个分量恰好是0，就说明
             // 另外两个分量组成了这个面对角线所在的坐标面）；FindPathFaceDiagonal、GetForcedNeighbourFaceDiagonal、
             // 以及dispatch的case 2都需要同一份拆分，统一到这里，避免同样的if/else写三遍
@@ -38,11 +37,9 @@ namespace AStar.ThreeD
             bool FindPathOrthogonal(Node3D start, Vector3Int direction)
             {
                 Node3D current = start;
-                Vector3Int pos = current.Position;
-                bool isJumpPoint = false;
-                for (int i = 0; i < depthOnDirection; i++)
+                bool found = false;
+                for (Vector3Int pos = current.Position + direction; ; pos += direction)
                 {
-                    pos += direction;
                     Node3D next = process.PeekNode(pos);
                     if (!process.ExploreCheck(current, next))
                         return false;
@@ -56,35 +53,35 @@ namespace AStar.ThreeD
                         return true;
                     }
 
-                    isJumpPoint = GetForcedNeighbourOrthogonal(current, direction);
-                    if (isJumpPoint)
+                    found = GetForcedNeighbourOrthogonal(current, direction)
+                        || !ScanSO.ScanCheck(process, start, current);
+                    if (found)
+                    {
+                        AddToPath(current);
                         break;
+                    }
                 }
-                isJumpPoint |= current != start;    //走到最大距离的点也加入后续节点，但不作为预知对角线上跳点的依据
-                if (isJumpPoint)
-                    AddToPath(current);
-                return isJumpPoint;
+                return found;
             }
 
             bool FindPathFaceDiagonal(Node3D start, Vector3Int direction)
+                => lazyScan ? FindPathFaceDiagonal_Lazy(start, direction) : FindPathFaceDiagonal_Regular(start, direction);
+
+            bool FindPathFaceDiagonal_Regular(Node3D start, Vector3Int direction)
             {
                 // 只依赖direction本身，扫描全程不变，循环外拆一次即可
                 SplitFaceDiagonal(direction, out Vector3Int a, out Vector3Int b);
 
                 Node3D current = start;
-                Vector3Int pos = current.Position;
-                bool isJumpPoint = false;
-                for (int i = 0; i < depthOnDirection; i++)
+                bool found = false;
+                Node3D nodeA, nodeB, next;
+                int bitMask;
+                for (; ; )
                 {
-                    pos += direction;
-                    Node3D next = process.PeekNode(pos);
-                    if (!process.ExploreCheck(current, next))
-                        return false;
+                    bitMask = PathFinding3DUtility.FaceDiagonalMoveCheck(process, current, process.ExploreCheck, a, b, direction,
+                        out next, out nodeA, out nodeB);
 
-                    //宽松角规则：a、b两条侧路只要有一条从current出发是畅通的，就允许切这个角
-                    Node3D node1 = process.PeekNode(current.Position + a);
-                    Node3D node2 = process.PeekNode(current.Position + b);
-                    if (!moveCheck(current, node1) && !moveCheck(current, node2))
+                    if ((bitMask & 0b100) == 0)
                         return false;
 
                     current = next;
@@ -96,51 +93,89 @@ namespace AStar.ThreeD
                         return true;
                     }
 
-                    isJumpPoint = GetForcedNeighbourFaceDiagonal(current, direction)
-                        || FindPathOrthogonal(current, a)
-                        || FindPathOrthogonal(current, b);
-                    if (isJumpPoint)
+                    found = GetForcedNeighbourFaceDiagonal(current, direction)
+                        || (bitMask & 0b1) > 0 && FindPathOrthogonal(current, a)
+                        || (bitMask & 0b10) > 0 && FindPathOrthogonal(current, b)
+                        || !ScanSO.ScanCheck(process, start, current);
+                    if (found)
+                    {
+                        AddToPath(current);
+                        break;
+                    }
+                }
+                return found;
+            }
+
+            bool FindPathFaceDiagonal_Lazy(Node3D start, Vector3Int direction)
+            {
+                SplitFaceDiagonal(direction, out Vector3Int a, out Vector3Int b);
+
+                Node3D current = start;
+                Node3D nodeA, nodeB, next;
+
+                int bitMask = PathFinding3DUtility.FaceDiagonalMoveCheck(process, current, process.ExploreCheck, a, b, direction,
+                    out next, out nodeA, out nodeB);
+                if ((bitMask & 0b100) == 0)
+                    return false;
+                current = next;
+                current.UpdateParent(start);
+
+                for (; ; )
+                {
+                    AddToPath(current);
+                    if (current == process.To)
+                    {
+                        ret.Add(current);
+                        return true;
+                    }
+
+                    bitMask = PathFinding3DUtility.FaceDiagonalMoveCheck(process, current, process.ExploreCheck, a, b, direction,
+                        out next, out nodeA, out nodeB);
+
+                    // 侧向两个分量各挂1步relay，不做完整的递归子扫描——relay自己被Open堆弹出时，
+                    // 会按其Parent方向（纯正交）自动继续做完整扫描
+                    if ((bitMask & 0b1) > 0)
+                    {
+                        nodeA.UpdateParent(current);
+                        AddToPath(nodeA);
+                    }
+                    if ((bitMask & 0b10) > 0)
+                    {
+                        nodeB.UpdateParent(current);
+                        AddToPath(nodeB);
+                    }
+                    if ((bitMask & 0b100) > 0)
+                    {
+                        next.UpdateParent(current);
+                        AddToPath(next);
+                    }
+                    current.state = ENodeState.Close;
+                    if (GetForcedNeighbourFaceDiagonal(current, direction))
+                        break;
+                    if ((bitMask & 0b100) == 0)
+                        break;
+                    current = next;
+                    if (!ScanSO.ScanCheck(process, start, current))
                         break;
                 }
-                isJumpPoint |= current != start;    //走到最大距离的点也作为预知对角线上跳点的依据
-                if (isJumpPoint)
-                    AddToPath(current);
-                return isJumpPoint;
+                return true;
             }
 
             bool FindPathBodyDiagonal(Node3D start, Vector3Int direction)
+                => lazyScan ? FindPathBodyDiagonal_Lazy(start, direction) : FindPathBodyDiagonal_Regular(start, direction);
+
+            bool FindPathBodyDiagonal_Regular(Node3D start, Vector3Int direction)
             {
-                // direction三个分量都非零(体对角线)，拆成三个直线自然分量ax、ay、az，
-                // 同样只依赖direction本身，循环外算一次
-                Vector3Int ax = new(direction.x, 0, 0);
-                Vector3Int ay = new(0, direction.y, 0);
-                Vector3Int az = new(0, 0, direction.z);
-
                 Node3D current = start;
-                Vector3Int pos = current.Position;
-                bool isJumpPoint = false;
-                for (int i = 0; i < depthOnDirection; i++)
+                bool found = false;
+                Node3D ax, ay, az, axay, axaz, ayaz, next;
+                int bitMask;
+                for (; ; )
                 {
-                    pos += direction;
-                    Node3D next = process.PeekNode(pos);
-                    if (!process.ExploreCheck(current, next))
-                        return false;
+                    bitMask = PathFinding3DUtility.BodyDiagonalMoveCheck(process, current, moveCheck, direction,
+                        out next, out ax, out ay, out az, out axay, out axaz, out ayaz);
 
-                    //体对角线转角比面对角线更宽，仿照Get26AdjoinNodes的宽松角规则：
-                    //3个面(经过一个直线分量)+3条棱(经过一个面对角线分量)一共6条侧路，任意一条通畅即可切角
-                    Node3D node1 = process.PeekNode(current.Position + ax);
-                    Node3D node2 = process.PeekNode(current.Position + ay);
-                    Node3D node3 = process.PeekNode(current.Position + az);
-                    Node3D node4 = process.PeekNode(current.Position + ax + ay);
-                    Node3D node5 = process.PeekNode(current.Position + ax + az);
-                    Node3D node6 = process.PeekNode(current.Position + ay + az);
-                    bool canCut = moveCheck(current, node1) && moveCheck(node1, next)
-                        || moveCheck(current, node2) && moveCheck(node2, next)
-                        || moveCheck(current, node3) && moveCheck(node3, next)
-                        || moveCheck(current, node4) && moveCheck(node4, next)
-                        || moveCheck(current, node5) && moveCheck(node5, next)
-                        || moveCheck(current, node6) && moveCheck(node6, next);
-                    if (!canCut)
+                    if ((bitMask & 0b1000000) == 0)   //合理的路径不可能互相穿插
                         return false;
 
                     current = next;
@@ -152,140 +187,151 @@ namespace AStar.ThreeD
                         return true;
                     }
 
-                    isJumpPoint = GetForcedNeighbourBodyDiagonal(current, direction)
-                        || FindPathFaceDiagonal(current, ax + ay)
-                        || FindPathFaceDiagonal(current, ax + az)
-                        || FindPathFaceDiagonal(current, ay + az)
-                        || FindPathOrthogonal(current, ax)
-                        || FindPathOrthogonal(current, ay)
-                        || FindPathOrthogonal(current, az);
-                    if (isJumpPoint)
+                    found = GetForcedNeighbourBodyDiagonal(current, direction)
+                        || (bitMask & 0b1000) > 0 && FindPathFaceDiagonal(current, new Vector3Int(direction.x, direction.y, 0))
+                        || (bitMask & 0b10000) > 0 && FindPathFaceDiagonal(current, new Vector3Int(direction.x, 0, direction.y))
+                        || (bitMask & 0b100000) > 0 && FindPathFaceDiagonal(current, new Vector3Int(0, direction.y, direction.z))
+                        || (bitMask & 0b1) > 0 && FindPathOrthogonal(current, new Vector3Int(direction.x, 0, 0))
+                        || (bitMask & 0b10) > 0 && FindPathOrthogonal(current, new Vector3Int(0, direction.y, 0))
+                        || (bitMask & 0b100) > 0 && FindPathOrthogonal(current, new Vector3Int(0, 0, direction.z))
+                        || !ScanSO.ScanCheck(process, start, current);
+                    if (found)
+                    {
+                        AddToPath(current);
                         break;
+                    }
                 }
-                isJumpPoint |= current != start;    //走到最大距离的点也作为预知对角线上跳点的依据
-                if (isJumpPoint)
-                    AddToPath(current);
-                return isJumpPoint;
+                return found;
             }
 
-            // 在(a,b)所在坐标面内做一次2D对角线强制邻居判定：自然分量a/b其中一侧的直线邻格(node5/node6)被挡、
-            // 另一侧的自然分量(node1/node2)仍可从current走到时，翻转被挡的一侧得到强制邻居(node3/node4)——
-            // 与2D GetForcedNeighbourDiagonal完全同源的规则，用显式向量而不是SortedTwentySixDirections下标，
-            // 因为26个方向排序后，面/体对角线互为近邻会插进2D原本紧邻的下标之间，1~6的下标语义在3D里对不上号；
-            // 面对角线(GetForcedNeighbourFaceDiagonal)只需调用一次(a,b就是它自己仅有的两个非零分量)，
-            // 体对角线(GetForcedNeighbourBodyDiagonal)在XY/XZ/YZ三个坐标面各调用一次
-            bool CheckFaceDiagonal(Node3D current, Vector3Int a, Vector3Int b)
+            bool FindPathBodyDiagonal_Lazy(Node3D start, Vector3Int direction)
             {
-                Node3D node1 = process.PeekNode(current.Position + a);
-                Node3D node2 = process.PeekNode(current.Position + b);
-                Node3D node3 = process.PeekNode(current.Position + a - b);
-                Node3D node4 = process.PeekNode(current.Position - a + b);
-                Node3D node5 = process.PeekNode(current.Position - b);
-                Node3D node6 = process.PeekNode(current.Position - a);
+                Node3D current = start;
+                Node3D ax, ay, az, axay, axaz, ayaz, next;
 
-                bool hasFocedNeighbour = false;
-                if (!moveCheck(current, node5) && moveCheck(current, node1) && moveCheck(node1, node3))
+                int bitMask = PathFinding3DUtility.BodyDiagonalMoveCheck(process, current, process.ExploreCheck, direction,
+                    out next, out ax, out ay, out az, out axay, out axaz, out ayaz);
+                if ((bitMask & 0b1000000) == 0)
+                    return false;
+                current = next;
+                current.UpdateParent(start);
+
+                for (; ; )
                 {
-                    hasFocedNeighbour = true;
-                    node3.UpdateParent(current);
-                    AddToPath(node3);
+                    AddToPath(current);
+                    if (current == process.To)
+                    {
+                        ret.Add(current);
+                        return true;
+                    }
+
+                    bitMask = PathFinding3DUtility.BodyDiagonalMoveCheck(process, current, moveCheck, direction,
+                        out next, out ax, out ay, out az, out axay, out axaz, out ayaz);
+
+                    // 6个组成方向（3直线+3面对角线）各挂1步relay，不做完整的递归子扫描——relay自己被Open堆
+                    // 弹出时，会按其Parent方向自动继续做完整扫描（正交的走FindPathOrthogonal，面对角线的走FindPathFaceDiagonal）
+                    if ((bitMask & 0b1) > 0) { ax.UpdateParent(current); AddToPath(ax); }
+                    if ((bitMask & 0b10) > 0) { ay.UpdateParent(current); AddToPath(ay); }
+                    if ((bitMask & 0b100) > 0) { az.UpdateParent(current); AddToPath(az); }
+                    if ((bitMask & 0b1000) > 0) { axay.UpdateParent(current); AddToPath(axay); }
+                    if ((bitMask & 0b10000) > 0) { axaz.UpdateParent(current); AddToPath(axaz); }
+                    if ((bitMask & 0b100000) > 0) { ayaz.UpdateParent(current); AddToPath(ayaz); }
+                    if ((bitMask & 0b1000000) > 0)
+                    {
+                        next.UpdateParent(current);
+                        AddToPath(next);
+                    }
+                    current.state = ENodeState.Close;
+                    if (GetForcedNeighbourBodyDiagonal(current, direction))
+                        break;
+                    if ((bitMask & 0b1000000) == 0)
+                        break;
+                    current = next;
+                    if (!ScanSO.ScanCheck(process, start, current))
+                        break;
                 }
-                if (!moveCheck(current, node6) && moveCheck(current, node2) && moveCheck(node2, node4))
+                return true;
+            }
+
+            bool GetSingleForcedNeighbour(Node3D current, Vector3Int direction, List<Vector3Int> expectedPass, List<Vector3Int> unexpectedPass)
+            {
+                Vector3Int pos = current.Position;
+                Node3D next = process.PeekNode(pos + direction);
+                if (!moveCheck(current, next))
+                    return false;
+
+                foreach (Vector3Int v in unexpectedPass)
                 {
-                    hasFocedNeighbour = true;
-                    node4.UpdateParent(current);
-                    AddToPath(node4);
+                    if (PathFinding3DUtility.AdjoinMoveCheck(process, current, v, moveCheck))
+                        return false;
                 }
-                return hasFocedNeighbour;
+
+                bool passable = false;
+                foreach (Vector3Int v in expectedPass)
+                {
+                    if (PathFinding3DUtility.AdjoinMoveCheck(process, current, v, moveCheck))
+                    {
+                        passable = true; 
+                        break;
+                    }
+                }
+                if (!passable)
+                    return false;
+
+                next.UpdateParent(current);
+                AddToPath(next);
+                return true;
             }
 
             bool GetForcedNeighbourOrthogonal(Node3D current, Vector3Int enterDirection)
             {
-                Node3D node0 = process.PeekNode(current.Position + enterDirection);
-                if (!moveCheck(current, node0))
-                    return false;
-
-                // enterDirection只有一个非零分量，另外两条坐标轴各自的正负方向，是4个需要分别检查的"侧向"
-                // （2D正交前进只有2个侧向，3D因为多一条维度变成4个），每个侧向对应一对(侧邻格,越过侧邻格到达的对角格)
-                Vector3Int perpA, perpB;
-                if (enterDirection.x != 0) { perpA = new Vector3Int(0, 1, 0); perpB = new Vector3Int(0, 0, 1); }
-                else if (enterDirection.y != 0) { perpA = new Vector3Int(1, 0, 0); perpB = new Vector3Int(0, 0, 1); }
-                else { perpA = new Vector3Int(1, 0, 0); perpB = new Vector3Int(0, 1, 0); }
-
-                Node3D node1 = process.PeekNode(current.Position + perpA);
-                Node3D node2 = process.PeekNode(node0.Position + perpA);
-                Node3D node3 = process.PeekNode(current.Position - perpA);
-                Node3D node4 = process.PeekNode(node0.Position - perpA);
-                Node3D node5 = process.PeekNode(current.Position + perpB);
-                Node3D node6 = process.PeekNode(node0.Position + perpB);
-                Node3D node7 = process.PeekNode(current.Position - perpB);
-                Node3D node8 = process.PeekNode(node0.Position - perpB);
-
                 bool hasFocedNeighbour = false;
-                if (!moveCheck(current, node1) && moveCheck(node0, node2))
-                {
-                    hasFocedNeighbour = true;
-                    node2.UpdateParent(current);
-                    AddToPath(node2);
-                }
-                if (!moveCheck(current, node3) && moveCheck(node0, node4))
-                {
-                    hasFocedNeighbour = true;
-                    node4.UpdateParent(current);
-                    AddToPath(node4);
-                }
-                if (!moveCheck(current, node5) && moveCheck(node0, node6))
-                {
-                    hasFocedNeighbour = true;
-                    node6.UpdateParent(current);
-                    AddToPath(node6);
-                }
-                if (!moveCheck(current, node7) && moveCheck(node0, node8))
-                {
-                    hasFocedNeighbour = true;
-                    node8.UpdateParent(current);
-                    AddToPath(node8);
-                }
+                Vector3Int[] directions = PathFinding3DUtility.SortedTwentySixDirections[enterDirection];
+
+                hasFocedNeighbour |= GetSingleForcedNeighbour(current, directions[1], new() { directions[0] }, new() { directions[9] });
+                hasFocedNeighbour |= GetSingleForcedNeighbour(current, directions[2], new() { directions[0] }, new() { directions[11] });
+                hasFocedNeighbour |= GetSingleForcedNeighbour(current, directions[3], new() { directions[0] }, new() { directions[13] });
+                hasFocedNeighbour |= GetSingleForcedNeighbour(current, directions[4], new() { directions[0] }, new() { directions[15] });
+
+                //TODO:体对角线
 
                 if (hasFocedNeighbour)
-                {
-                    node0.UpdateParent(current);
                     AddToPath(current);
-                }
-
                 return hasFocedNeighbour;
             }
 
             //与面对角线平行的方向
-            bool GetForcedNeighbourFaceDiagonal(Node3D current, Vector3Int direction)
+            bool GetForcedNeighbourFaceDiagonal(Node3D current, Vector3Int enterDirection)
             {
-                // direction恰好有两个非零分量(面对角线)，拆成两个直线自然分量a、b，交给CheckDiagonalPlane判定
-                SplitFaceDiagonal(direction, out Vector3Int a, out Vector3Int b);
+                bool hasFocedNeighbour = false;
+                Vector3Int[] directions = PathFinding3DUtility.SortedTwentySixDirections[enterDirection];
 
-                bool hasFocedNeighbour = CheckFaceDiagonal(current, a, b);
+                hasFocedNeighbour |= GetSingleForcedNeighbour(current, directions[9], new() { directions[3] }, new() { directions[21] });
+                hasFocedNeighbour |= GetSingleForcedNeighbour(current, directions[13], new() { directions[4] }, new() { directions[22] });
+
+
+                hasFocedNeighbour |= GetSingleForcedNeighbour(current, directions[5], new() { directions[3] }, new() { directions[11], directions[21] });
+                hasFocedNeighbour |= GetSingleForcedNeighbour(current, directions[8], new() { directions[3] }, new() { directions[15], directions[21] });
+                hasFocedNeighbour |= GetSingleForcedNeighbour(current, directions[6], new() { directions[4] }, new() { directions[11], directions[22] });
+                hasFocedNeighbour |= GetSingleForcedNeighbour(current, directions[7], new() { directions[4] }, new() { directions[15], directions[22] });
+
+                //TODO:体对角线
+
                 if (hasFocedNeighbour)
                     AddToPath(current);
-
                 return hasFocedNeighbour;
             }
 
             //与体对角线平行的方向
-            bool GetForcedNeighbourBodyDiagonal(Node3D current, Vector3Int direction)
+            bool GetForcedNeighbourBodyDiagonal(Node3D current, Vector3Int enterDirection)
             {
-                // 体对角线(dx,dy,dz)按三个坐标面拆成三个面对角线分量(XY/XZ/YZ)，每个分量各自交给
-                // CheckDiagonalPlane做一次和面对角线同源的2D强制邻居判定
-                //
-                // 注意：这三次平面分解只能覆盖"结果仍落在某个坐标面内(第三分量为0)"的强制邻居，
-                // 没有覆盖"体对角线本身翻转某一个轴"这一类（比如(1,1,1)翻转y变成(1,-1,1)，第三分量不为0）——
-                // 这类强制邻居的触发条件目前还没有严格推导，先不处理，等对照论文图示核实后再补
-                Vector3Int ax = new(direction.x, 0, 0);
-                Vector3Int ay = new(0, direction.y, 0);
-                Vector3Int az = new(0, 0, direction.z);
-
                 bool hasFocedNeighbour = false;
-                hasFocedNeighbour |= CheckFaceDiagonal(current, ax, ay);
-                hasFocedNeighbour |= CheckFaceDiagonal(current, ax, az);
-                hasFocedNeighbour |= CheckFaceDiagonal(current, ay, az);
+                Vector3Int[] directions = PathFinding3DUtility.SortedTwentySixDirections[enterDirection];
+
+                hasFocedNeighbour |= GetSingleForcedNeighbour(current, directions[10], new() { directions[4] }, new() { directions[19], directions[22] });
+                hasFocedNeighbour |= GetSingleForcedNeighbour(current, directions[13], new() { directions[3] }, new() { directions[20], directions[24] });
+
+                //TODO:体对角线
 
                 if (hasFocedNeighbour)
                     AddToPath(current);
@@ -310,6 +356,8 @@ namespace AStar.ThreeD
                 return;
             }
 
+            ret.Clear();
+
             Vector3Int v = from.Parent == null ? Vector3Int.left : from.Position - from.Parent.Position;
             v = new Vector3Int(Math.Sign(v.x), Math.Sign(v.y), Math.Sign(v.z));
 
@@ -324,31 +372,24 @@ namespace AStar.ThreeD
                     FindPathOrthogonal(from, v);
                     break;
                 case 2:
-                    {
-                        SplitFaceDiagonal(v, out Vector3Int a, out Vector3Int b);
+                    SplitFaceDiagonal(v, out Vector3Int a, out Vector3Int b);
 
-                        GetForcedNeighbourFaceDiagonal(from, v);
-                        FindPathFaceDiagonal(from, v);
-                        FindPathOrthogonal(from, a);
-                        FindPathOrthogonal(from, b);
-                        break;
-                    }
+                    GetForcedNeighbourFaceDiagonal(from, v);
+                    FindPathFaceDiagonal(from, v);
+                    FindPathOrthogonal(from, a);
+                    FindPathOrthogonal(from, b);
+                    break;
                 case 3:
-                    {
-                        Vector3Int ax = new(v.x, 0, 0);
-                        Vector3Int ay = new(0, v.y, 0);
-                        Vector3Int az = new(0, 0, v.z);
+                    GetForcedNeighbourBodyDiagonal(from, v);
 
-                        GetForcedNeighbourBodyDiagonal(from, v);
-                        FindPathBodyDiagonal(from, v);
-                        FindPathFaceDiagonal(from, ax + ay);
-                        FindPathFaceDiagonal(from, ax + az);
-                        FindPathFaceDiagonal(from, ay + az);
-                        FindPathOrthogonal(from, ax);
-                        FindPathOrthogonal(from, ay);
-                        FindPathOrthogonal(from, az);
-                        break;
-                    }
+                    FindPathBodyDiagonal(from, v);
+                    FindPathFaceDiagonal(from, new Vector3Int(v.x, v.y, 0));
+                    FindPathFaceDiagonal(from, new Vector3Int(v.x, 0, v.z));
+                    FindPathFaceDiagonal(from, new Vector3Int(0, v.y, v.z));
+                    FindPathOrthogonal(from, new Vector3Int(v.x, 0, 0));
+                    FindPathOrthogonal(from, new Vector3Int(0, v.y, 0));
+                    FindPathOrthogonal(from, new Vector3Int(0, 0, v.z));
+                    break;
                 default:
                     throw new ArgumentException();
             }

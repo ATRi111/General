@@ -8,7 +8,7 @@ namespace AStar.Sample
     public class PathFindingSample3DEditor : AutoEditor
     {
         [AutoProperty]
-        public SerializedProperty prefab, process, moveAbility, gridSize, hideNodesOutsidePath;
+        public SerializedProperty prefab, process, moveAbility, verticalBuffer, hideNodesOutsidePath;
         public PathFindingSample3D sample;
 
         protected override void OnEnable()
@@ -21,7 +21,7 @@ namespace AStar.Sample
         {
             prefab.PropertyField("预制体");
             moveAbility.IntField("移动力");
-            gridSize.Vector3IntField("网格范围");
+            verticalBuffer.IntField("竖直方向障碍物顶部预留空间");
 
             EditorGUI.BeginChangeCheck();
             hideNodesOutsidePath.BoolField("隐藏路径以外的节点");

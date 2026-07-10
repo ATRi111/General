@@ -1,18 +1,9 @@
 using System.Collections.Generic;
-using AStar.ThreeD;
-using TMPro;
 using UnityEditor;
 using UnityEngine;
 
 namespace AStar.Sample
 {
-    /// <summary>
-    /// 一键搭建3D寻路演示，提供两套地图生成方案（各自生成独立的根物体，互不影响，可以都留在场景里对比）：
-    /// - 山地(Hill)：仿参考图的分层地块，从起点一侧低、往终点一侧高铺一整片连续坡地；
-    /// - 城市(City)：大片平整地面上放若干大小不一的建筑。
-    /// 两套方案共用策略SO资源、DebugNode3D预制体、PathFindingSample3D组件挂载、等距摄像机取景这些逻辑。
-    /// 全部通过代码在编辑器里生成，不需要手工摆放，也避免手写场景/预制体文件带来的风险。
-    /// </summary>
     public static class AStarSample3DBuilder
     {
         private const string ResFolder = "Assets/Addon/Astar/Sample3D/Res";
@@ -53,22 +44,18 @@ namespace AStar.Sample
         public static void BuildHill()
         {
             EnsureFolder(ResFolder);
-            (GenerateSampleNode3DSO generateNodeSO, GetJumpPoint3DSO jumpPointSO, GameObject prefab) = EnsureSharedAssets();
 
             System.Random rng = new(12345);
             int[,] heights = BuildHeightMap(rng);
 
             GameObject root = new("Hill");
 
-            // 必须先创建 From/To 子物体，再挂 PathFindingSample3D 组件——
-            // AddComponent 会立刻触发 Awake（即使在编辑模式下），Awake 里会 transform.Find("From")/("To")；
             // y 取该列地形高度之上半格，确保起点/终点落在地面以上，而不是被埋进地形里
             CreateMarker("From", new Vector3(0.5f, heights[0, 0] + 0.5f, 0.5f), Color.green, root.transform);
             CreateMarker("To", new Vector3(HillSizeX - 0.5f, heights[HillSizeX - 1, HillSizeZ - 1] + 0.5f, HillSizeZ - 0.5f), Color.cyan, root.transform);
 
             int verticalExtent = HillMaxHeight + 2 + AirBuffer;
             Vector3Int gridSize = new(HillSizeX, verticalExtent, HillSizeZ);
-            SetupSample(root, prefab, generateNodeSO, jumpPointSO, gridSize);
 
             BuildTerrain(root.transform, heights);
             SetupIsometricCamera(gridSize);
@@ -199,7 +186,6 @@ namespace AStar.Sample
         public static void BuildCity()
         {
             EnsureFolder(ResFolder);
-            (GenerateSampleNode3DSO generateNodeSO, GetJumpPoint3DSO jumpPointSO, GameObject prefab) = EnsureSharedAssets();
 
             System.Random rng = new(54321);
             List<CityBuilding> buildings = BuildCityLayout(rng, out CityBuilding fromBuilding, out CityBuilding toBuilding);
@@ -213,7 +199,6 @@ namespace AStar.Sample
             CreateMarker("To", GetBuildingInteriorMarkerPosition(toBuilding), Color.cyan, root.transform);
 
             Vector3Int gridSize = new(CitySizeX, CitySizeY, CitySizeZ);
-            SetupSample(root, prefab, generateNodeSO, jumpPointSO, gridSize);
 
             BuildCityBlocks(root.transform, buildings, rng);
             SetupIsometricCamera(gridSize);
@@ -409,47 +394,220 @@ namespace AStar.Sample
 
         #endregion
 
-        #region 两套方案共用：策略SO资源、Debug预制体、PathFindingSample3D组件挂载、等距摄像机
+        #region 高墙迷宫(Wall)方案：50×50平地上散布高墙+若干矮于墙高的平台
 
-        /// <summary>创建/复用两套方案共用的策略SO资源与Debug预制体</summary>
-        private static (GenerateSampleNode3DSO generateNodeSO, GetJumpPoint3DSO jumpPointSO, GameObject prefab) EnsureSharedAssets()
+        private const int WallSizeX = 50;
+        private const int WallSizeZ = 50;
+        /// <summary>地面厚度（起点站在地面正上方）</summary>
+        private const int WallGroundHeight = 1;
+        /// <summary>高墙的高度（从地面往上算），比任何平台都高——逼迫寻路只能绕开墙的两端，飞不过去/爬不上去</summary>
+        private const int WallHeight = 10;
+        /// <summary>墙体厚度固定为1格，长度在下面范围内随机，方向随机取"沿x"或"沿z"</summary>
+        private const int WallMinLength = 6;
+        private const int WallMaxLength = 16;
+        /// <summary>墙的数量按地图面积/该值估算，值越小墙越密</summary>
+        private const int WallCellsPerWall = 55;
+        /// <summary>普通平台的正方形足迹边长范围</summary>
+        private const int WallPlatformMinFootprint = 4;
+        private const int WallPlatformMaxFootprint = 8;
+        /// <summary>普通平台的高度范围，必须严格低于 <see cref="WallHeight"/>，否则会失去"平台矮墙高"的对比</summary>
+        private const int WallPlatformMinHeight = 3;
+        private const int WallPlatformMaxHeight = 6;
+        private const int WallPlatformCellsPerPlatform = 220;
+        /// <summary>终点所在的"锚点平台"固定足迹，比普通平台更大，保证中心格离边缘足够远</summary>
+        private const int WallGoalPlatformFootprint = 8;
+        /// <summary>终点锚点平台的高度，取普通平台的最高值，明确低于墙高</summary>
+        private const int WallGoalPlatformHeight = WallPlatformMaxHeight;
+        /// <summary>起点/终点各自预留的空地边长，生成墙/平台时会避开这片区域，保证起终点不会被卡在障碍物里</summary>
+        private const int WallClearZoneSize = 3;
+
+        private static readonly Color WallGroundColor = new(0.42f, 0.46f, 0.40f); // 灰绿地面
+        private static readonly Color WallStoneColor = new(0.30f, 0.30f, 0.32f); // 深灰石墙
+        private static readonly Color WallGoalPlatformColor = new(0.85f, 0.65f, 0.20f); // 金黄，突出终点平台
+        private static readonly Color[] WallPlatformPalette =
         {
-            GenerateSampleNode3DSO generateNodeSO = GetOrCreateAsset<GenerateSampleNode3DSO>($"{ResFolder}/生成SampleNode3D.asset");
+            new(0.55f, 0.42f, 0.30f), // 木棕
+            new(0.50f, 0.50f, 0.55f), // 石灰
+            new(0.35f, 0.50f, 0.42f), // 苔绿
+        };
 
-            GetJumpPoint3DSO jumpPointSO = GetOrCreateAsset<GetJumpPoint3DSO>($"{ResFolder}/3D跳点.asset");
-            // 顺带生成一份朴素六向策略资源，方便在Inspector里对比切换（不作为默认值使用）
-            GetOrCreateAsset<Get6SO>($"{ResFolder}/六向移动.asset");
+        private struct WallSegment { public int x0, z0, length; public bool horizontal; }
+        private struct WallPlatform { public int x0, z0, footprint, height; public bool isGoal; }
 
-            GameObject prefab = GetOrCreateDebugPrefab($"{ResFolder}/DebugNode3D.prefab");
-            return (generateNodeSO, jumpPointSO, prefab);
+        [MenuItem("Tools/AStar/搭建3D寻路示例场景（高墙迷宫Wall）")]
+        public static void BuildWall()
+        {
+            EnsureFolder(ResFolder);
+
+            System.Random rng = new(20240609);
+            (List<WallSegment> walls, List<WallPlatform> platforms, WallPlatform goalPlatform) = BuildWallLayout(rng);
+
+            GameObject root = new("Wall");
+
+            // From站在地面上（左下角预留空地中心），To站在终点锚点平台顶面中心
+            CreateMarker("From", new Vector3(WallClearZoneSize / 2f, WallGroundHeight + 0.5f, WallClearZoneSize / 2f), Color.green, root.transform);
+            CreateMarker("To", GetWallPlatformTopMarkerPosition(goalPlatform), Color.cyan, root.transform);
+
+            Vector3Int gridSize = new(WallSizeX, WallGroundHeight + WallHeight + AirBuffer, WallSizeZ);
+
+            BuildWallBlocks(root.transform, walls, platforms);
+            SetupIsometricCamera(gridSize);
+
+            Selection.activeGameObject = root;
         }
 
         /// <summary>
-        /// 挂载 PathFindingSample3D + PathCameraRoamer 两个组件并写入两套方案共用的字段；
-        /// 必须先创建好 From/To 子物体再调用——AddComponent 会立刻触发 Awake（即使在编辑模式下），
-        /// Awake 里会 transform.Find("From")/("To")
+        /// 随机生成墙体与平台的布局：先各自预留起点角落（左下）与终点锚点平台（右上，固定足迹，一定生成）
+        /// 两片区域，标记进占用网格；再用拒绝采样先随机撒墙、再随机撒普通平台——顺序很重要：
+        /// 墙先撒，保证墙的分布不受平台挤占；平台后撒，允许平台紧贴墙边（更像"墙内藏平台"的地形），
+        /// 但两者都不会互相重叠或落进起终点的预留空地
         /// </summary>
-        private static void SetupSample(GameObject root, GameObject prefab, GenerateSampleNode3DSO generateNodeSO, GetJumpPoint3DSO jumpPointSO, Vector3Int gridSize)
+        private static (List<WallSegment> walls, List<WallPlatform> platforms, WallPlatform goalPlatform) BuildWallLayout(System.Random rng)
         {
-            PathFindingSample3D sample = root.AddComponent<PathFindingSample3D>();
+            bool[,] occupied = new bool[WallSizeX, WallSizeZ];
+            MarkOccupied(occupied, 0, 0, WallClearZoneSize, WallClearZoneSize);
 
-            SerializedObject so = new(sample);
-            so.FindProperty("prefab").objectReferenceValue = prefab;
-            so.FindProperty("gridSize").vector3IntValue = gridSize;
-            // 显式给一个覆盖全图的富余值：Node.Recall() 回溯输出路径时会用它过滤GCost超出预算的节点，
-            // 留空/0会导致只有GCost=0的起点本身能进入output（表现为"寻路完成后只有起点被染成output颜色"）
-            so.FindProperty("moveAbility").intValue = 999;
-            so.FindProperty("process.mountPoint").objectReferenceValue = root.transform;
-            so.FindProperty("process.settings.generateNodeSO").objectReferenceValue = generateNodeSO;
-            so.FindProperty("process.settings.getAdjoinedNodesSO").objectReferenceValue = jumpPointSO;
-            so.ApplyModifiedPropertiesWithoutUndo();
+            int goalX0 = WallSizeX - WallGoalPlatformFootprint - 1;
+            int goalZ0 = WallSizeZ - WallGoalPlatformFootprint - 1;
+            WallPlatform goalPlatform = new()
+            {
+                x0 = goalX0,
+                z0 = goalZ0,
+                footprint = WallGoalPlatformFootprint,
+                height = WallGoalPlatformHeight,
+                isGoal = true,
+            };
+            // 预留比足迹本身再宽1格的空地，避免墙紧贴平台边缘导致终点平台被完全包围、绕不进去
+            MarkOccupied(occupied, goalX0 - 1, goalZ0 - 1, WallGoalPlatformFootprint + 2, WallGoalPlatformFootprint + 2);
 
-            // 相机漫游是独立组件（不依赖寻路逻辑本身），这里只负责把它的sample引用指回刚创建的PathFindingSample3D
-            PathCameraRoamer roamer = root.AddComponent<PathCameraRoamer>();
-            SerializedObject roamerSO = new(roamer);
-            roamerSO.FindProperty("sample").objectReferenceValue = sample;
-            roamerSO.ApplyModifiedPropertiesWithoutUndo();
+            List<WallPlatform> platforms = new() { goalPlatform };
+
+            List<WallSegment> walls = new();
+            int wallCount = WallSizeX * WallSizeZ / WallCellsPerWall;
+            int wallAttempts = 0;
+            int wallMaxAttempts = wallCount * 30;
+            while (walls.Count < wallCount && wallAttempts < wallMaxAttempts)
+            {
+                wallAttempts++;
+                bool horizontal = rng.Next(0, 2) == 0;
+                int length = rng.Next(WallMinLength, WallMaxLength + 1);
+                int width = horizontal ? length : 1;
+                int depth = horizontal ? 1 : length;
+                int x0 = rng.Next(0, WallSizeX - width + 1);
+                int z0 = rng.Next(0, WallSizeZ - depth + 1);
+
+                if (IsOccupied(occupied, x0, z0, width, depth))
+                    continue;
+
+                MarkOccupied(occupied, x0, z0, width, depth);
+                walls.Add(new WallSegment { x0 = x0, z0 = z0, length = length, horizontal = horizontal });
+            }
+
+            int platformCount = WallSizeX * WallSizeZ / WallPlatformCellsPerPlatform;
+            int platformAttempts = 0;
+            int platformMaxAttempts = platformCount * 30;
+            while (platforms.Count < platformCount && platformAttempts < platformMaxAttempts)
+            {
+                platformAttempts++;
+                int footprint = rng.Next(WallPlatformMinFootprint, WallPlatformMaxFootprint + 1);
+                int x0 = rng.Next(0, WallSizeX - footprint + 1);
+                int z0 = rng.Next(0, WallSizeZ - footprint + 1);
+
+                if (IsOccupied(occupied, x0, z0, footprint, footprint))
+                    continue;
+
+                MarkOccupied(occupied, x0, z0, footprint, footprint);
+                int height = rng.Next(WallPlatformMinHeight, WallPlatformMaxHeight + 1);
+                platforms.Add(new WallPlatform { x0 = x0, z0 = z0, footprint = footprint, height = height, isGoal = false });
+            }
+
+            return (walls, platforms, goalPlatform);
         }
+
+        private static bool IsOccupied(bool[,] occupied, int x0, int z0, int width, int depth)
+        {
+            for (int x = x0; x < x0 + width; x++)
+                for (int z = z0; z < z0 + depth; z++)
+                    if (occupied[x, z])
+                        return true;
+            return false;
+        }
+
+        private static void MarkOccupied(bool[,] occupied, int x0, int z0, int width, int depth)
+        {
+            x0 = Mathf.Max(x0, 0);
+            z0 = Mathf.Max(z0, 0);
+            int x1 = Mathf.Min(x0 + width, occupied.GetLength(0));
+            int z1 = Mathf.Min(z0 + depth, occupied.GetLength(1));
+            for (int x = x0; x < x1; x++)
+                for (int z = z0; z < z1; z++)
+                    occupied[x, z] = true;
+        }
+
+        /// <summary>终点锚点平台顶面中心的世界坐标——平台是实心填满的，顶面正上方半格即可站稳，不会卡进平台内部</summary>
+        private static Vector3 GetWallPlatformTopMarkerPosition(WallPlatform platform)
+        {
+            int centerX = platform.x0 + platform.footprint / 2;
+            int centerZ = platform.z0 + platform.footprint / 2;
+            float y = WallGroundHeight + platform.height + 0.5f;
+            return new Vector3(centerX + 0.5f, y, centerZ + 0.5f);
+        }
+
+        /// <summary>
+        /// 先铺满整片地面，再把每段墙体从地面往上实心堆到 <see cref="WallHeight"/>，
+        /// 最后把每个平台（含终点锚点平台）从地面往上实心堆到各自的高度——平台高度严格低于墙高，
+        /// 这样"绕开墙的两端"和"直接走上/飞过平台"才会呈现出真正的高度差异，而不是所有障碍物一样高
+        /// </summary>
+        private static void BuildWallBlocks(Transform mount, List<WallSegment> walls, List<WallPlatform> platforms)
+        {
+            Dictionary<Color, Material> materialCache = new();
+            Material GetMaterial(Color color) => GetOrCreateMaterial(materialCache, color);
+
+            Material groundMaterial = GetMaterial(WallGroundColor);
+            for (int x = 0; x < WallSizeX; x++)
+                for (int z = 0; z < WallSizeZ; z++)
+                    for (int y = 0; y < WallGroundHeight; y++)
+                        CreateObstacleCube("Block", new Vector3(x + 0.5f, y + 0.5f, z + 0.5f), groundMaterial, mount);
+
+            Material wallMaterial = GetMaterial(WallStoneColor);
+            foreach (WallSegment wall in walls)
+            {
+                int width = wall.horizontal ? wall.length : 1;
+                int depth = wall.horizontal ? 1 : wall.length;
+                for (int x = wall.x0; x < wall.x0 + width; x++)
+                {
+                    for (int z = wall.z0; z < wall.z0 + depth; z++)
+                    {
+                        for (int y = WallGroundHeight; y < WallGroundHeight + WallHeight; y++)
+                        {
+                            CreateObstacleCube("Block", new Vector3(x + 0.5f, y + 0.5f, z + 0.5f), wallMaterial, mount);
+                        }
+                    }
+                }
+            }
+
+            // 终点锚点平台用专属金黄色，方便在画面里一眼认出终点所在的平台；其余按调色板轮换取色
+            int normalIndex = 0;
+            foreach (WallPlatform platform in platforms)
+            {
+                Material material = platform.isGoal
+                    ? GetMaterial(WallGoalPlatformColor)
+                    : GetMaterial(WallPlatformPalette[normalIndex++ % WallPlatformPalette.Length]);
+                BuildOnePlatform(mount, platform, material);
+            }
+        }
+
+        private static void BuildOnePlatform(Transform mount, WallPlatform platform, Material material)
+        {
+            for (int x = platform.x0; x < platform.x0 + platform.footprint; x++)
+                for (int z = platform.z0; z < platform.z0 + platform.footprint; z++)
+                    for (int y = WallGroundHeight; y < WallGroundHeight + platform.height; y++)
+                        CreateObstacleCube("Block", new Vector3(x + 0.5f, y + 0.5f, z + 0.5f), material, mount);
+        }
+
+        #endregion
+
+        #region 三套方案共用：策略SO资源、Debug预制体、PathFindingSample3D组件挂载、等距摄像机
 
         private static Material GetOrCreateMaterial(Dictionary<Color, Material> cache, Color color)
         {
@@ -459,17 +617,6 @@ namespace AStar.Sample
                 cache[color] = material;
             }
             return material;
-        }
-
-        private static T GetOrCreateAsset<T>(string path) where T : ScriptableObject
-        {
-            T asset = AssetDatabase.LoadAssetAtPath<T>(path);
-            if (asset != null)
-                return asset;
-
-            asset = ScriptableObject.CreateInstance<T>();
-            AssetDatabase.CreateAsset(asset, path);
-            return asset;
         }
 
         private static void EnsureFolder(string path)
@@ -544,55 +691,6 @@ namespace AStar.Sample
             cube.transform.position = worldPos;
             cube.transform.localScale = Vector3.one * ObstacleScale;
             cube.GetComponent<Renderer>().sharedMaterial = material;
-        }
-
-        /// <summary>调试节点用的球体缩放比例，比整格的障碍物立方体（<see cref="ObstacleScale"/>=1）略小，便于区分</summary>
-        private const float DebugNodeScale = 0.7f;
-        /// <summary>调试节点球体的整体透明度，写入 <see cref="SampleDebugNode3D"/> 的alpha字段</summary>
-        private const float DebugNodeAlpha = 0.55f;
-
-        private static GameObject GetOrCreateDebugPrefab(string path)
-        {
-            GameObject existing = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-            if (existing != null)
-                return existing;
-
-            GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            sphere.name = "DebugNode3D";
-            Object.DestroyImmediate(sphere.GetComponent<Collider>());
-            sphere.transform.localScale = Vector3.one * DebugNodeScale;
-            // CreatePrimitive默认挂的材质是不透明的，设置颜色的alpha通道不会有任何可见效果；
-            // 换成和场景里其它调试物体（CreateMarker/CreateObstacleCube）同款的Sprites/Default——
-            // 无光照、按颜色自身alpha做混合，运行时SampleDebugNode3D设置的半透明色才能真正显示出来
-            sphere.GetComponent<Renderer>().sharedMaterial = CreateColorMaterial(Color.white);
-
-            GameObject textObj = new("Text");
-            textObj.transform.SetParent(sphere.transform, false);
-            // TextMeshPro（非UGUI）本身依赖RectTransform，先AddComponent让Transform升级为RectTransform，
-            // 再设置缩放，避免在升级过程中丢失提前设置的数值
-            TextMeshPro tmp = textObj.AddComponent<TextMeshPro>();
-            // 抵消父物体(球体)的缩放，让文字的实际大小与父物体缩放无关
-            textObj.transform.localScale = Vector3.one / DebugNodeScale * 0.2f;
-            tmp.alignment = TextAlignmentOptions.Center;
-            tmp.fontSize = 6;
-            tmp.color = Color.black;
-            tmp.rectTransform.sizeDelta = new Vector2(4, 4);
-
-            SampleDebugNode3D debugNode = sphere.AddComponent<SampleDebugNode3D>();
-            // 仿照2D版DebugNode.prefab里手动设置好的颜色方案，用不同颜色区分节点状态
-            SerializedObject nodeSO = new(debugNode);
-            nodeSO.FindProperty("color_open").colorValue = new Color(0.022067308f, 1f, 0f);
-            nodeSO.FindProperty("color_close").colorValue = new Color(1f, 0f, 0f);
-            nodeSO.FindProperty("color_obstacle").colorValue = new Color(0f, 0f, 0f);
-            nodeSO.FindProperty("color_output").colorValue = new Color(0f, 0.89399576f, 1f);
-            nodeSO.FindProperty("color_available").colorValue = new Color(1f, 0f, 0.7567086f);
-            nodeSO.FindProperty("color_blank").colorValue = new Color(1f, 1f, 1f);
-            nodeSO.FindProperty("alpha").floatValue = DebugNodeAlpha;
-            nodeSO.ApplyModifiedPropertiesWithoutUndo();
-
-            GameObject prefab = PrefabUtility.SaveAsPrefabAsset(sphere, path);
-            Object.DestroyImmediate(sphere);
-            return prefab;
         }
 
         #endregion
